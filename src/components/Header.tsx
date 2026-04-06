@@ -20,12 +20,12 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-md border-b border-border">
-      <div className="container mx-auto flex items-center justify-between h-16 px-4">
+      <div className="container mx-auto flex h-16 items-center px-4">
         <Link to="/" className="ml-[30px] flex items-center gap-2">
           <img src={zestekLogo} alt="Zestek" className="h-20 w-20 rounded-lg object-contain" />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-1 lg:mr-5">
+        <nav className="hidden lg:ml-5 lg:mr-auto lg:flex lg:items-center lg:gap-1">
           {navLinks.map((link) => (
             <Link
               key={link.label}
@@ -42,7 +42,7 @@ const Header = () => {
         </nav>
 
         <button
-          className="lg:hidden p-2 rounded-lg hover:bg-muted"
+          className="ml-auto rounded-lg p-2 hover:bg-muted lg:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
