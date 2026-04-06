@@ -8,7 +8,6 @@ import InsightsSection from "@/components/InsightsSection";
 import TrustSignals from "@/components/TrustSignals";
 import SegmentSection from "@/components/SegmentSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
-import MachinesSection from "@/components/MachinesSection";
 import Footer from "@/components/Footer";
 
 const Index = () => (
@@ -23,7 +22,6 @@ const Index = () => (
     <TrustSignals />
     <SegmentSection />
     <TestimonialsSection />
-    <MachinesSection />
     <Footer />
   </div>
 );

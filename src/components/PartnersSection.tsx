@@ -43,11 +43,11 @@ const PartnersSection = () => (
             transition={{ delay: i * 0.15, duration: 0.5 }}
             className="bg-background rounded-2xl p-6 border border-border hover:shadow-lg transition-shadow group"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="h-12 w-28 rounded-xl bg-[#E9F2FF] border border-border flex items-center justify-center p-2">
+            <div className="flex items-start justify-between gap-3 mb-4">
+              <div className="h-12 w-24 shrink-0 rounded-xl bg-[#E9F2FF] border border-border flex items-center justify-center p-2 sm:w-28">
                 <img src={p.logo} alt={`${p.name} logo`} className="h-full w-full object-contain" />
               </div>
-              <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+              <span className="w-[132px] pt-2 text-right text-[10px] font-semibold uppercase leading-tight tracking-[0.22em] text-muted-foreground sm:w-auto sm:pt-1 sm:text-[11px] sm:tracking-widest">
                 {p.badge}
               </span>
             </div>

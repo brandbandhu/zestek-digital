@@ -10,11 +10,12 @@ import banner2 from "@/assets/banner/2.png";
 import banner3 from "@/assets/banner/3.png";
 import banner4 from "@/assets/banner/4.png";
 import banner5 from "@/assets/banner/5.png";
-import mobileBanner1 from "@/assets/mobile-banner/1.png";
-import mobileBanner2 from "@/assets/mobile-banner/2.png";
-import mobileBanner3 from "@/assets/mobile-banner/3.png";
-import mobileBanner4 from "@/assets/mobile-banner/4.jpeg";
-import mobileBanner5 from "@/assets/mobile-banner/5.jpeg";
+import mobileBanner1 from "../../assets/mobile banner/1.svg";
+import mobileBanner2 from "../../assets/mobile banner/2.svg";
+import mobileBanner3 from "../../assets/mobile banner/3.svg";
+import mobileBanner4 from "../../assets/mobile banner/4.svg";
+import mobileBanner5 from "../../assets/mobile banner/5.svg";
+import { Link } from "react-router-dom";
 
 const banners = [banner1, banner2, banner3, banner4, banner5];
 const mobileBanners = [mobileBanner1, mobileBanner2, mobileBanner3, mobileBanner4, mobileBanner5];
@@ -42,26 +43,19 @@ const HeroSection = () => (
                           Service & SLA
                         </span>
                         <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold leading-tight">
-                          Same-day service coverage across Mumbai &amp; MMR.
+                          Reliable Service Coverage Across Mumbai &amp; MMR
                         </h1>
                         <p className="mt-4 text-sm md:text-base text-foreground/80">
-                          Certified engineers, predictable SLAs, and fast consumables planning for uninterrupted printing.
+                          Certified engineers, structured SLAs, and efficient consumables planning for smooth,
+                          uninterrupted printing for your business.
                         </p>
-                        <div className="mt-6 flex flex-wrap gap-3">
-                          <a
-                            href="https://www.epson.co.in/"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="rounded-full bg-navy text-primary-foreground px-5 py-2 text-xs font-semibold"
+                        <div className="mt-6">
+                          <Link
+                            to="/contact"
+                            className="inline-flex items-center justify-center rounded-full border border-navy/20 bg-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-navy/90"
                           >
-                            See MPS Plans
-                          </a>
-                          <a
-                            href="/contact"
-                            className="rounded-full border border-navy/40 px-5 py-2 text-xs font-semibold text-navy bg-white/80"
-                          >
-                            Request Support
-                          </a>
+                            Request Support Now
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -96,26 +90,19 @@ const HeroSection = () => (
                           Service & SLA
                         </span>
                         <h1 className="mt-4 text-2xl font-display font-extrabold leading-tight">
-                          Same-day service coverage across Mumbai &amp; MMR.
+                          Reliable Service Coverage Across Mumbai &amp; MMR
                         </h1>
                         <p className="mt-3 text-xs text-foreground/80">
-                          Certified engineers, predictable SLAs, and fast consumables planning for uninterrupted printing.
+                          Certified engineers, structured SLAs, and efficient consumables planning for smooth,
+                          uninterrupted printing for your business.
                         </p>
-                        <div className="mt-4 flex flex-wrap gap-3">
-                          <a
-                            href="https://www.epson.co.in/"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="rounded-full bg-navy text-primary-foreground px-4 py-2 text-[11px] font-semibold"
+                        <div className="mt-4">
+                          <Link
+                            to="/contact"
+                            className="inline-flex items-center justify-center rounded-full border border-navy/20 bg-navy px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-navy/90"
                           >
-                            See MPS Plans
-                          </a>
-                          <a
-                            href="/contact"
-                            className="rounded-full border border-navy/40 px-4 py-2 text-[11px] font-semibold text-navy bg-white/80"
-                          >
-                            Request Support
-                          </a>
+                            Request Support Now
+                          </Link>
                         </div>
                       </div>
                     </div>

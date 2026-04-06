@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { Building, Copy, Camera } from "lucide-react";
 
 const segments = [
-  { icon: Building, tag: "COM", title: "Printers for Commercial Segment", desc: "High-volume production for print houses, packaging, and short-run jobs.", link: "/products" },
-  { icon: Copy, tag: "PXC", title: "Printers for Photocopy Centers", desc: "Cost-efficient, durable devices for daily walk-in copy and scan workloads.", link: "/products" },
+  { icon: Building, tag: "COM", title: "Printers for Commercial Segment", desc: "High-volume production for print houses, packaging, and short-run jobs.", link: "/konica-production" },
+  { icon: Copy, tag: "PXC", title: "Printers for Photocopy Centers", desc: "Cost-efficient, durable devices for daily walk-in copy and scan workloads.", link: "/epson-m5500" },
   { icon: Camera, tag: "PRO", title: "Printers for Photo Professionals", desc: "Color-accurate, detail-rich output for studios, labs, and visual work.", link: "/about" },
 ];
 

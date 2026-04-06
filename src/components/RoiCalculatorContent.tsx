@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 
 const RoiCalculatorContent = () => {
+  const [decisionMakerName, setDecisionMakerName] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [industry, setIndustry] = useState("commercial");
   const [monoPages, setMonoPages] = useState(60000);
   const [colorPages, setColorPages] = useState(10000);
@@ -8,6 +10,7 @@ const RoiCalculatorContent = () => {
   const [downtimeCriticality, setDowntimeCriticality] = useState("medium");
   const [sellingMode, setSellingMode] = useState("b2c");
   const [message, setMessage] = useState("");
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
 
   const isCommercial = industry === "commercial";
 
@@ -137,33 +140,201 @@ const RoiCalculatorContent = () => {
     })}`;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setMessage("ROI report generated. PDF download starts automatically.");
+
+    const industryLabel =
+      industry === "commercial"
+        ? "Commercial Print & Packaging"
+        : industry === "education"
+          ? "Education & Universities"
+          : "Corporates & MSME";
+    const fleetAgeLabel = fleetAge === "new" ? "0 - 2 years" : fleetAge === "mid" ? "3 - 5 years" : "5+ years";
+    const downtimeLabel = downtimeCriticality === "high" ? "High" : downtimeCriticality === "medium" ? "Medium" : "Low";
+    const sellingModeLabel =
+      sellingMode === "b2c" ? "End Customer (B2C Retail)" : "Reseller (B2B Trade)";
+
+    const reportInputs = [
+      `Decision maker: ${decisionMakerName || "Not provided"}`,
+      `Company name: ${companyName || "Not provided"}`,
+      `Industry: ${industryLabel}`,
+      `Monthly mono pages: ${monoPages.toLocaleString("en-IN")}`,
+      `Monthly color pages: ${colorPages.toLocaleString("en-IN")}`,
+      `Current printer fleet age: ${fleetAgeLabel}`,
+      `Downtime criticality: ${downtimeLabel}`,
+      `Selling mode: ${isCommercial ? sellingModeLabel : "Not applicable"}`,
+    ];
+
+    const summaryMetrics = [
+      `Recommended model: ${recommendation.model}`,
+      `CAPEX benchmark: ${recommendation.range.replace("CAPEX benchmark: ", "")}`,
+      `Projected monthly net cash flow: ${formatInr(roiMetrics.netCashflow)}`,
+      `Projected monthly gross revenue: ${formatInr(roiMetrics.revenue)}`,
+      `Monthly EMI commitment: ${formatInr(roiMetrics.emi)}`,
+      `Current monthly operating cost: ${formatInr(roiMetrics.currentCost)}`,
+      `Projected monthly operating cost: ${formatInr(roiMetrics.projectedCost)}`,
+      `Estimated monthly savings: ${formatInr(roiMetrics.monthlySavings)}`,
+      `Estimated annual savings: ${formatInr(roiMetrics.annualSavings)}`,
+      `Three-year ROI: ${roiMetrics.roi3Years.toFixed(1)}%`,
+      `Payback period: ${
+        roiMetrics.paybackMonths > 0 ? `${roiMetrics.paybackMonths.toFixed(1)} months` : "Payback not available"
+      }`,
+      `Gross profit per print: ${
+        isCommercial ? `INR ${roiMetrics.grossProfitPerPrint.toFixed(2)}` : "Not applicable"
+      }`,
+    ];
+
+    const costComparison = [
+      `Print output cost: ${formatInr(roiMetrics.currentConsumables)} current vs ${formatInr(
+        roiMetrics.projectedConsumables,
+      )} projected`,
+      `Maintenance: ${formatInr(roiMetrics.maintenance)} current vs ${formatInr(roiMetrics.maintenance * 0.82)} projected`,
+      `Energy: ${formatInr(roiMetrics.energy)} current vs ${formatInr(roiMetrics.energy * 0.82)} projected`,
+      `Downtime impact: ${formatInr(roiMetrics.downtimeCost)} current vs ${formatInr(roiMetrics.downtimeCost * 0.65)} projected`,
+      `Total monthly cost: ${formatInr(roiMetrics.currentCost)} current vs ${formatInr(roiMetrics.projectedCost)} projected`,
+    ];
+
+    try {
+      setIsGeneratingReport(true);
+      setMessage("Generating ROI report PDF...");
+
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF({ unit: "pt", format: "a4" });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const marginX = 48;
+      const topMargin = 52;
+      const bottomMargin = 52;
+      const contentWidth = pageWidth - marginX * 2;
+      let currentY = topMargin;
+
+      const ensureSpace = (requiredHeight: number) => {
+        if (currentY + requiredHeight > pageHeight - bottomMargin) {
+          doc.addPage();
+          currentY = topMargin;
+        }
+      };
+
+      const addWrappedText = (
+        text: string,
+        options?: { fontSize?: number; color?: [number, number, number]; indent?: number; lineGap?: number },
+      ) => {
+        const fontSize = options?.fontSize ?? 11;
+        const indent = options?.indent ?? 0;
+        const lineGap = options?.lineGap ?? 6;
+        const lines = doc.splitTextToSize(text, contentWidth - indent);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(fontSize);
+        if (options?.color) {
+          doc.setTextColor(...options.color);
+        } else {
+          doc.setTextColor(72, 85, 99);
+        }
+
+        const blockHeight = lines.length * fontSize * 1.25 + lineGap;
+        ensureSpace(blockHeight);
+        doc.text(lines, marginX + indent, currentY);
+        currentY += blockHeight;
+      };
+
+      const addSectionHeading = (title: string) => {
+        ensureSpace(28);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(15);
+        doc.setTextColor(15, 32, 66);
+        doc.text(title, marginX, currentY);
+        currentY += 18;
+      };
+
+      const addBulletList = (items: string[]) => {
+        items.forEach((item) => {
+          addWrappedText(`- ${item}`, { fontSize: 11, indent: 4, lineGap: 5 });
+        });
+      };
+
+      doc.setFillColor(15, 32, 66);
+      doc.roundedRect(marginX, currentY, contentWidth, 78, 18, 18, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(22);
+      doc.setTextColor(255, 255, 255);
+      doc.text("Zestek ROI Report", marginX + 18, currentY + 28);
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${recommendation.model} recommendation summary`, marginX + 18, currentY + 48);
+      doc.text(`Generated on ${new Date().toLocaleString("en-IN")}`, marginX + 18, currentY + 66);
+      currentY += 102;
+
+      addSectionHeading("Customer profile");
+      addBulletList(reportInputs);
+
+      addSectionHeading("Recommendation");
+      addWrappedText(recommendation.reason, { fontSize: 11 });
+      addBulletList(summaryMetrics);
+
+      addSectionHeading("Cost comparison");
+      addBulletList(costComparison);
+
+      addSectionHeading("Working assumptions");
+      addBulletList([
+        `Current CPP mono / color: INR ${roiMetrics.currentCppMono.toFixed(2)} / INR ${roiMetrics.currentCppColor.toFixed(2)}`,
+        `Projected consumables spend: ${formatInr(roiMetrics.projectedConsumables)} per month`,
+        `Consumables budget annualised: ${formatInr(roiMetrics.pnlConsumables * 12)}`,
+        `Downtime benchmark: ${roiMetrics.downtimeHours.toFixed(1)} hours x ${formatInr(roiMetrics.downtimeRate)}`,
+        `Break-even volume: ${
+          roiMetrics.sellPrice > 0 ? Math.ceil(roiMetrics.emi / roiMetrics.sellPrice).toLocaleString("en-IN") : "-"
+        } prints per month`,
+        `FSMA plus paper cost per print: INR ${roiMetrics.costPerPrint.toFixed(2)}`,
+      ]);
+
+      addSectionHeading("Interpretation");
+      addWrappedText(
+        `Projected monthly net cash flow is ${formatInr(roiMetrics.netCashflow)}. ${
+          roiMetrics.revenue > 0
+            ? `This represents ${((roiMetrics.netCashflow / roiMetrics.revenue) * 100).toFixed(1)} percent margin on monthly revenue.`
+            : "Revenue-based margin is not applicable for the current selection."
+        }`,
+      );
+      addWrappedText(
+        `The calculator recommends ${recommendation.model} because it best matches the selected industry, volume profile and color mix. Same-day service SLA applies in Mumbai, Boisar and Khopoli.`,
+      );
+
+      const safeCompany = (companyName || "zestek-roi-report").trim().replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+      const safeModel = recommendation.model.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+      doc.save(`${safeCompany}-${safeModel}-roi-report.pdf`);
+
+      setMessage("ROI report generated and PDF download has started.");
+    } catch (error) {
+      console.error("Unable to generate ROI report PDF", error);
+      setMessage("Unable to generate the ROI PDF right now. Please try again.");
+    } finally {
+      setIsGeneratingReport(false);
+    }
   };
 
   return (
     <>
-      <section
-        className="relative overflow-hidden"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(10, 25, 60, 0.7), rgba(10, 25, 60, 0.7)), url('https://zestek.vercel.app/assets/images/bg/print-floor.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="container mx-auto section-padding">
-          <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
+      <section className="relative overflow-hidden -mt-16 bg-[#12203c] pb-6">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(18,32,60,0.96)_0%,rgba(34,55,95,0.92)_42%,rgba(87,119,170,0.55)_72%,rgba(226,239,255,0.82)_100%)]" />
+        <img
+          src="https://zestek.vercel.app/assets/images/products/epson-am-c4000.png"
+          alt="Business printer for ROI calculator"
+          className="pointer-events-none absolute bottom-0 right-4 hidden h-[84%] w-auto object-contain mix-blend-multiply opacity-95 drop-shadow-[0_18px_40px_rgba(15,32,66,0.25)] md:block lg:right-10"
+          loading="eager"
+        />
+        <div className="relative container mx-auto flex min-h-[320px] items-center px-4 pb-12 pt-20 md:min-h-[390px] md:pb-14 md:pt-24">
+          <div className="max-w-3xl">
+            <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
             Market-Benchmarked Self-Serve Tool
           </span>
-          <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-primary-foreground">
-            Low-Effort Print ROI Calculator
-          </h1>
-          <p className="mt-3 text-sm md:text-base text-primary-foreground/80 max-w-3xl">
-            You only enter a few details. Market cost parameters are fixed from current Mumbai/MMR B2B benchmarks, so
-            buyers can quickly get a decision-ready ROI report and PDF.
-          </p>
+            <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-primary-foreground">
+              Low-Effort Print ROI Calculator
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm text-primary-foreground/80 md:text-base">
+              You only enter a few details. Market cost parameters are fixed from current Mumbai and MMR B2B
+              benchmarks, so buyers can quickly get a decision-ready ROI report and PDF.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -182,13 +353,20 @@ const RoiCalculatorContent = () => {
               <div>
                 <label className="text-xs font-semibold text-navy">Decision Maker Name</label>
                 <input
+                  value={decisionMakerName}
+                  onChange={(e) => setDecisionMakerName(e.target.value)}
                   className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                   placeholder="Example: Head of IT"
                 />
               </div>
               <div>
                 <label className="text-xs font-semibold text-navy">Company Name</label>
-                <input className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
+                <input
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  required
+                />
               </div>
             </div>
 
@@ -289,8 +467,12 @@ const RoiCalculatorContent = () => {
             </div>
 
             <div className="space-y-2">
-              <button type="submit" className="w-full rounded-full bg-navy text-primary-foreground py-3 text-xs font-semibold">
-                Generate ROI Report + Download PDF
+              <button
+                type="submit"
+                disabled={isGeneratingReport}
+                className="w-full rounded-full bg-navy py-3 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {isGeneratingReport ? "Generating ROI Report..." : "Generate ROI Report + Download PDF"}
               </button>
               <p className="text-xs text-muted-foreground">PDF download starts automatically when report is generated.</p>
               {message && <p className="text-xs text-muted-foreground">{message}</p>}
@@ -485,7 +667,7 @@ const RoiCalculatorContent = () => {
                     value: isCommercial ? `INR 5.15 / INR ${roiMetrics.grossProfitPerPrint.toFixed(2)}` : "-",
                   },
                 ].map((item) => (
-                  <div key={item} className="rounded-lg border border-border bg-white p-3">
+                  <div key={item.label} className="rounded-lg border border-border bg-white p-3">
                     <p className="text-xs text-muted-foreground">{item.label}</p>
                     <p className="text-sm text-navy mt-1">{item.value}</p>
                   </div>

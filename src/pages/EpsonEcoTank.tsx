@@ -1,22 +1,49 @@
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ProductFilterPanel from "@/components/ProductFilterPanel";
 import { motion } from "framer-motion";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight, Droplets, PhoneCall, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
+import { matchesSearchQuery, matchesSelectedOptions, toggleFilterValue } from "@/lib/productFilters";
 
-const filters = [
-  "Home & Office",
-  "Business",
-  "Photo",
-  "A3 / A4",
-  "Wi-Fi",
-  "Duplex",
-  "ADF",
-  "EcoTank",
-  "WorkForce",
-];
+type EcoTankProduct = {
+  name: string;
+  sku: string;
+  productUrl: string;
+  imageUrl: string;
+};
 
-const productCards = [
+type EcoTankProductMeta = {
+  description: string;
+  highlights: string[];
+  bestFor: string;
+  inkUrl: string;
+  paperSize: string;
+  colourMode: string;
+  usageType: string;
+  functionType: string;
+  features: string[];
+  searchTerms: string[];
+};
+
+const productCards: EcoTankProduct[] = [
+  {
+    name: "EcoTank Monochrome M15180",
+    sku: "C11CJ41507",
+    productUrl:
+      "https://www.epson.co.in/EcoTank-Printers/Epson-EcoTank-Monochrome-M15180-A3-Wi-Fi-Duplex-Multi-Function-Ink-Tank-Printer/p/C11CJ41507",
+    imageUrl:
+      "https://mediaserver.goepson.com/adaptivemedia/rendition?id=a2ea993c221f0956430f9ed78a26a6ea3f3efd72&vid=a2ea993c221f0956430f9ed78a26a6ea3f3efd72&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=M15140+4",
+  },
+  {
+    name: "EcoTank L15180",
+    sku: "C11CH71507",
+    productUrl:
+      "https://www.epson.co.in/EcoTank-Printers/Epson-EcoTank-L15180-A3-Wi-Fi-Duplex-Multi-Function-Ink-Tank-Printer/p/C11CH71507",
+    imageUrl:
+      "https://mediaserver.goepson.com/adaptivemedia/rendition?id=971336a3289c5e62e48bb05c1de8c49e05cea44d&vid=971336a3289c5e62e48bb05c1de8c49e05cea44d&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=L15150_19Cah_FDL_Black_01_2",
+  },
   {
     name: "EcoTank L130",
     sku: "C11CE58501",
@@ -239,149 +266,384 @@ const productCards = [
     imageUrl:
       "https://mediaserver.goepson.com/adaptivemedia/rendition?id=971336a3289c5e62e48bb05c1de8c49e05cea44d&vid=971336a3289c5e62e48bb05c1de8c49e05cea44d&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=L15150_19Cah_FDL_Black_01_2",
   },
-  {
-    name: "EcoTank L15180",
-    sku: "C11CH71507",
-    productUrl:
-      "https://www.epson.co.in/EcoTank-Printers/Epson-EcoTank-L15180-A3-Wi-Fi-Duplex-Multi-Function-Ink-Tank-Printer/p/C11CH71507",
-    imageUrl:
-      "https://mediaserver.goepson.com/adaptivemedia/rendition?id=971336a3289c5e62e48bb05c1de8c49e05cea44d&vid=971336a3289c5e62e48bb05c1de8c49e05cea44d&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=L15150_19Cah_FDL_Black_01_2",
-  },
 ];
 
-const EpsonEcoTank = () => (
-  <div className="min-h-screen bg-background">
-    <Header />
+const salesPhoneHref = "tel:+919876543210";
 
-    <section
-      className="relative overflow-hidden min-h-[360px] md:min-h-[420px] -mt-16"
-      style={{
-        backgroundImage:
-          "linear-gradient(rgba(10, 25, 60, 0.78), rgba(10, 25, 60, 0.78)), url('https://zestek.vercel.app/assets/images/products/epson-l3252.png')",
-        backgroundSize: "auto 84%",
-        backgroundPosition: "92% center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <div className="container mx-auto section-padding pt-16 md:pt-20">
-        <span className="mt-4 inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
-          Product Finder
-        </span>
-        <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-primary-foreground">
-          Epson EcoTank Printers
-        </h1>
-        <p className="mt-3 text-sm md:text-base text-primary-foreground/80 max-w-3xl">
-          Browse the full Epson EcoTank range with product filters, official details, and guided support from Zestek
-          Digital LLP.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a href="/contact" className="rounded-full bg-white text-navy px-5 py-2 text-xs font-semibold">
-            Request a Quote
-          </a>
-          <a href="/" className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white">
-            Back to Home
-          </a>
+type EcoTankFilterState = {
+  paperSizes: string[];
+  colourModes: string[];
+  usageTypes: string[];
+  functionTypes: string[];
+  features: string[];
+};
+
+const createEmptyEcoTankFilters = (): EcoTankFilterState => ({
+  paperSizes: [],
+  colourModes: [],
+  usageTypes: [],
+  functionTypes: [],
+  features: [],
+});
+
+const ecoTankSortOptions = [
+  { label: "Recommended", value: "recommended" },
+  { label: "Name (A-Z)", value: "name-asc" },
+  { label: "Name (Z-A)", value: "name-desc" },
+  { label: "SKU", value: "sku" },
+];
+
+const buildFeatureList = (features: string[]) => {
+  if (features.length === 0) {
+    return "low-cost everyday printing";
+  }
+
+  if (features.length === 1) {
+    return features[0];
+  }
+
+  if (features.length === 2) {
+    return `${features[0]} and ${features[1]}`;
+  }
+
+  return `${features.slice(0, -1).join(", ")}, and ${features.at(-1)}`;
+};
+
+const getEcoTankProductMeta = (product: EcoTankProduct): EcoTankProductMeta => {
+  const source = `${product.name} ${product.productUrl}`.toLowerCase();
+
+  const isMonochrome = source.includes("monochrome") || /\bm\d{4,5}\b/.test(source);
+  const isA3Plus = source.includes("a3%2b") || source.includes("a3+");
+  const isA3 = isA3Plus || source.includes("a3");
+  const hasWifi = source.includes("wi-fi") || source.includes("wifi");
+  const hasDuplex = source.includes("duplex");
+  const hasAdf = source.includes("adf");
+  const hasFax = source.includes("fax");
+  const isSingleFunction = source.includes("single-function");
+
+  const formatLabel = isA3Plus ? "A3+" : isA3 ? "A3" : "A4";
+  const colourLabel = isMonochrome ? "Monochrome" : "Colour";
+  const workflowLabel = isSingleFunction
+    ? "Single Function"
+    : hasFax || hasAdf || hasDuplex
+      ? "Business Workflow"
+      : "Multi-Function";
+
+  const usageLabel =
+    isA3 || hasAdf || hasFax || hasDuplex
+      ? isMonochrome
+        ? "High Volume Printing"
+        : "Business Printing"
+      : "Low Cost Printing";
+
+  const highlights = [formatLabel, colourLabel, usageLabel, workflowLabel];
+
+  const featureFragments = [
+    hasWifi ? "Wi-Fi connectivity" : null,
+    hasDuplex ? "duplex printing" : null,
+    hasAdf ? "ADF support" : null,
+    hasFax ? "fax support" : null,
+  ].filter((value): value is string => Boolean(value));
+
+  let description = `Reliable ${formatLabel} ${colourLabel.toLowerCase()} printer built for low-cost printing and everyday productivity.`;
+
+  if (isSingleFunction && !isA3) {
+    description = `Low-cost ${formatLabel} ${colourLabel.toLowerCase()} printer designed for everyday printing with high page yield and minimal running cost.`;
+  } else if (isSingleFunction && isA3) {
+    description = `Wide-format ${formatLabel} ${colourLabel.toLowerCase()} printer built for affordable everyday printing with larger output size and low running cost.`;
+  } else if (isA3 && isMonochrome) {
+    description = `Business-ready ${formatLabel} monochrome multi-function printer built for fast document workflows, high page yield, and dependable low-cost output.`;
+  } else if (isA3) {
+    description = `Wide-format ${formatLabel} colour multi-function printer designed for business documents, presentations, and low-cost high-volume printing.`;
+  } else if (featureFragments.length > 0) {
+    description = `${formatLabel} ${colourLabel.toLowerCase()} multi-function printer with ${buildFeatureList(featureFragments)} for efficient home and office printing.`;
+  }
+
+  let bestFor = "Home users and small offices looking for dependable low-cost printing.";
+
+  if (isSingleFunction && !isA3) {
+    bestFor = "Home users, small offices, and low-volume printing.";
+  } else if (isSingleFunction && isA3) {
+    bestFor = "Design studios, offices, and users who need affordable wide-format printing.";
+  } else if (isA3 && isMonochrome) {
+    bestFor = "Offices, billing teams, and document-heavy business printing.";
+  } else if (isA3) {
+    bestFor = "Businesses needing wide-format colour documents, reports, and presentations.";
+  } else if (hasFax || hasAdf) {
+    bestFor = "Small offices and growing teams with regular print, scan, copy, and document handling needs.";
+  } else if (hasWifi || hasDuplex) {
+    bestFor = "Home offices, students, and teams that need convenient everyday wireless printing.";
+  }
+
+  return {
+    description,
+    highlights,
+    bestFor,
+    inkUrl: `https://www.epson.co.in/i/${product.sku}`,
+    paperSize: formatLabel,
+    colourMode: colourLabel,
+    usageType: usageLabel,
+    functionType: workflowLabel,
+    features: featureFragments,
+    searchTerms: [
+      product.name,
+      product.sku,
+      description,
+      bestFor,
+      formatLabel,
+      colourLabel,
+      usageLabel,
+      workflowLabel,
+      ...featureFragments,
+    ],
+  };
+};
+
+const ecoTankProducts = productCards.map((product) => ({
+  ...product,
+  meta: getEcoTankProductMeta(product),
+}));
+
+const EpsonEcoTank = () => {
+  const [searchValue, setSearchValue] = useState("");
+  const [sortValue, setSortValue] = useState("recommended");
+  const [selectedFilters, setSelectedFilters] = useState<EcoTankFilterState>(createEmptyEcoTankFilters);
+
+  const toggleFilter = (group: keyof EcoTankFilterState, value: string) => {
+    setSelectedFilters((current) => ({
+      ...current,
+      [group]: toggleFilterValue(current[group], value),
+    }));
+  };
+
+  const clearFilters = () => {
+    setSearchValue("");
+    setSortValue("recommended");
+    setSelectedFilters(createEmptyEcoTankFilters());
+  };
+
+  const filteredProducts = ecoTankProducts.filter((product) => {
+    const { meta } = product;
+
+    return (
+      matchesSearchQuery(meta.searchTerms, searchValue) &&
+      matchesSelectedOptions([meta.paperSize], selectedFilters.paperSizes) &&
+      matchesSelectedOptions([meta.colourMode], selectedFilters.colourModes) &&
+      matchesSelectedOptions([meta.usageType], selectedFilters.usageTypes) &&
+      matchesSelectedOptions([meta.functionType], selectedFilters.functionTypes) &&
+      matchesSelectedOptions(meta.features, selectedFilters.features)
+    );
+  });
+
+  const sortedProducts =
+    sortValue === "name-asc"
+      ? [...filteredProducts].sort((left, right) => left.name.localeCompare(right.name))
+      : sortValue === "name-desc"
+        ? [...filteredProducts].sort((left, right) => right.name.localeCompare(left.name))
+        : sortValue === "sku"
+          ? [...filteredProducts].sort((left, right) => left.sku.localeCompare(right.sku))
+          : filteredProducts;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+
+      <section
+        className="relative overflow-hidden min-h-[360px] md:min-h-[420px] -mt-16"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(10, 25, 60, 0.78), rgba(10, 25, 60, 0.78)), url('https://zestek.vercel.app/assets/images/products/epson-l3252.png')",
+          backgroundSize: "auto 84%",
+          backgroundPosition: "92% center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="container mx-auto section-padding pt-16 md:pt-20">
+          <span className="mt-4 inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
+            Product Finder
+          </span>
+          <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-primary-foreground">
+            Epson EcoTank Printers
+          </h1>
+          <p className="mt-3 text-sm md:text-base text-primary-foreground/80 max-w-3xl">
+            Browse the full Epson EcoTank range with product filters, official details, and guided support from Zestek
+            Digital LLP.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a href="/contact" className="rounded-full bg-white text-navy px-5 py-2 text-xs font-semibold">
+              Request a Quote
+            </a>
+            <a href="/" className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white">
+              Back to Home
+            </a>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section className="section-padding pt-0">
-      <div className="container mx-auto">
-        <div className="grid lg:grid-cols-[260px_1fr] gap-8">
-          <aside className="space-y-6">
-            <div className="rounded-2xl bg-card border border-border p-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-navy mb-3">
-                <Search className="w-4 h-4" />
-                Search
-              </div>
-              <input
-                placeholder="Search printers..."
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-            </div>
+      <section className="section-padding pt-0">
+        <div className="container mx-auto">
+          <div className="grid items-start gap-8 lg:grid-cols-[320px_minmax(0,1fr)]">
+            <ProductFilterPanel
+              variant="sidebar"
+              className="lg:top-28"
+              eyebrow="EcoTank Smart Filters"
+              title="Filter EcoTank by paper size, workflow, and core features"
+              description="Search by model or SKU, then combine paper size, output type, workflow, and connectivity filters to narrow the shortlist quickly."
+              totalCount={ecoTankProducts.length}
+              resultCount={sortedProducts.length}
+              searchPlaceholder="Search EcoTank model or SKU"
+              searchValue={searchValue}
+              onSearchChange={setSearchValue}
+              onClear={clearFilters}
+              sortValue={sortValue}
+              sortOptions={ecoTankSortOptions}
+              onSortChange={setSortValue}
+              groups={[
+                {
+                  id: "paper-size",
+                  label: "Paper Size",
+                  options: ["A4", "A3", "A3+"],
+                  selected: selectedFilters.paperSizes,
+                  onToggle: (value) => toggleFilter("paperSizes", value),
+                },
+                {
+                  id: "colour-mode",
+                  label: "Output Type",
+                  options: ["Colour", "Monochrome"],
+                  selected: selectedFilters.colourModes,
+                  onToggle: (value) => toggleFilter("colourModes", value),
+                },
+                {
+                  id: "usage-type",
+                  label: "Usage",
+                  options: ["Low Cost Printing", "Business Printing", "High Volume Printing"],
+                  selected: selectedFilters.usageTypes,
+                  onToggle: (value) => toggleFilter("usageTypes", value),
+                },
+                {
+                  id: "function-type",
+                  label: "Function Type",
+                  options: ["Single Function", "Multi-Function", "Business Workflow"],
+                  selected: selectedFilters.functionTypes,
+                  onToggle: (value) => toggleFilter("functionTypes", value),
+                },
+                {
+                  id: "features",
+                  label: "Features",
+                  options: ["Wi-Fi connectivity", "duplex printing", "ADF support", "fax support"],
+                  selected: selectedFilters.features,
+                  onToggle: (value) => toggleFilter("features", value),
+                  helperText: "Choose one or more workflow features to narrow the models that fit your daily use.",
+                },
+              ]}
+            />
 
-            <div className="rounded-2xl bg-card border border-border p-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-navy mb-3">
-                <SlidersHorizontal className="w-4 h-4" />
-                Find the Right EcoTank
+            <div>
+              <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Filtered Products</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Showing <span className="font-semibold text-navy">{sortedProducts.length}</span> of{" "}
+                    {ecoTankProducts.length}
+                  </p>
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground mb-3">
-                Select based on print volume, features, connectivity, and paper size to quickly shortlist the best
-                EcoTank models for your business or daily use.
-              </p>
-              <div className="space-y-2 text-xs text-muted-foreground">
-                <p>Home + office Entry models to higher-duty EcoTank printers in one view.</p>
-                <p>A4 + A3 Choose by paper format first, then compare features and price.</p>
-                <p>Colour + mono Pick the right fit for daily print volume and running cost.</p>
-              </div>
-              <div className="space-y-2">
-                {filters.map((f) => (
-                  <label key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <input type="checkbox" className="accent-navy" />
-                    {f}
-                  </label>
-                ))}
-              </div>
-            </div>
-          </aside>
 
-          <div>
-            <div className="mb-6">
-              <h2 className="section-title text-2xl md:text-3xl">
-                Epson EcoTank Printers for Low-Cost Printing
-              </h2>
-              <p className="section-subtitle mt-2">
-                Explore EcoTank printers designed for low running cost and everyday reliability - ideal for home, office,
-                and small businesses. Easily find the right model based on your print volume, paper size, and usage needs.
-              </p>
-            </div>
+              {sortedProducts.length > 0 ? (
+                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                  {sortedProducts.map((product, index) => {
+                    const { meta } = product;
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {productCards.map((p, i) => (
-                <motion.div
-                  key={`${p.name}-${i}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.03 }}
-                  className="rounded-2xl bg-card border border-border p-5 hover:shadow-lg hover:border-highlight transition-all"
-                >
-                  <div className="h-36 rounded-xl bg-muted/60 border border-border mb-4 flex items-center justify-center overflow-hidden">
-                    <img src={p.imageUrl} alt={p.name} className="h-full w-full object-contain p-3" />
-                  </div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-highlight">
-                      EcoTank
-                    </span>
-                    <span className="text-xs text-muted-foreground">{p.sku}</span>
-                  </div>
-                  <h3 className="font-display font-bold text-navy">{p.name}</h3>
-                  <div className="mt-4 flex gap-2">
-                    <Link
-                      to="/contact"
-                      className="flex-1 rounded-full bg-navy text-primary-foreground py-2 text-xs font-semibold text-center"
-                    >
-                      Quick Enquiry
-                    </Link>
-                    <a
-                      href={p.productUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex-1 rounded-full border border-border py-2 text-xs font-semibold text-navy text-center"
-                    >
-                      View Details
-                    </a>
-                  </div>
-                </motion.div>
-              ))}
+                    return (
+                      <motion.div
+                        key={`${product.name}-${index}`}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.03 }}
+                        className="rounded-2xl bg-card border border-border p-5 hover:shadow-lg hover:border-highlight transition-all"
+                      >
+                        <div className="h-40 rounded-xl bg-muted/60 border border-border mb-4 flex items-center justify-center overflow-hidden">
+                          <img src={product.imageUrl} alt={product.name} className="h-full w-full object-contain p-3" />
+                        </div>
+                        <div className="flex items-center justify-between gap-3 mb-2">
+                          <span className="text-[10px] font-semibold uppercase tracking-widest text-highlight">
+                            EcoTank
+                          </span>
+                          <span className="text-xs text-muted-foreground">{product.sku}</span>
+                        </div>
+                        <h3 className="font-display font-bold text-lg text-navy">{product.name}</h3>
+                        <p className="mt-3 text-sm leading-6 text-muted-foreground">{meta.description}</p>
+                        <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-navy/80">
+                          {meta.highlights.join(" | ")}
+                        </p>
+                        <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                          <span className="font-semibold text-navy">Best for:</span> {meta.bestFor}
+                        </p>
+
+                        <div className="mt-5 space-y-2">
+                          <a
+                            href={product.productUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-navy px-4 py-2.5 text-xs font-semibold text-primary-foreground"
+                          >
+                            Check Price & Details
+                            <ArrowUpRight className="h-4 w-4" />
+                          </a>
+                          <a
+                            href={salesPhoneHref}
+                            className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-border px-4 py-2.5 text-xs font-semibold text-navy"
+                          >
+                            <PhoneCall className="h-4 w-4" />
+                            Call for Best Price
+                          </a>
+                          <div className="grid grid-cols-1 gap-2 pt-1">
+                            <a
+                              href={meta.inkUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
+                            >
+                              <Droplets className="h-4 w-4" />
+                              View Ink & Consumables
+                            </a>
+                            <Link
+                              to="/contact"
+                              className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
+                            >
+                              <Wrench className="h-4 w-4" />
+                              Service & Support
+                            </Link>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="rounded-3xl border border-dashed border-border bg-card px-6 py-12 text-center">
+                  <h3 className="font-display text-xl font-bold text-navy">No EcoTank models match these filters</h3>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Try clearing one or two filters, or search with a broader model term.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="mt-5 rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground"
+                  >
+                    Reset filters
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <Footer />
-  </div>
-);
+      <Footer />
+    </div>
+  );
+};
 
 export default EpsonEcoTank;

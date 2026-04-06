@@ -6,13 +6,13 @@ const testimonials = [
     name: "Radheshyam Pardeshi",
     company: "Print Point",
     quote: "Excellent service, competitive pricing, and dependable after-sales support from Amit and the Zest team.",
-    badge: "5★",
+    badge: "5 Star",
   },
   {
     name: "Vinod",
     company: "Sharda Stationery & Xerox, Mumbai",
     quote: "The digital printer solution helped us save nearly 20% in production cost while improving overall output.",
-    badge: "20%",
+    badge: "20% Savings",
   },
   {
     name: "Darshan Patne",

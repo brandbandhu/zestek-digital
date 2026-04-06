@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { Printer, Building2, Factory, Settings, Info, Calculator } from "lucide-react";
 
 const categories = [
-  { icon: Printer, tag: "Home & Office", title: "Epson EcoTank Printers", desc: "Colour ink tank products for home and small office use.", link: "/products" },
-  { icon: Building2, tag: "Business", title: "Epson WorkForce Printers", desc: "Low running cost business inkjet printers for daily document printing.", link: "/products" },
-  { icon: Factory, tag: "Production", title: "Konica Minolta Production", desc: "High-speed production systems for print shops and commercial use.", link: "/products" },
-  { icon: Settings, tag: "Managed Print", title: "Corporate Solutions / MPS", desc: "Managed print services for secure, cost-controlled office printing.", link: "/products" },
+  { icon: Printer, tag: "Home & Office", title: "Epson EcoTank Printers", desc: "Colour ink tank products for home and small office use.", link: "/epson-ecotank" },
+  { icon: Building2, tag: "Business", title: "Epson WorkForce Printers", desc: "Low running cost business inkjet printers for daily document printing.", link: "/epson-workforce" },
+  { icon: Factory, tag: "Production", title: "Konica Minolta Production", desc: "High-speed production systems for print shops and commercial use.", link: "/konica-production" },
+  { icon: Settings, tag: "Managed Print", title: "Corporate Solutions / MPS", desc: "Managed print services for secure, cost-controlled office printing.", link: "/corporate-solutions" },
   { icon: Info, tag: "About", title: "Why Choose Zestek", desc: "Reliable service and ongoing guidance for profitable operations.", link: "/about" },
-  { icon: Calculator, tag: "ROI", title: "ROI Calculator", desc: "Estimate business print value before choosing the right setup.", link: "/contact" },
+  { icon: Calculator, tag: "ROI", title: "ROI Calculator", desc: "Estimate business print value before choosing the right setup.", link: "/roi-calculator" },
 ];
 
 const ProductCategories = () => (

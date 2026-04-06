@@ -504,7 +504,7 @@
                             "value":  "upto 350GSM"
                         }
                     ],
-        "viewUrl":  "https://zestek.vercel.app/#quote-form"
+        "viewUrl":  "https://bt.konicaminolta.in/products/production-printer/bw-production-print-systems/accurioprint-2100/"
     },
     {
         "name":  "AccurioPrint C7100",
@@ -777,7 +777,7 @@
                             "value":  "Upto 360 GSM"
                         }
                     ],
-        "viewUrl":  "https://zestek.vercel.app/#quote-form"
+        "viewUrl":  "https://bt.konicaminolta.in/products/production-printer/colour-production-print-systems/accuriopress-c4080/"
     },
     {
         "name":  "AccurioPress C84hc",
@@ -972,7 +972,7 @@
                             "value":  "360GSM"
                         }
                     ],
-        "viewUrl":  "https://zestek.vercel.app/#quote-form"
+        "viewUrl":  "https://bt.konicaminolta.in/products/production-printer/colour-production-print-systems/accuriopress-c4070/"
     },
     {
         "name":  "AccurioPress C73hc",
@@ -1089,7 +1089,7 @@
                             "value":  "360GSM"
                         }
                     ],
-        "viewUrl":  "https://zestek.vercel.app/#quote-form"
+        "viewUrl":  "https://bt.konicaminolta.in/products/production-printer/colour-production-print-systems/accurioprint-c4065/"
     },
     {
         "name":  "bizhub C651i",

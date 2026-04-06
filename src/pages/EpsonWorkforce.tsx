@@ -1,9 +1,42 @@
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ProductFilterPanel from "@/components/ProductFilterPanel";
 import { motion } from "framer-motion";
+import { ArrowUpRight, Droplets, PhoneCall, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
+import { matchesSearchQuery, matchesSelectedOptions, toggleFilterValue } from "@/lib/productFilters";
 
-const workforceProducts = [
+type WorkforceProduct = {
+  name: string;
+  productUrl: string;
+  imageUrl: string;
+};
+
+type WorkforceProductMeta = {
+  paperSize: string;
+  outputMode: string;
+  series: string;
+  deviceType: string;
+  usageType: string;
+  features: string[];
+  description: string;
+  highlights: string[];
+  bestFor: string;
+  consumablesUrl: string;
+  searchTerms: string[];
+};
+
+type WorkforceFilterState = {
+  paperSizes: string[];
+  outputModes: string[];
+  series: string[];
+  deviceTypes: string[];
+  usageTypes: string[];
+  features: string[];
+};
+
+const workforceProducts: WorkforceProduct[] = [
   {
     name: "Epson WorkForce Enterprise AM-C4000",
     productUrl:
@@ -104,225 +137,502 @@ const workforceProducts = [
   },
 ];
 
-const EpsonWorkforce = () => (
-  <div className="min-h-screen bg-background">
-    <Header />
+const salesPhoneHref = "tel:+919920909700";
 
-    <section
-      className="pb-10 -mt-16"
-      style={{
-        backgroundImage:
-          "linear-gradient(90deg, rgba(18, 32, 60, 0.92) 0%, rgba(34, 55, 95, 0.88) 40%, rgba(73, 87, 120, 0.6) 65%, rgba(230, 236, 244, 0.12) 100%), url('https://zestek.vercel.app/assets/images/products/epson-am-c4000.png')",
-        backgroundSize: "auto 84%",
-        backgroundPosition: "88% center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <div className="container mx-auto section-padding pt-16 md:pt-20">
-        <span className="mt-4 inline-flex items-center rounded-full bg-white/15 px-4 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
-          Print Buddy of Every Print Shop
-        </span>
-        <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-primary-foreground max-w-3xl">
-          Epson WorkForce Printers for secure, high-output business teams.
-        </h1>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link to="/contact" className="rounded-full bg-white text-navy px-5 py-2 text-xs font-semibold">
-            Quick Enquiry
-          </Link>
-          <a
-            href="https://epsonadvantage.in"
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white"
-          >
-            Download Brochure
-          </a>
-          <Link to="/roi-calculator" className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white">
-            ROI Calculator
-          </Link>
-        </div>
-      </div>
-    </section>
+const createEmptyWorkforceFilters = (): WorkforceFilterState => ({
+  paperSizes: [],
+  outputModes: [],
+  series: [],
+  deviceTypes: [],
+  usageTypes: [],
+  features: [],
+});
 
-    <section className="section-padding pt-0">
-      <div className="container mx-auto">
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-          {[
-            {
-              title: "Business Fit",
-              body: "Finance, HR, admin, and branch-office ready",
-              detail:
-                "Choose a lineup that fits single teams, multi-floor offices, or growing distributed business environments.",
-            },
-            {
-              title: "Device Range",
-              body: "Compact mono to enterprise A3 MFPs",
-              detail:
-                "Compare the full portfolio in one place instead of treating every business print need as the same workflow.",
-            },
-            {
-              title: "IT Advantage",
-              body: "Cleaner control for shared print environments",
-              detail:
-                "Make it easier to manage departments, user behavior, and business-critical output with the right printer fit.",
-            },
-            {
-              title: "Zestek Support",
-              body: "Quote, rollout, service, and consumables",
-              detail:
-                "Get one path from product selection to support planning, so procurement and admin teams can move faster.",
-            },
-          ].map((item) => (
-            <div key={item.title} className="rounded-2xl bg-card border border-border p-5">
-              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">{item.title}</p>
-              <h3 className="mt-3 font-display font-bold text-navy">{item.body}</h3>
-              <p className="mt-3 text-sm text-muted-foreground">{item.detail}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+const workforceSortOptions = [
+  { label: "Recommended", value: "recommended" },
+  { label: "Name (A-Z)", value: "name-asc" },
+  { label: "Name (Z-A)", value: "name-desc" },
+];
 
-    <section className="section-padding pt-0">
-      <div className="container mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-8">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Epson WorkForce</p>
-          <h2 className="section-title text-2xl md:text-3xl mt-2">Business Inkjet Printers</h2>
-          <p className="section-subtitle mt-3">
-            Epson business inkjet printers deliver amazing quality, blazing-fast speeds, exceptional reliability and
-            dependable performance to meet your business needs.
-          </p>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Find the right WorkForce lineup faster. Use the filters below to move from broad product research into a
-            shortlist that matches your print format, workload, and business environment.
-          </p>
-          <div className="mt-5 grid sm:grid-cols-3 gap-3 text-sm text-muted-foreground">
-            <div className="rounded-xl border border-border bg-card p-3">Mono + colour Options for focused teams and shared office fleets.</div>
-            <div className="rounded-xl border border-border bg-card p-3">A4 + A3 Choose by format, not just by price.</div>
-            <div className="rounded-xl border border-border bg-card p-3">Ready to compare Use model details, brochure, and quote flow together.</div>
-          </div>
-        </div>
-        <div className="rounded-2xl bg-card border border-border p-5">
-          <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Epson WorkForce</p>
-          <h3 className="mt-2 font-display font-bold text-navy">Printer information</h3>
-          <div className="mt-4 rounded-xl border border-border bg-muted/60 p-4 flex items-center justify-center">
-            <img
-              src="https://mediaserver.goepson.com/adaptivemedia/rendition?assetDescr=C4000&clid=SAPDAM&id=497de13b25347068dce62d42ce18bbe12579f0ea&prclid=productpictures&prid=515Wx515H&vid=497de13b25347068dce62d42ce18bbe12579f0ea"
-              alt="Epson WorkForce printer"
-              className="h-40 w-full object-contain"
-            />
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-navy">
-            <span className="rounded-full bg-highlight/20 px-3 py-1">Call for Best Price</span>
-            <span className="rounded-full bg-highlight/20 px-3 py-1">View Ink & Consumables</span>
-            <span className="rounded-full bg-highlight/20 px-3 py-1">Service & Support</span>
-          </div>
-        </div>
-      </div>
-    </section>
+const workforceSpotlightPaths: Record<string, string> = {
+  "Epson WorkForce Pro EM-C8100": "/epson-em-c8100",
+  "Epson WorkForce Enterprise AM-M5500": "/epson-m5500",
+};
 
-    <section className="section-padding pt-0">
-      <div className="container mx-auto">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Filter Your Products</p>
-            <p className="text-sm text-muted-foreground mt-1">Showing {workforceProducts.length} of 14</p>
-          </div>
-          <div className="text-sm text-muted-foreground">Sort by: Top Rated · Name (ascending) · Name (descending)</div>
-        </div>
+const buildWorkforceFeatureList = (features: string[]) => {
+  if (features.length === 0) {
+    return "shared office printing";
+  }
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {workforceProducts.map((p, i) => (
-            <motion.div
-              key={`${p.name}-${i}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.03 }}
-              className="rounded-2xl bg-card border border-border p-5 hover:shadow-lg hover:border-highlight transition-all"
+  if (features.length === 1) {
+    return features[0];
+  }
+
+  if (features.length === 2) {
+    return `${features[0]} and ${features[1]}`;
+  }
+
+  return `${features.slice(0, -1).join(", ")}, and ${features.at(-1)}`;
+};
+
+const getWorkforceProductMeta = (product: WorkforceProduct): WorkforceProductMeta => {
+  const source = `${product.name} ${product.productUrl}`.toLowerCase();
+  const isMonochrome =
+    source.includes("mono") || source.includes("monochrome") || source.includes("wf-m") || source.includes("am-m");
+  const isA3Plus = source.includes("a3%2b") || source.includes("a3+");
+  const isA3 = isA3Plus || source.includes("a3");
+  const hasWifi = source.includes("wi-fi") || source.includes("wifi");
+  const hasDuplex = source.includes("duplex");
+  const isMultifunction = source.includes("multifunction") || source.includes("all-in-one") || source.includes("multi-function");
+
+  const paperSize = isA3Plus ? "A3+" : isA3 ? "A3" : "A4";
+  const outputMode = isMonochrome ? "Monochrome" : "Colour";
+  const series = source.includes("enterprise") ? "Enterprise" : "Pro";
+  const deviceType = isMultifunction ? "Multifunction" : "Printer";
+  const usageType = series === "Enterprise" ? "High Volume" : paperSize === "A4" ? "Workgroup" : "Department";
+  const features = [hasWifi ? "Wi-Fi" : null, hasDuplex ? "Duplex" : null].filter(
+    (value): value is string => Boolean(value),
+  );
+  const highlightUsage = usageType === "High Volume" ? "High Volume Printing" : usageType;
+  const highlights = [paperSize, outputMode, highlightUsage, deviceType];
+
+  let description = `${series} ${paperSize} ${outputMode.toLowerCase()} business inkjet ${deviceType.toLowerCase()} built for reliable office printing and lower-interruption workflows.`;
+
+  if (series === "Enterprise" && outputMode === "Colour") {
+    description = `Enterprise ${paperSize} colour multifunction printer built for high-volume departments, centralized output, and secure shared office workflows.`;
+  } else if (series === "Enterprise" && outputMode === "Monochrome") {
+    description = `Enterprise ${paperSize} monochrome multifunction printer designed for document-heavy offices that need fast output and predictable running cost.`;
+  } else if (paperSize === "A3+") {
+    description = `Business-ready ${paperSize} ${outputMode.toLowerCase()} multifunction printer built for wide-format office documents, presentations, and high-value print work.`;
+  } else if (features.length > 0) {
+    description = `${series} ${paperSize} ${outputMode.toLowerCase()} ${deviceType.toLowerCase()} with ${buildWorkforceFeatureList(features.map((feature) => feature.toLowerCase()))} for streamlined office printing.`;
+  }
+
+  let bestFor = "Small offices and teams that need dependable business printing with lower running cost.";
+
+  if (series === "Enterprise" && outputMode === "Colour") {
+    bestFor = "Corporate offices, central print rooms, and high-volume colour document workflows.";
+  } else if (series === "Enterprise" && outputMode === "Monochrome") {
+    bestFor = "Copy-led departments, records teams, and mono-heavy business printing.";
+  } else if (paperSize === "A3+") {
+    bestFor = "Marketing teams, admin departments, and businesses that need wider-format document output.";
+  } else if (usageType === "Department") {
+    bestFor = "Branch offices, admin teams, and shared departments with regular daily printing.";
+  } else if (usageType === "Workgroup") {
+    bestFor = "Small offices, finance teams, and workgroups with predictable everyday print demand.";
+  }
+
+  return {
+    paperSize,
+    outputMode,
+    series,
+    deviceType,
+    usageType,
+    features,
+    description,
+    highlights,
+    bestFor,
+    consumablesUrl: product.productUrl,
+    searchTerms: [product.name, paperSize, outputMode, series, deviceType, usageType, description, bestFor, ...features],
+  };
+};
+
+const normalizedWorkforceProducts = workforceProducts.map((product) => ({
+  ...product,
+  meta: getWorkforceProductMeta(product),
+}));
+
+const EpsonWorkforce = () => {
+  const [searchValue, setSearchValue] = useState("");
+  const [sortValue, setSortValue] = useState("recommended");
+  const [selectedFilters, setSelectedFilters] = useState<WorkforceFilterState>(createEmptyWorkforceFilters);
+
+  const toggleFilter = (group: keyof WorkforceFilterState, value: string) => {
+    setSelectedFilters((current) => ({
+      ...current,
+      [group]: toggleFilterValue(current[group], value),
+    }));
+  };
+
+  const clearFilters = () => {
+    setSearchValue("");
+    setSortValue("recommended");
+    setSelectedFilters(createEmptyWorkforceFilters());
+  };
+
+  const filteredProducts = normalizedWorkforceProducts.filter((product) => {
+    const { meta } = product;
+
+    return (
+      matchesSearchQuery(meta.searchTerms, searchValue) &&
+      matchesSelectedOptions([meta.paperSize], selectedFilters.paperSizes) &&
+      matchesSelectedOptions([meta.outputMode], selectedFilters.outputModes) &&
+      matchesSelectedOptions([meta.series], selectedFilters.series) &&
+      matchesSelectedOptions([meta.deviceType], selectedFilters.deviceTypes) &&
+      matchesSelectedOptions([meta.usageType], selectedFilters.usageTypes) &&
+      matchesSelectedOptions(meta.features, selectedFilters.features)
+    );
+  });
+
+  const sortedProducts =
+    sortValue === "name-asc"
+      ? [...filteredProducts].sort((left, right) => left.name.localeCompare(right.name))
+      : sortValue === "name-desc"
+        ? [...filteredProducts].sort((left, right) => right.name.localeCompare(left.name))
+        : filteredProducts;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+
+      <section
+        className="pb-10 -mt-16"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, rgba(18, 32, 60, 0.92) 0%, rgba(34, 55, 95, 0.88) 40%, rgba(73, 87, 120, 0.6) 65%, rgba(230, 236, 244, 0.12) 100%), url('https://zestek.vercel.app/assets/images/products/epson-am-c4000.png')",
+          backgroundSize: "auto 84%",
+          backgroundPosition: "88% center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="container mx-auto section-padding pt-16 md:pt-20">
+          <span className="mt-4 inline-flex items-center rounded-full bg-white/15 px-4 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
+            Print Buddy of Every Print Shop
+          </span>
+          <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-primary-foreground max-w-3xl">
+            Epson WorkForce Printers for secure, high-output business teams.
+          </h1>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link to="/contact" className="rounded-full bg-white text-navy px-5 py-2 text-xs font-semibold">
+              Quick Enquiry
+            </Link>
+            <a
+              href="https://epsonadvantage.in"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white"
             >
-              <div className="h-40 rounded-xl bg-muted/60 border border-border mb-4 flex items-center justify-center overflow-hidden">
-                <img src={p.imageUrl} alt={p.name} className="h-full w-full object-contain p-3" />
-              </div>
-              <h3 className="font-display font-bold text-navy">{p.name}</h3>
-              <div className="mt-4 flex gap-2">
-                <Link
-                  to="/contact"
-                  className="flex-1 rounded-full bg-navy text-primary-foreground py-2 text-xs font-semibold text-center"
-                >
-                  Quick Enquiry
-                </Link>
-                <a
-                  href={p.productUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex-1 rounded-full border border-border py-2 text-xs font-semibold text-navy text-center"
-                >
-                  View Details
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section className="section-padding pt-0">
-      <div className="container mx-auto">
-        <div className="rounded-3xl border border-border bg-card p-6 md:p-8">
-          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Request a Quote</p>
-              <h3 className="mt-3 font-display font-bold text-navy text-2xl">Zestek Digital LLP</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Managed corporate print solutions with Epson WorkForce expertise.
-              </p>
-            </div>
-            <form className="grid gap-3">
-              <input className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="Name" />
-              <input
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                placeholder="Company Name"
-              />
-              <input
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                placeholder="Work Email"
-              />
-              <input
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                placeholder="Phone Number"
-              />
-              <select className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-                <option>Monthly Print Volume</option>
-                <option>Below 20,000 pages</option>
-                <option>20,000 - 50,000 pages</option>
-                <option>50,000 - 100,000 pages</option>
-                <option>100,000+ pages</option>
-              </select>
-              <textarea
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                rows={4}
-                placeholder="Message / Requirements"
-              />
-              <div className="flex flex-wrap gap-3">
-                <button className="rounded-full bg-navy text-primary-foreground px-5 py-2 text-xs font-semibold">
-                  Quick Enquiry
-                </button>
-                <a
-                  href="tel:+919920909700"
-                  className="rounded-full border border-border px-5 py-2 text-xs font-semibold text-navy"
-                >
-                  Call Now
-                </a>
-              </div>
-            </form>
+              Download Brochure
+            </a>
+            <Link to="/roi-calculator" className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white">
+              ROI Calculator
+            </Link>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <Footer />
-  </div>
-);
+      <section className="section-padding pt-0">
+        <div className="container mx-auto">
+          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {[
+              {
+                title: "Business Fit",
+                body: "Finance, HR, admin, and branch-office ready",
+                detail:
+                  "Choose a lineup that fits single teams, multi-floor offices, or growing distributed business environments.",
+              },
+              {
+                title: "Device Range",
+                body: "Compact mono to enterprise A3 MFPs",
+                detail:
+                  "Compare the full portfolio in one place instead of treating every business print need as the same workflow.",
+              },
+              {
+                title: "IT Advantage",
+                body: "Cleaner control for shared print environments",
+                detail:
+                  "Make it easier to manage departments, user behavior, and business-critical output with the right printer fit.",
+              },
+              {
+                title: "Zestek Support",
+                body: "Quote, rollout, service, and consumables",
+                detail:
+                  "Get one path from product selection to support planning, so procurement and admin teams can move faster.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl bg-card border border-border p-5">
+                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">{item.title}</p>
+                <h3 className="mt-3 font-display font-bold text-navy">{item.body}</h3>
+                <p className="mt-3 text-sm text-muted-foreground">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-padding pt-0">
+        <div className="container mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-8">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Epson WorkForce</p>
+            <h2 className="section-title text-2xl md:text-3xl mt-2">Business Inkjet Printers</h2>
+            <p className="section-subtitle mt-3">
+              Epson business inkjet printers deliver amazing quality, blazing-fast speeds, exceptional reliability and
+              dependable performance to meet your business needs.
+            </p>
+            <p className="mt-4 text-sm text-muted-foreground">
+              Find the right WorkForce lineup faster. Use the filters below to move from broad product research into a
+              shortlist that matches your print format, workload, and business environment.
+            </p>
+            <div className="mt-5 grid sm:grid-cols-3 gap-3 text-sm text-muted-foreground">
+              <div className="rounded-xl border border-border bg-card p-3">
+                Mono + colour Options for focused teams and shared office fleets.
+              </div>
+              <div className="rounded-xl border border-border bg-card p-3">
+                A4 + A3 Choose by format, not just by price.
+              </div>
+              <div className="rounded-xl border border-border bg-card p-3">
+                Ready to compare Use model details, brochure, and quote flow together.
+              </div>
+            </div>
+          </div>
+          <div className="rounded-2xl bg-card border border-border p-5">
+            <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Epson WorkForce</p>
+            <h3 className="mt-2 font-display font-bold text-navy">Printer information</h3>
+            <div className="mt-4 rounded-xl border border-border bg-muted/60 p-4 flex items-center justify-center">
+              <img
+                src="https://mediaserver.goepson.com/adaptivemedia/rendition?assetDescr=C4000&clid=SAPDAM&id=497de13b25347068dce62d42ce18bbe12579f0ea&prclid=productpictures&prid=515Wx515H&vid=497de13b25347068dce62d42ce18bbe12579f0ea"
+                alt="Epson WorkForce printer"
+                className="h-40 w-full object-contain"
+              />
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-navy">
+              <span className="rounded-full bg-highlight/20 px-3 py-1">Call for Best Price</span>
+              <span className="rounded-full bg-highlight/20 px-3 py-1">View Ink & Consumables</span>
+              <span className="rounded-full bg-highlight/20 px-3 py-1">Service & Support</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-padding pt-0">
+        <div className="container mx-auto">
+          <div className="grid items-start gap-8 lg:grid-cols-[320px_minmax(0,1fr)]">
+            <ProductFilterPanel
+              variant="sidebar"
+              className="lg:top-28"
+              eyebrow="WorkForce Smart Filters"
+              title="Filter WorkForce by paper size, output, and office fit"
+              description="Use search and smart filter chips to narrow WorkForce models by print format, mono or colour output, workflow type, and business scale."
+              totalCount={normalizedWorkforceProducts.length}
+              resultCount={sortedProducts.length}
+              searchPlaceholder="Search WorkForce model"
+              searchValue={searchValue}
+              onSearchChange={setSearchValue}
+              onClear={clearFilters}
+              sortValue={sortValue}
+              sortOptions={workforceSortOptions}
+              onSortChange={setSortValue}
+              groups={[
+                {
+                  id: "paper-size",
+                  label: "Paper Size",
+                  options: ["A4", "A3", "A3+"],
+                  selected: selectedFilters.paperSizes,
+                  onToggle: (value) => toggleFilter("paperSizes", value),
+                },
+                {
+                  id: "output-mode",
+                  label: "Output Mode",
+                  options: ["Colour", "Monochrome"],
+                  selected: selectedFilters.outputModes,
+                  onToggle: (value) => toggleFilter("outputModes", value),
+                },
+                {
+                  id: "series",
+                  label: "Series",
+                  options: ["Enterprise", "Pro"],
+                  selected: selectedFilters.series,
+                  onToggle: (value) => toggleFilter("series", value),
+                },
+                {
+                  id: "device-type",
+                  label: "Device Type",
+                  options: ["Multifunction", "Printer"],
+                  selected: selectedFilters.deviceTypes,
+                  onToggle: (value) => toggleFilter("deviceTypes", value),
+                },
+                {
+                  id: "usage-type",
+                  label: "Business Fit",
+                  options: ["Workgroup", "Department", "High Volume"],
+                  selected: selectedFilters.usageTypes,
+                  onToggle: (value) => toggleFilter("usageTypes", value),
+                },
+                {
+                  id: "features",
+                  label: "Features",
+                  options: ["Wi-Fi", "Duplex"],
+                  selected: selectedFilters.features,
+                  onToggle: (value) => toggleFilter("features", value),
+                },
+              ]}
+            />
+
+            <div>
+              <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Filtered Products</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Showing <span className="font-semibold text-navy">{sortedProducts.length}</span> of{" "}
+                    {normalizedWorkforceProducts.length}
+                  </p>
+                </div>
+              </div>
+
+              {sortedProducts.length > 0 ? (
+                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                  {sortedProducts.map((product, index) => (
+                    <motion.div
+                      key={`${product.name}-${index}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.03 }}
+                      className="rounded-2xl bg-card border border-border p-5 hover:shadow-lg hover:border-highlight transition-all"
+                    >
+                      <div className="mb-4 flex h-40 items-center justify-center overflow-hidden rounded-xl border border-border bg-muted/60">
+                        <img src={product.imageUrl} alt={product.name} className="h-full w-full object-contain p-3" />
+                      </div>
+                      <div className="mb-3 flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-widest text-highlight">
+                        <span className="rounded-full bg-highlight/15 px-3 py-1">{product.meta.paperSize}</span>
+                        <span className="rounded-full bg-highlight/15 px-3 py-1">{product.meta.outputMode}</span>
+                        <span className="rounded-full bg-highlight/15 px-3 py-1">{product.meta.deviceType}</span>
+                      </div>
+                      <h3 className="font-display font-bold text-navy">{product.name}</h3>
+                      <p className="mt-3 text-sm leading-6 text-muted-foreground">{product.meta.description}</p>
+                      <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-navy/80">
+                        {product.meta.highlights.join(" | ")}
+                      </p>
+                      <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                        <span className="font-semibold text-navy">Best for:</span> {product.meta.bestFor}
+                      </p>
+
+                      <div className="mt-5 space-y-2">
+                        {workforceSpotlightPaths[product.name] ? (
+                          <Link
+                            to={workforceSpotlightPaths[product.name]}
+                            className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-navy px-4 py-2.5 text-xs font-semibold text-primary-foreground"
+                          >
+                            Check Price & Details
+                            <ArrowUpRight className="h-4 w-4" />
+                          </Link>
+                        ) : (
+                          <a
+                            href={product.productUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-navy px-4 py-2.5 text-xs font-semibold text-primary-foreground"
+                          >
+                            Check Price & Details
+                            <ArrowUpRight className="h-4 w-4" />
+                          </a>
+                        )}
+                        <a
+                          href={salesPhoneHref}
+                          className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-border px-4 py-2.5 text-xs font-semibold text-navy"
+                        >
+                          <PhoneCall className="h-4 w-4" />
+                          Call for Best Price
+                        </a>
+                        <div className="grid grid-cols-1 gap-2 pt-1">
+                          <a
+                            href={product.meta.consumablesUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
+                          >
+                            <Droplets className="h-4 w-4" />
+                            View Ink & Consumables
+                          </a>
+                          <Link
+                            to="/contact"
+                            className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
+                          >
+                            <Wrench className="h-4 w-4" />
+                            Service & Support
+                          </Link>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-3xl border border-dashed border-border bg-card px-6 py-12 text-center">
+                  <h3 className="font-display text-xl font-bold text-navy">No WorkForce models match these filters</h3>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Clear a few filter chips or try a broader search term to see more business printer options.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="mt-5 rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground"
+                  >
+                    Reset filters
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-padding pt-0">
+        <div className="container mx-auto">
+          <div className="rounded-3xl border border-border bg-card p-6 md:p-8">
+            <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Request a Quote</p>
+                <h3 className="mt-3 font-display font-bold text-navy text-2xl">Zestek Digital LLP</h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Managed corporate print solutions with Epson WorkForce expertise.
+                </p>
+              </div>
+              <form className="grid gap-3">
+                <input className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="Name" />
+                <input
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  placeholder="Company Name"
+                />
+                <input
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  placeholder="Work Email"
+                />
+                <input
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  placeholder="Phone Number"
+                />
+                <select className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
+                  <option>Monthly Print Volume</option>
+                  <option>Below 20,000 pages</option>
+                  <option>20,000 - 50,000 pages</option>
+                  <option>50,000 - 100,000 pages</option>
+                  <option>100,000+ pages</option>
+                </select>
+                <textarea
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  rows={4}
+                  placeholder="Message / Requirements"
+                />
+                <div className="flex flex-wrap gap-3">
+                  <button className="rounded-full bg-navy text-primary-foreground px-5 py-2 text-xs font-semibold">
+                    Quick Enquiry
+                  </button>
+                  <a
+                    href="tel:+919920909700"
+                    className="rounded-full border border-border px-5 py-2 text-xs font-semibold text-navy"
+                  >
+                    Call Now
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+};
 
 export default EpsonWorkforce;
