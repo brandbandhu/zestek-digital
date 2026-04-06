@@ -1,14 +1,21 @@
 import { Link } from "react-router-dom";
-import zestekLogo from "../../assets/logo/logo.svg";
+import { Mail, MapPin, Phone } from "lucide-react";
+import zestekLogo from "../../assets/Zestek_Logo.png";
 
 const Footer = () => (
   <footer className="bg-navy text-primary-foreground">
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 pb-14 pt-12">
       <div className="grid gap-12 md:grid-cols-[1.15fr_0.95fr_1.2fr]">
         <div className="max-w-md">
-          <img src={zestekLogo} alt="Zestek" className="mb-6 h-16 w-auto object-contain" />
+          <Link to="/" className="mb-1 inline-flex items-center leading-none">
+            <img
+              src={zestekLogo}
+              alt="Zestek Digital LLP"
+              className="block h-24 w-auto max-w-[340px] object-contain md:h-28 md:max-w-[390px]"
+            />
+          </Link>
           <h3 className="font-display text-3xl font-bold text-primary-foreground">Zestek Digital LLP</h3>
-          <p className="mt-6 text-base leading-9 text-primary-foreground/92">
+          <p className="mt-3 text-base leading-8 text-primary-foreground/92">
             Your trusted partner for Epson and Konica Minolta solutions, helping businesses reduce print cost,
             improve output, and scale with the right technology and products.
           </p>
@@ -47,18 +54,23 @@ const Footer = () => (
 
         <div>
           <h4 className="font-display text-2xl font-bold text-primary-foreground">Get in Touch</h4>
-          <div className="mt-6 space-y-8 text-base leading-9 text-primary-foreground/92">
-            <p>32, Kohinoor Industrial Estate, Near Virwani Industry, Goregaon East, Mumbai 400063</p>
-            <p>
+          <div className="mt-6 space-y-6 text-base leading-8 text-primary-foreground/92">
+            <div className="flex items-start gap-4">
+              <MapPin className="mt-1 h-5 w-5 shrink-0 text-highlight" />
+              <p>32, Kohinoor Industrial Estate, Near Virwani Industry, Goregaon East, Mumbai 400063</p>
+            </div>
+            <div className="flex items-start gap-4">
+              <Phone className="mt-1 h-5 w-5 shrink-0 text-highlight" />
               <a href="tel:+919920909700" className="transition-colors hover:text-highlight">
                 9920909700
               </a>
-            </p>
-            <p>
+            </div>
+            <div className="flex items-start gap-4">
+              <Mail className="mt-1 h-5 w-5 shrink-0 text-highlight" />
               <a href="mailto:Connect@zestek.in" className="transition-colors hover:text-highlight">
                 Connect@zestek.in
               </a>
-            </p>
+            </div>
           </div>
         </div>
       </div>

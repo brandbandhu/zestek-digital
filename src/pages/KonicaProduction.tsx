@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import ProductFilterPanel from "@/components/ProductFilterPanel";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Package, PhoneCall, Wrench } from "lucide-react";
+import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
 import { Link } from "react-router-dom";
 import { konicaProductionProducts } from "@/data/konicaProductionProducts";
 import { matchesSearchQuery, matchesSelectedOptions, parseLeadingNumber, toggleFilterValue } from "@/lib/productFilters";
@@ -196,6 +197,19 @@ const normalizedKonicaProducts = prioritizedKonicaProducts.map((product) => ({
 }));
 
 const KonicaProduction = () => {
+  const { isSubmitting, handleSubmit } = useLeadFormSubmission({
+    formId: "konica-production-pricing-form",
+    formName: "Konica Production Pricing Form",
+    successMessage: "Your production pricing request has been sent. Our team will contact you soon.",
+    mapFields: (fields) => ({
+      name: fields.name,
+      company_name: fields.company_name,
+      work_email: fields.work_email,
+      phone_number: fields.phone_number,
+      monthly_print_volume: fields.monthly_print_volume,
+      message: fields.message,
+    }),
+  });
   const [searchValue, setSearchValue] = useState("");
   const [sortValue, setSortValue] = useState("recommended");
   const [minSpeed, setMinSpeed] = useState("Any");
@@ -408,14 +422,14 @@ const KonicaProduction = () => {
               {sortedProducts.length > 0 ? (
                 <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                   {sortedProducts.map((product, index) => (
-                    <motion.div
-                      key={`${product.name}-${index}`}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.02 }}
-                      className="rounded-2xl bg-card border border-border p-5 hover:shadow-lg hover:border-highlight transition-all"
-                    >
+                      <motion.div
+                        key={`${product.name}-${index}`}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.02 }}
+                        className="flex h-full flex-col rounded-2xl bg-card border border-border p-5 transition-all hover:border-highlight hover:shadow-lg"
+                      >
                       <div className="mb-4 flex h-40 items-center justify-center overflow-hidden rounded-xl border border-border bg-muted/60">
                         <img src={product.imageUrl} alt={product.name} className="h-full w-full object-contain p-3" />
                       </div>
@@ -434,7 +448,7 @@ const KonicaProduction = () => {
                       <p className="mt-4 text-sm leading-6 text-muted-foreground">
                         <span className="font-semibold text-navy">Best for:</span> {product.meta.bestFor}
                       </p>
-                      <div className="mt-5 space-y-2">
+                        <div className="mt-auto space-y-2 pt-5">
                         <a
                           href={product.viewUrl}
                           target="_blank"
@@ -546,31 +560,31 @@ const KonicaProduction = () => {
             </div>
           </div>
 
-          <form className="rounded-2xl bg-card border border-border p-6 grid gap-4">
+          <form onSubmit={handleSubmit} className="grid gap-4 rounded-2xl border border-border bg-card p-6">
             <h3 className="font-display font-bold text-navy text-xl">Request Production Pricing</h3>
             <div className="grid sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-semibold text-navy">Name</label>
-                <input className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+                <input name="name" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
               </div>
               <div>
                 <label className="text-xs font-semibold text-navy">Company Name</label>
-                <input className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+                <input name="company_name" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
               </div>
             </div>
             <div className="grid sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-semibold text-navy">Work Email</label>
-                <input type="email" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+                <input name="work_email" type="email" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
               </div>
               <div>
                 <label className="text-xs font-semibold text-navy">Phone Number</label>
-                <input type="tel" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+                <input name="phone_number" type="tel" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
               </div>
             </div>
             <div>
               <label className="text-xs font-semibold text-navy">Monthly Print Volume</label>
-              <select className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
+              <select name="monthly_print_volume" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
                 <option>Select volume</option>
                 <option>Below 20,000 impressions</option>
                 <option>20,000 - 100,000 impressions</option>
@@ -581,13 +595,18 @@ const KonicaProduction = () => {
             <div>
               <label className="text-xs font-semibold text-navy">Message / Requirements</label>
               <textarea
+                name="message"
                 rows={3}
                 placeholder="Tell us about substrates, finishing, or timeline."
                 className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
               />
             </div>
-            <button className="rounded-full bg-navy text-primary-foreground px-5 py-2 text-xs font-semibold">
-              Submit Request
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {isSubmitting ? "Submitting..." : "Submit Request"}
             </button>
           </form>
         </div>

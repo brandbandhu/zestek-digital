@@ -20,33 +20,44 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-md border-b border-border">
-      <div className="container mx-auto flex h-16 items-center px-4">
-        <Link to="/" className="ml-[30px] flex items-center gap-2">
-          <img src={zestekLogo} alt="Zestek" className="h-20 w-20 rounded-lg object-contain" />
-        </Link>
-
-        <nav className="hidden lg:ml-5 lg:mr-auto lg:flex lg:items-center lg:gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              to={link.path}
-              className={`px-3 py-2 rounded-full text-sm font-medium transition-colors ${
-                location.pathname === link.path
-                  ? "bg-primary text-primary-foreground"
-                  : "text-foreground hover:bg-muted"
-              }`}
-            >
-              {link.label}
+      <div className="container mx-auto h-16 px-4 sm:h-[68px] sm:px-5">
+        <div className="hidden h-full lg:flex lg:items-center lg:justify-center">
+          <div className="flex items-center gap-6 xl:gap-8">
+            <Link to="/" className="flex shrink-0 items-center gap-2">
+              <img src={zestekLogo} alt="Zestek" className="h-10 w-auto rounded-md object-contain xl:h-12" />
             </Link>
-          ))}
-        </nav>
 
-        <button
-          className="ml-auto rounded-lg p-2 hover:bg-muted lg:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+            <nav className="flex items-center gap-1 xl:gap-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.path}
+                  className={`rounded-full px-3 py-2 text-[13px] font-medium transition-colors xl:text-sm ${
+                    location.pathname === link.path
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground hover:bg-muted"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </div>
+
+        <div className="flex h-full items-center justify-between gap-3 lg:hidden">
+          <Link to="/" className="flex shrink-0 items-center gap-2">
+            <img src={zestekLogo} alt="Zestek" className="h-10 w-auto rounded-md object-contain sm:h-11" />
+          </Link>
+
+          <button
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-navy hover:bg-muted"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -55,9 +66,9 @@ const Header = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden overflow-hidden border-t border-border bg-card"
+            className="overflow-hidden border-t border-border bg-card lg:hidden"
           >
-            <div className="px-4 py-4 space-y-1">
+            <div className="max-h-[calc(100vh-4rem)] space-y-1 overflow-y-auto px-4 py-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}

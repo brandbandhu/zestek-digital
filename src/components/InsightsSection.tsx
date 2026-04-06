@@ -14,18 +14,21 @@ const InsightsSection = () => (
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid gap-6 md:grid-cols-3">
         {insightArticles.map((item) => (
-          <article key={item.slug} className="rounded-2xl bg-background border border-border overflow-hidden">
-            <div className="h-40 bg-slate-100 overflow-hidden">
+          <article
+            key={item.slug}
+            className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background"
+          >
+            <div className="h-52 overflow-hidden bg-slate-50">
               <img
                 src={item.imageUrl}
                 alt={item.title}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover object-center"
                 loading="lazy"
               />
             </div>
-            <div className="p-6">
+            <div className="flex flex-1 flex-col p-6">
               <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                 {item.tag}
               </span>
@@ -37,7 +40,7 @@ const InsightsSection = () => (
               <p className="text-sm text-muted-foreground mt-2">{item.cardDescription}</p>
               <Link
                 to={item.route}
-                className="mt-4 inline-flex text-xs font-semibold text-navy hover:text-highlight transition-colors"
+                className="mt-auto pt-6 inline-flex text-xs font-semibold text-navy transition-colors hover:text-highlight"
               >
                 Read more
               </Link>

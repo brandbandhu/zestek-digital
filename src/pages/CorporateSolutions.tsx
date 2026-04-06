@@ -1,9 +1,75 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
+import corporatePrinterImage from "@/assets/hero-printer.jpg";
+import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
+import { BarChart3, Boxes, Printer, ShieldCheck, SlidersHorizontal, Workflow, type LucideIcon } from "lucide-react";
 
-const CorporateSolutions = () => (
-  <div className="min-h-screen bg-background">
+const mpsSnapshotCards: { title: string; body: string; icon: LucideIcon }[] = [
+  {
+    title: "Usage Visibility",
+    body: "Get a clearer picture of volume, cost, and device performance before they turn into budget issues.",
+    icon: BarChart3,
+  },
+  {
+    title: "Supply Control",
+    body: "Monitor toner and consumables before stock-outs interrupt the workday or create rush procurement.",
+    icon: Boxes,
+  },
+  {
+    title: "Service Coordination",
+    body: "Bring support, SLA response, and proactive maintenance under one accountable workflow.",
+    icon: ShieldCheck,
+  },
+];
+
+const mpsStats = [
+  { value: "10-40%", label: "Potential print cost savings with better fleet control." },
+  { value: "1 to 50+", label: "Devices supported across single sites and distributed offices." },
+  { value: "Same-day", label: "Service coordination across Mumbai, MMR, Boisar, and Khopoli." },
+];
+
+const whyChooseCards: { tag: string; title: string; body: string; icon: LucideIcon }[] = [
+  {
+    tag: "EXP",
+    title: "Experience and Expertise",
+    body:
+      "Benefit from a specialist-led approach shaped by real printing-industry experience and a support team focused on business continuity.",
+    icon: Printer,
+  },
+  {
+    tag: "FIT",
+    title: "Customized Solutions",
+    body:
+      "Tailored MPS programs can be aligned to your print volumes, branch structure, workflow requirements, and cost expectations.",
+    icon: SlidersHorizontal,
+  },
+  {
+    tag: "TECH",
+    title: "Advanced Technology with Ongoing Support",
+    body:
+      "Access the latest print technology without heavy upfront cost, backed by continuous support, maintenance, and user guidance.",
+    icon: Workflow,
+  },
+];
+
+const CorporateSolutions = () => {
+  const { isSubmitting, handleSubmit } = useLeadFormSubmission({
+    formId: "corporate-solutions-consultation-form",
+    formName: "Corporate Solutions Consultation Form",
+    successMessage: "Your managed print request has been sent. We will contact you shortly.",
+    mapFields: (fields) => ({
+      name: fields.name,
+      company_name: fields.company_name,
+      work_email: fields.work_email,
+      phone_number: fields.phone_number,
+      current_fleet_size: fields.current_fleet_size,
+      message: fields.message,
+    }),
+  });
+
+  return (
+    <div className="min-h-screen bg-background">
     <Header />
 
     <section
@@ -47,6 +113,54 @@ const CorporateSolutions = () => (
 
     <section className="section-padding pt-8">
       <div className="container mx-auto">
+        <div className="overflow-hidden rounded-3xl border border-border bg-card">
+          <div className="grid gap-6 p-6 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Managed Print Snapshot</p>
+              <h2 className="section-title mt-2 text-2xl md:text-3xl">
+                Less print chaos. Better visibility, service, and cost control.
+              </h2>
+              <p className="section-subtitle mt-3">
+                Managed print works best when the program is easy to understand visually as well as operationally. These
+                are the outcomes most businesses want to improve first.
+              </p>
+            </div>
+            <div className="relative min-h-[320px] overflow-hidden rounded-3xl bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(232,241,255,0.86)_58%,rgba(183,206,234,0.45)_100%)]">
+              <img
+                src={corporatePrinterImage}
+                alt="Managed print services visual with multifunction office printer"
+                className="absolute inset-0 h-full w-full object-cover object-center"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <div className="grid gap-4 border-t border-border px-6 pb-6 pt-2 md:grid-cols-3">
+            {mpsSnapshotCards.map((card, index) => {
+              const Icon = card.icon;
+              const stat = mpsStats[index];
+
+              return (
+                <div key={card.title} className="rounded-2xl border border-border bg-muted/60 p-5">
+                  <div className="flex items-start gap-4">
+                    <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-background text-highlight">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <div>
+                      {stat && <p className="font-display text-xl font-bold text-navy">{stat.value}</p>}
+                      <h3 className="mt-2 font-display font-bold text-navy">{card.title}</h3>
+                      <p className="mt-2 text-sm text-muted-foreground">{card.body}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="section-padding pt-0">
+      <div className="container mx-auto">
         <div className="mb-6">
           <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Why Choose Us</p>
           <h2 className="section-title text-2xl md:text-3xl mt-2">
@@ -58,32 +172,22 @@ const CorporateSolutions = () => (
           </p>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
-          {[
-            {
-              tag: "EXP",
-              title: "Experience and Expertise",
-              body:
-                "Benefit from a specialist-led approach shaped by real printing-industry experience and a support team focused on business continuity.",
-            },
-            {
-              tag: "FIT",
-              title: "Customized Solutions",
-              body:
-                "Tailored MPS programs can be aligned to your print volumes, branch structure, workflow requirements, and cost expectations.",
-            },
-            {
-              tag: "TECH",
-              title: "Advanced Technology with Ongoing Support",
-              body:
-                "Access the latest print technology without heavy upfront cost, backed by continuous support, maintenance, and user guidance.",
-            },
-          ].map((item) => (
-            <div key={item.tag} className="rounded-2xl bg-card border border-border p-5">
-              <span className="text-xs font-semibold uppercase tracking-widest text-highlight">{item.tag}</span>
-              <h3 className="mt-3 font-display font-bold text-navy">{item.title}</h3>
-              <p className="mt-3 text-sm text-muted-foreground">{item.body}</p>
-            </div>
-          ))}
+          {whyChooseCards.map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <div key={item.tag} className="rounded-2xl bg-card border border-border p-5">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-xs font-semibold uppercase tracking-widest text-highlight">{item.tag}</span>
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-highlight/15 text-highlight">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                </div>
+                <h3 className="mt-3 font-display font-bold text-navy">{item.title}</h3>
+                <p className="mt-3 text-sm text-muted-foreground">{item.body}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -174,6 +278,26 @@ const CorporateSolutions = () => (
             Our service model focuses on worry-free printing, automatic supply management, and lower disruption through
             proactive servicing and monitored environments.
           </p>
+          <div className="mt-6 overflow-hidden rounded-3xl border border-border bg-muted/40">
+            <div className="grid gap-0 md:grid-cols-[1.1fr_0.9fr]">
+              <div className="h-64 overflow-hidden bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.96),rgba(232,241,255,0.9)_58%,rgba(183,206,234,0.45)_100%)] md:h-full">
+                <img
+                  src="https://zestek.vercel.app/assets/images/new/site-05-online.jpg"
+                  alt="Managed print support environment and monitored office printing setup"
+                  className="h-full w-full object-cover object-center"
+                  loading="lazy"
+                />
+              </div>
+              <div className="bg-[linear-gradient(135deg,#12203c_0%,#1f3a69_58%,#335792_100%)] p-5 text-white">
+                <p className="text-xs font-semibold uppercase tracking-widest text-white/70">Managed Service Focus</p>
+                <h3 className="mt-3 font-display text-xl font-bold">Support that stays active after installation</h3>
+                <p className="mt-3 text-sm text-white/80">
+                  From service coordination and supplies planning to performance follow-up, the model is built to keep
+                  office printing reliable and easier to manage.
+                </p>
+              </div>
+            </div>
+          </div>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             <li>Worry-free printing with managed warranties, on-site support coordination, and supply replenishment planning.</li>
             <li>Automatic supply management so consumables can be monitored and replaced before they affect productivity.</li>
@@ -322,22 +446,30 @@ const CorporateSolutions = () => (
                 <p>Optimization Cost and uptime improvement</p>
               </div>
             </div>
-            <form className="grid gap-3">
+            <form onSubmit={handleSubmit} className="grid gap-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Request MPS Consultation</p>
-              <input className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="Name" />
+              <input name="name" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="Name" required />
               <input
+                name="company_name"
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                 placeholder="Company Name"
+                required
               />
               <input
+                name="work_email"
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                 placeholder="Work Email"
+                type="email"
+                required
               />
               <input
+                name="phone_number"
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                 placeholder="Phone Number"
+                type="tel"
+                required
               />
-              <select className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
+              <select name="current_fleet_size" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
                 <option>Current Fleet Size</option>
                 <option>1 - 5 devices</option>
                 <option>6 - 20 devices</option>
@@ -345,12 +477,17 @@ const CorporateSolutions = () => (
                 <option>50+ devices</option>
               </select>
               <textarea
+                name="message"
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                 rows={4}
                 placeholder="Message / Requirements"
               />
-              <button className="rounded-full bg-navy text-primary-foreground px-5 py-2 text-xs font-semibold">
-                Submit Request
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {isSubmitting ? "Submitting..." : "Submit Request"}
               </button>
             </form>
           </div>
@@ -360,6 +497,7 @@ const CorporateSolutions = () => (
 
     <Footer />
   </div>
-);
+  );
+};
 
 export default CorporateSolutions;

@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { toast } from "@/hooks/use-toast";
+import { isGoogleSheetsConfigured, submitLeadToGoogleSheets } from "@/lib/googleSheets";
 
 const RoiCalculatorContent = () => {
   const [decisionMakerName, setDecisionMakerName] = useState("");
@@ -194,9 +196,46 @@ const RoiCalculatorContent = () => {
       `Total monthly cost: ${formatInr(roiMetrics.currentCost)} current vs ${formatInr(roiMetrics.projectedCost)} projected`,
     ];
 
+    let sheetsSyncMessage = "";
+
     try {
       setIsGeneratingReport(true);
       setMessage("Generating ROI report PDF...");
+
+      try {
+        await submitLeadToGoogleSheets({
+          formId: "roi-calculator-form",
+          formName: "ROI Calculator Form",
+          pagePath: typeof window !== "undefined" ? window.location.pathname : "",
+          fields: {
+            decision_maker_name: decisionMakerName || "Not provided",
+            company_name: companyName || "Not provided",
+            industry: industryLabel,
+            monthly_mono_pages: monoPages,
+            monthly_color_pages: colorPages,
+            current_printer_fleet_age: fleetAgeLabel,
+            downtime_criticality: downtimeLabel,
+            commercial_selling_mode: isCommercial ? sellingModeLabel : "Not applicable",
+          },
+          context: {
+            recommended_model: recommendation.model,
+            capex_benchmark: recommendation.range.replace("CAPEX benchmark: ", ""),
+            projected_monthly_net_cash_flow: formatInr(roiMetrics.netCashflow),
+            projected_monthly_gross_revenue: formatInr(roiMetrics.revenue),
+            monthly_emi_commitment: formatInr(roiMetrics.emi),
+            estimated_monthly_savings: formatInr(roiMetrics.monthlySavings),
+            estimated_annual_savings: formatInr(roiMetrics.annualSavings),
+            three_year_roi: `${roiMetrics.roi3Years.toFixed(1)}%`,
+          },
+        });
+
+        sheetsSyncMessage = " Lead synced to Google Sheets.";
+      } catch (syncError) {
+        console.error("Unable to sync ROI form to Google Sheets", syncError);
+        sheetsSyncMessage = isGoogleSheetsConfigured
+          ? " PDF downloaded, but Google Sheets sync could not be confirmed."
+          : " PDF downloaded, but Google Sheets is not configured yet.";
+      }
 
       const { jsPDF } = await import("jspdf");
       const doc = new jsPDF({ unit: "pt", format: "a4" });
@@ -303,10 +342,19 @@ const RoiCalculatorContent = () => {
       const safeModel = recommendation.model.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
       doc.save(`${safeCompany}-${safeModel}-roi-report.pdf`);
 
-      setMessage("ROI report generated and PDF download has started.");
+      setMessage(`ROI report generated and PDF download has started.${sheetsSyncMessage}`);
+      toast({
+        title: "ROI report ready",
+        description: `The PDF download has started.${sheetsSyncMessage}`,
+      });
     } catch (error) {
       console.error("Unable to generate ROI report PDF", error);
       setMessage("Unable to generate the ROI PDF right now. Please try again.");
+      toast({
+        variant: "destructive",
+        title: "ROI report failed",
+        description: "We could not generate the ROI report right now. Please try again.",
+      });
     } finally {
       setIsGeneratingReport(false);
     }

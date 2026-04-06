@@ -25,7 +25,7 @@ const partners = [
 ];
 
 const PartnersSection = () => (
-  <section className="section-padding pt-0 bg-card">
+  <section className="section-padding bg-card pt-8 md:pt-10">
     <div className="container mx-auto">
       <div className="text-left mb-10">
         <span className="text-xs font-semibold uppercase tracking-widest text-highlight mb-2 block">
@@ -43,11 +43,16 @@ const PartnersSection = () => (
             transition={{ delay: i * 0.15, duration: 0.5 }}
             className="bg-background rounded-2xl p-6 border border-border hover:shadow-lg transition-shadow group"
           >
-            <div className="flex items-start justify-between gap-3 mb-4">
-              <div className="h-12 w-24 shrink-0 rounded-xl bg-[#E9F2FF] border border-border flex items-center justify-center p-2 sm:w-28">
-                <img src={p.logo} alt={`${p.name} logo`} className="h-full w-full object-contain" />
+            <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-24 shrink-0 items-center justify-center rounded-xl border border-border bg-[#E9F2FF] p-2 sm:w-28">
+                  <img src={p.logo} alt={`${p.name} logo`} className="h-full w-full object-contain" />
+                </div>
+                <span className="text-[10px] font-semibold uppercase leading-tight tracking-[0.22em] text-muted-foreground sm:hidden">
+                  {p.badge}
+                </span>
               </div>
-              <span className="w-[132px] pt-2 text-right text-[10px] font-semibold uppercase leading-tight tracking-[0.22em] text-muted-foreground sm:w-auto sm:pt-1 sm:text-[11px] sm:tracking-widest">
+              <span className="hidden w-[132px] pt-1 text-right text-[11px] font-semibold uppercase leading-tight tracking-widest text-muted-foreground sm:block">
                 {p.badge}
               </span>
             </div>

@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import ProductFilterPanel from "@/components/ProductFilterPanel";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Droplets, PhoneCall, Wrench } from "lucide-react";
+import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
 import { Link } from "react-router-dom";
 import { matchesSearchQuery, matchesSelectedOptions, toggleFilterValue } from "@/lib/productFilters";
 
@@ -243,6 +244,19 @@ const normalizedWorkforceProducts = workforceProducts.map((product) => ({
 }));
 
 const EpsonWorkforce = () => {
+  const { isSubmitting, handleSubmit } = useLeadFormSubmission({
+    formId: "epson-workforce-quote-form",
+    formName: "Epson WorkForce Quote Form",
+    successMessage: "Your WorkForce enquiry has been sent. Our team will get in touch shortly.",
+    mapFields: (fields) => ({
+      name: fields.name,
+      company_name: fields.company_name,
+      work_email: fields.work_email,
+      phone_number: fields.phone_number,
+      monthly_print_volume: fields.monthly_print_volume,
+      message: fields.message,
+    }),
+  });
   const [searchValue, setSearchValue] = useState("");
   const [sortValue, setSortValue] = useState("recommended");
   const [selectedFilters, setSelectedFilters] = useState<WorkforceFilterState>(createEmptyWorkforceFilters);
@@ -317,45 +331,6 @@ const EpsonWorkforce = () => {
             <Link to="/roi-calculator" className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white">
               ROI Calculator
             </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-padding pt-0">
-        <div className="container mx-auto">
-          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-            {[
-              {
-                title: "Business Fit",
-                body: "Finance, HR, admin, and branch-office ready",
-                detail:
-                  "Choose a lineup that fits single teams, multi-floor offices, or growing distributed business environments.",
-              },
-              {
-                title: "Device Range",
-                body: "Compact mono to enterprise A3 MFPs",
-                detail:
-                  "Compare the full portfolio in one place instead of treating every business print need as the same workflow.",
-              },
-              {
-                title: "IT Advantage",
-                body: "Cleaner control for shared print environments",
-                detail:
-                  "Make it easier to manage departments, user behavior, and business-critical output with the right printer fit.",
-              },
-              {
-                title: "Zestek Support",
-                body: "Quote, rollout, service, and consumables",
-                detail:
-                  "Get one path from product selection to support planning, so procurement and admin teams can move faster.",
-              },
-            ].map((item) => (
-              <div key={item.title} className="rounded-2xl bg-card border border-border p-5">
-                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">{item.title}</p>
-                <h3 className="mt-3 font-display font-bold text-navy">{item.body}</h3>
-                <p className="mt-3 text-sm text-muted-foreground">{item.detail}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -482,14 +457,14 @@ const EpsonWorkforce = () => {
               {sortedProducts.length > 0 ? (
                 <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                   {sortedProducts.map((product, index) => (
-                    <motion.div
-                      key={`${product.name}-${index}`}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.03 }}
-                      className="rounded-2xl bg-card border border-border p-5 hover:shadow-lg hover:border-highlight transition-all"
-                    >
+                      <motion.div
+                        key={`${product.name}-${index}`}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.03 }}
+                        className="flex h-full flex-col rounded-2xl bg-card border border-border p-5 transition-all hover:border-highlight hover:shadow-lg"
+                      >
                       <div className="mb-4 flex h-40 items-center justify-center overflow-hidden rounded-xl border border-border bg-muted/60">
                         <img src={product.imageUrl} alt={product.name} className="h-full w-full object-contain p-3" />
                       </div>
@@ -507,7 +482,7 @@ const EpsonWorkforce = () => {
                         <span className="font-semibold text-navy">Best for:</span> {product.meta.bestFor}
                       </p>
 
-                      <div className="mt-5 space-y-2">
+                        <div className="mt-auto space-y-2 pt-5">
                         {workforceSpotlightPaths[product.name] ? (
                           <Link
                             to={workforceSpotlightPaths[product.name]}
@@ -587,21 +562,29 @@ const EpsonWorkforce = () => {
                   Managed corporate print solutions with Epson WorkForce expertise.
                 </p>
               </div>
-              <form className="grid gap-3">
-                <input className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="Name" />
+              <form onSubmit={handleSubmit} className="grid gap-3">
+                <input name="name" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="Name" required />
                 <input
+                  name="company_name"
                   className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                   placeholder="Company Name"
+                  required
                 />
                 <input
+                  name="work_email"
                   className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                   placeholder="Work Email"
+                  type="email"
+                  required
                 />
                 <input
+                  name="phone_number"
                   className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                   placeholder="Phone Number"
+                  type="tel"
+                  required
                 />
-                <select className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
+                <select name="monthly_print_volume" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
                   <option>Monthly Print Volume</option>
                   <option>Below 20,000 pages</option>
                   <option>20,000 - 50,000 pages</option>
@@ -609,13 +592,18 @@ const EpsonWorkforce = () => {
                   <option>100,000+ pages</option>
                 </select>
                 <textarea
+                  name="message"
                   className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                   rows={4}
                   placeholder="Message / Requirements"
                 />
                 <div className="flex flex-wrap gap-3">
-                  <button className="rounded-full bg-navy text-primary-foreground px-5 py-2 text-xs font-semibold">
-                    Quick Enquiry
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {isSubmitting ? "Submitting..." : "Quick Enquiry"}
                   </button>
                   <a
                     href="tel:+919920909700"
@@ -630,9 +618,9 @@ const EpsonWorkforce = () => {
         </div>
       </section>
 
-      <Footer />
-    </div>
-  );
+    <Footer />
+  </div>
+);
 };
 
 export default EpsonWorkforce;

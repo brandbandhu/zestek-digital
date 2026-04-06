@@ -555,14 +555,14 @@ const EpsonEcoTank = () => {
                     const { meta } = product;
 
                     return (
-                      <motion.div
-                        key={`${product.name}-${index}`}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.03 }}
-                        className="rounded-2xl bg-card border border-border p-5 hover:shadow-lg hover:border-highlight transition-all"
-                      >
+                        <motion.div
+                          key={`${product.name}-${index}`}
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.03 }}
+                          className="flex h-full flex-col rounded-2xl bg-card border border-border p-5 transition-all hover:border-highlight hover:shadow-lg"
+                        >
                         <div className="h-40 rounded-xl bg-muted/60 border border-border mb-4 flex items-center justify-center overflow-hidden">
                           <img src={product.imageUrl} alt={product.name} className="h-full w-full object-contain p-3" />
                         </div>
@@ -581,7 +581,7 @@ const EpsonEcoTank = () => {
                           <span className="font-semibold text-navy">Best for:</span> {meta.bestFor}
                         </p>
 
-                        <div className="mt-5 space-y-2">
+                          <div className="mt-auto space-y-2 pt-5">
                           <a
                             href={product.productUrl}
                             target="_blank"
