@@ -14,15 +14,18 @@ import PageMeta from "@/components/PageMeta";
 const Index = () => (
   <div className="min-h-screen">
     <PageMeta
-      title="Zestek Digital Solutions | Epson, Konica Minolta, MPS & ROI Calculator"
-      description="Explore Epson EcoTank, Epson WorkForce, Konica Minolta production printers, and managed print services from Zestek Digital LLP in Mumbai."
+      title="Zestek Digital LLP | Official Zestek Website for Epson, Konica Minolta & Managed Print"
+      description="Official Zestek Digital LLP website for Epson EcoTank, Epson WorkForce, Konica Minolta production printers, managed print services, and print ROI planning in Mumbai."
       keywords={[
+        "Zestek",
+        "Zestek Digital LLP",
+        "Zestek Digital Solutions",
+        "zestek.in",
         "Epson printers Mumbai",
         "Konica Minolta production printers India",
         "Managed print services Mumbai",
         "business printer solutions",
         "printer ROI calculator",
-        "Zestek Digital LLP",
       ]}
       canonicalPath="/"
       image="/zestek-logo.png"
@@ -31,6 +34,8 @@ const Index = () => (
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Zestek Digital LLP",
+          alternateName: ["Zestek", "Zestek Digital Solutions"],
+          legalName: "Zestek Digital LLP",
           url: "https://zestek.in/",
           logo: "https://zestek.in/zestek-logo.png",
           contactPoint: [
@@ -44,8 +49,26 @@ const Index = () => (
         },
         {
           "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "Zestek Digital LLP",
+          alternateName: ["Zestek", "Zestek Digital Solutions"],
+          url: "https://zestek.in/",
+          image: "https://zestek.in/zestek-logo.png",
+          telephone: "+91-9920909700",
+          email: "connect@zestek.in",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "32, Kohinoor Industrial Estate, Near Virwani Industry, Goregaon East",
+            addressLocality: "Mumbai",
+            addressRegion: "Maharashtra",
+            postalCode: "400063",
+            addressCountry: "IN",
+          },
+        },
+        {
+          "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "Zestek Digital Solutions",
+          name: "Zestek Digital LLP",
           url: "https://zestek.in/",
           potentialAction: {
             "@type": "SearchAction",
