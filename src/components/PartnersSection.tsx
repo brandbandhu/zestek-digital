@@ -32,6 +32,11 @@ const PartnersSection = () => (
           Our Partners
         </span>
         <h2 className="section-title">Reliable Brands. Smarter Print Solutions.</h2>
+        <p className="section-subtitle mt-4 max-w-4xl">
+          Looking for <strong className="font-semibold text-navy">Zestek printer solutions</strong>? Zestek Digital LLP
+          helps businesses choose the right Epson printers, Konica Minolta production systems, and managed print
+          services from one official website.
+        </p>
       </div>
       <div className="grid md:grid-cols-3 gap-8">
         {partners.map((p, i) => (

@@ -14,10 +14,13 @@ import PageMeta from "@/components/PageMeta";
 const Index = () => (
   <div className="min-h-screen">
     <PageMeta
-      title="Zestek Digital LLP | Official Zestek Website for Epson, Konica Minolta & Managed Print"
-      description="Official Zestek Digital LLP website for Epson EcoTank, Epson WorkForce, Konica Minolta production printers, managed print services, and print ROI planning in Mumbai."
+      title="Zestek Printer Solutions | Official Zestek Digital LLP Website"
+      description="Official Zestek Digital LLP website for Zestek printer solutions, Epson EcoTank, Epson WorkForce, Konica Minolta production printers, managed print services, and print ROI planning in Mumbai."
       keywords={[
         "Zestek",
+        "zestek printer",
+        "zestek printers",
+        "Zestek printer solutions",
         "Zestek Digital LLP",
         "Zestek Digital Solutions",
         "zestek.in",
@@ -34,7 +37,7 @@ const Index = () => (
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Zestek Digital LLP",
-          alternateName: ["Zestek", "Zestek Digital Solutions"],
+          alternateName: ["Zestek", "Zestek Digital Solutions", "Zestek Printer Solutions"],
           legalName: "Zestek Digital LLP",
           url: "https://zestek.in/",
           logo: "https://zestek.in/zestek-logo.png",
@@ -51,7 +54,7 @@ const Index = () => (
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           name: "Zestek Digital LLP",
-          alternateName: ["Zestek", "Zestek Digital Solutions"],
+          alternateName: ["Zestek", "Zestek Digital Solutions", "Zestek Printer Solutions"],
           url: "https://zestek.in/",
           image: "https://zestek.in/zestek-logo.png",
           telephone: "+91-9920909700",
