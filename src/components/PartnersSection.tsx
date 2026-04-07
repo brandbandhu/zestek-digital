@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 import logo1 from "@/assets/logo/1.jpeg";
 import logo2 from "@/assets/logo/2.png";
 import logo3 from "@/assets/logo/3.jpeg";
@@ -27,26 +28,33 @@ const partners = [
 const PartnersSection = () => (
   <section className="section-padding bg-card pt-8 md:pt-10">
     <div className="container mx-auto">
-      <div className="text-left mb-10">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={defaultViewport}
+        className="mb-10 text-left"
+      >
         <span className="text-xs font-semibold uppercase tracking-widest text-highlight mb-2 block">
           Our Partners
         </span>
-        <h2 className="section-title">Reliable Brands. Smarter Print Solutions.</h2>
-        <p className="section-subtitle mt-4 max-w-4xl">
+        <motion.h2 variants={fadeUp} className="section-title">Reliable Brands. Smarter Print Solutions.</motion.h2>
+        <motion.p variants={fadeUp} className="section-subtitle mt-4 max-w-4xl">
           Looking for <strong className="font-semibold text-navy">Zestek printer solutions</strong>? Zestek Digital LLP
           helps businesses choose the right Epson printers, Konica Minolta production systems, and managed print
           services from one official website.
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
       <div className="grid md:grid-cols-3 gap-8">
         {partners.map((p, i) => (
           <motion.div
             key={p.name}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.15, duration: 0.5 }}
-            className="bg-background rounded-2xl p-6 border border-border hover:shadow-lg transition-shadow group"
+            whileHover={{ y: -8 }}
+            viewport={defaultViewport}
+            transition={{ delay: i * 0.12, duration: 0.55 }}
+            className="hover-lift surface-glow group rounded-2xl border border-border bg-background p-6 transition-shadow"
           >
             <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex items-center gap-3">

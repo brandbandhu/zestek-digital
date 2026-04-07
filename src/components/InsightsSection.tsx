@@ -1,24 +1,39 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { insightArticles } from "@/data/insightsArticles";
+import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 
 const InsightsSection = () => (
   <section className="section-padding bg-card">
     <div className="container mx-auto">
-      <div className="text-center mb-12">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={defaultViewport}
+        className="mb-12 text-center"
+      >
         <span className="text-xs font-semibold uppercase tracking-widest text-highlight mb-2 block">
-          Insights
+          Blog
         </span>
-        <h2 className="section-title">Insights for smarter home &amp; office printing</h2>
-        <p className="section-subtitle mx-auto mt-3">
-          Curated guides and updates to help you choose the right print setup.
-        </p>
-      </div>
+        <motion.h2 variants={fadeUp} className="section-title">
+          Latest blog &amp; print insights
+        </motion.h2>
+        <motion.p variants={fadeUp} className="section-subtitle mx-auto mt-3">
+          Read useful guides and updates to help you choose the right print setup.
+        </motion.p>
+      </motion.div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        {insightArticles.map((item) => (
-          <article
+        {insightArticles.map((item, index) => (
+          <motion.article
             key={item.slug}
-            className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background"
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -8 }}
+            viewport={defaultViewport}
+            transition={{ duration: 0.55, delay: index * 0.08 }}
+            className="group surface-glow hover-lift flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background"
           >
             <div className="aspect-[16/9] w-full overflow-hidden bg-slate-50">
               <img
@@ -45,7 +60,7 @@ const InsightsSection = () => (
                 Read more
               </Link>
             </div>
-          </article>
+          </motion.article>
         ))}
       </div>
     </div>

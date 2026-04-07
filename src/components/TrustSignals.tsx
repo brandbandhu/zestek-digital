@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Award, ShieldCheck, Wrench, PackagePlus } from "lucide-react";
+import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 
 const signals = [
   { icon: Award, title: "Epson Authorized Partner", desc: "Certified guidance and support for Epson SOHO and WorkForce printer deployments." },
@@ -11,24 +12,33 @@ const signals = [
 const TrustSignals = () => (
   <section className="section-padding bg-card">
     <div className="container mx-auto">
-      <div className="text-left mb-10">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={defaultViewport}
+        className="mb-10 text-left"
+      >
         <span className="text-xs font-semibold uppercase tracking-widest text-highlight mb-2 block">
-          Awards &amp; Certifications
+          Achievements
         </span>
-        <h2 className="section-title">Trust signals that build confidence from day one</h2>
-        <p className="section-subtitle mt-3">
-          Certified partners, responsive service, and consistent installations.
-        </p>
-      </div>
+        <motion.h2 variants={fadeUp} className="section-title">
+          Achievements that build confidence from day one
+        </motion.h2>
+        <motion.p variants={fadeUp} className="section-subtitle mt-3">
+          Authorized partnerships, responsive service, and consistent installations.
+        </motion.p>
+      </motion.div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {signals.map((s, i) => (
           <motion.div
             key={s.title}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className="rounded-2xl bg-background p-6 border border-border"
+            whileHover={{ y: -8 }}
+            viewport={defaultViewport}
+            transition={{ duration: 0.55, delay: i * 0.08 }}
+            className="hover-lift surface-glow rounded-2xl border border-border bg-background p-6"
           >
             <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center mb-4">
               <s.icon className="w-5 h-5 text-navy" />

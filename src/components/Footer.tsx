@@ -1,17 +1,26 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 import zestekLogo from "../../assets/Zestek_Logo.png";
 
 const Footer = () => (
   <footer className="bg-navy text-primary-foreground">
     <div className="container mx-auto px-4 pb-14 pt-12">
-      <div className="grid gap-10 md:grid-cols-[1.15fr_0.95fr_1.2fr]">
-        <div className="max-w-md md:max-w-none">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={defaultViewport}
+        className="grid gap-10 md:grid-cols-[1.15fr_0.95fr_1.2fr]"
+      >
+        <motion.div variants={fadeUp} className="max-w-md md:max-w-none">
           <Link to="/" className="mb-2 inline-flex items-center leading-none">
-            <img
+            <motion.img
               src={zestekLogo}
               alt="Zestek Digital LLP"
-              className="block h-20 w-auto max-w-[300px] object-contain sm:h-24 sm:max-w-[340px] md:h-28 md:max-w-[390px]"
+              className="animate-float-soft block h-20 w-auto max-w-[300px] object-contain sm:h-24 sm:max-w-[340px] md:h-28 md:max-w-[390px]"
+              whileHover={{ scale: 1.04 }}
             />
           </Link>
           <h3 className="font-display text-2xl font-bold text-primary-foreground sm:text-3xl">Zestek Digital LLP</h3>
@@ -19,9 +28,9 @@ const Footer = () => (
             Your trusted partner for Epson and Konica Minolta solutions, helping businesses reduce print cost,
             improve output, and scale with the right technology and products.
           </p>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div variants={fadeUp}>
           <h4 className="font-display text-xl font-bold text-primary-foreground sm:text-2xl">Product Tabs</h4>
           <ul className="mt-6 space-y-6 text-base text-primary-foreground/92">
             <li>
@@ -50,9 +59,9 @@ const Footer = () => (
               </Link>
             </li>
           </ul>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div variants={fadeUp}>
           <h4 className="font-display text-xl font-bold text-primary-foreground sm:text-2xl">Get in Touch</h4>
           <div className="mt-6 space-y-6 text-base leading-8 text-primary-foreground/92">
             <div className="flex items-start gap-4">
@@ -72,10 +81,16 @@ const Footer = () => (
               </a>
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="mt-12 border-t border-primary-foreground/10 pt-8 text-center text-sm font-semibold text-primary-foreground/85">
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={defaultViewport}
+        transition={{ duration: 0.55, delay: 0.1 }}
+        className="mt-12 border-t border-primary-foreground/10 pt-8 text-center text-sm font-semibold text-primary-foreground/85"
+      >
         {"\u00A9"} {new Date().getFullYear()} Zestek Digital LLP Designed by{" "}
         <a
           href="https://webakoof.com"
@@ -86,7 +101,7 @@ const Footer = () => (
           webakoof
         </a>
         . All rights reserved.
-      </div>
+      </motion.div>
     </div>
   </footer>
 );

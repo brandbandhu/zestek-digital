@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Printer, Building2, Factory, Settings, Info, Calculator } from "lucide-react";
-import corporatePrinterImage from "@/assets/hero-printer.jpg";
+import { officeShowroomImage, printFloorImage, printWorkspaceImage } from "@/lib/siteVisuals";
+import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 
 const categories = [
   {
@@ -36,7 +37,7 @@ const categories = [
     title: "Corporate Solutions / MPS",
     desc: "Managed print services for secure, cost-controlled office printing.",
     link: "/corporate-solutions",
-    imageUrl: corporatePrinterImage,
+    imageUrl: printFloorImage,
   },
   {
     icon: Info,
@@ -44,7 +45,7 @@ const categories = [
     title: "Why Choose Zestek",
     desc: "Reliable service and ongoing guidance for profitable operations.",
     link: "/about",
-    imageUrl: "https://zestek.vercel.app/assets/images/new/site-05-online.jpg",
+    imageUrl: officeShowroomImage,
   },
   {
     icon: Calculator,
@@ -52,34 +53,41 @@ const categories = [
     title: "ROI Calculator",
     desc: "Estimate business print value before choosing the right setup.",
     link: "/roi-calculator",
-    imageUrl: "https://zestek.vercel.app/assets/images/products/epson-am-c4000.png",
+    imageUrl: printWorkspaceImage,
   },
 ];
 
 const ProductCategories = () => (
   <section className="section-padding">
     <div className="container mx-auto">
-      <div className="text-left mb-10">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={defaultViewport}
+        className="mb-10 text-left"
+      >
         <span className="text-xs font-semibold uppercase tracking-widest text-highlight mb-2 block">
-          Categories
+          Categories &amp; Solutions
         </span>
-        <h2 className="section-title">Choose the right category from the home page</h2>
-        <p className="section-subtitle mt-4">
-          Start with the product range that matches your business need.
-        </p>
-      </div>
+        <motion.h2 variants={fadeUp} className="section-title">Choose the right category and print solution</motion.h2>
+        <motion.p variants={fadeUp} className="section-subtitle mt-4">
+          Start with the printer range that matches your print volume, application, and business goals.
+        </motion.p>
+      </motion.div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((c, i) => (
           <motion.div
             key={c.title}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
+            whileHover={{ y: -8 }}
+            viewport={defaultViewport}
+            transition={{ duration: 0.55, delay: i * 0.08 }}
           >
             <Link
               to={c.link}
-              className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all hover:border-highlight hover:shadow-md md:p-6"
+              className="hover-lift surface-glow group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all hover:border-highlight hover:shadow-md md:p-6"
             >
               <div className="mb-4 overflow-hidden rounded-xl border border-border bg-muted/60">
                 <img

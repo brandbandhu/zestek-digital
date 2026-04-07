@@ -1,10 +1,14 @@
+import { useEffect, useRef, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import aboutPrinterImage from "@/assets/hero-printer.jpg";
 import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
 import PageMeta from "@/components/PageMeta";
 import { BadgeCheck, BriefcaseBusiness, Handshake, MapPin, Printer, ShieldCheck, Wrench, type LucideIcon } from "lucide-react";
+import { useInView } from "framer-motion";
+import aboutHeroImage from "../../assets/about us/2.jpg";
+import aboutDeskPrinterImage from "../../assets/about us/3.jpg";
+import aboutWorkspaceImage from "../../assets/about us/4.jpg";
+import aboutClientSupportImage from "../../assets/about us/2.jpg";
 
 const differenceCards = [
   {
@@ -85,16 +89,37 @@ const trustPoints = [
   "Real client installations",
 ];
 
-const aboutStats: { value: string; label: string; icon: LucideIcon }[] = [
+type AboutStat = {
+  value: string;
+  label: string;
+  icon: LucideIcon;
+  animatedValue?: {
+    end: number;
+    suffix?: string;
+    durationMs?: number;
+  };
+};
+
+const aboutStats: AboutStat[] = [
   {
     value: "14+",
     label: "Years guiding print decisions across office and production use cases.",
     icon: BadgeCheck,
+    animatedValue: {
+      end: 14,
+      suffix: "+",
+      durationMs: 1400,
+    },
   },
   {
     value: "300+",
     label: "Businesses supported with product-fit, deployment, and service planning.",
     icon: BriefcaseBusiness,
+    animatedValue: {
+      end: 300,
+      suffix: "+",
+      durationMs: 1800,
+    },
   },
   {
     value: "Mumbai & MMR",
@@ -102,6 +127,52 @@ const aboutStats: { value: string; label: string; icon: LucideIcon }[] = [
     icon: MapPin,
   },
 ];
+
+type AnimatedStatValueProps = {
+  end: number;
+  suffix?: string;
+  durationMs?: number;
+  className?: string;
+};
+
+const AnimatedStatValue = ({ end, suffix = "", durationMs = 1400, className }: AnimatedStatValueProps) => {
+  const counterRef = useRef<HTMLParagraphElement | null>(null);
+  const isInView = useInView(counterRef, { once: true, amount: 0.7 });
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) {
+      return;
+    }
+
+    let frameId = 0;
+    const startedAt = performance.now();
+
+    const tick = (now: number) => {
+      const progress = Math.min((now - startedAt) / durationMs, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+      setCount(Math.round(end * easedProgress));
+
+      if (progress < 1) {
+        frameId = window.requestAnimationFrame(tick);
+      }
+    };
+
+    frameId = window.requestAnimationFrame(tick);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [durationMs, end, isInView]);
+
+  return (
+    <p ref={counterRef} className={className}>
+      {count}
+      {suffix}
+    </p>
+  );
+};
 
 const About = () => {
   const { isSubmitting, handleSubmit } = useLeadFormSubmission({
@@ -139,7 +210,7 @@ const About = () => {
       className="relative overflow-hidden -mt-16"
       style={{
         backgroundImage:
-          "linear-gradient(rgba(10, 25, 60, 0.75), rgba(10, 25, 60, 0.75)), url('https://zestek.vercel.app/assets/images/new/site-05-online.jpg')",
+          `linear-gradient(rgba(10, 25, 60, 0.75), rgba(10, 25, 60, 0.75)), url('${aboutHeroImage}')`,
         backgroundSize: "cover",
         backgroundPosition: "right center",
       }}
@@ -175,12 +246,12 @@ const About = () => {
       <div className="container mx-auto grid gap-10 lg:grid-cols-[1.05fr_1fr]">
         <article className="overflow-hidden rounded-3xl border border-border bg-card">
           <div className="grid gap-4 p-4 md:grid-cols-[1.05fr_0.95fr]">
-            <div className="h-72 overflow-hidden rounded-2xl md:h-full">
-              <img
-                src="https://zestek.vercel.app/assets/images/new/site-05-online.jpg"
-                alt="Professional print setup and client installation environment supported by Zestek Digital LLP"
-                className="h-full w-full object-cover"
-                loading="lazy"
+              <div className="h-72 overflow-hidden rounded-2xl md:h-full">
+                <img
+                  src={aboutClientSupportImage}
+                  alt="Professional print setup and client installation environment supported by Zestek Digital LLP"
+                  className="h-full w-full object-cover"
+                  loading="lazy"
               />
             </div>
             <div className="grid gap-4">
@@ -194,13 +265,13 @@ const About = () => {
                   installation is done.
                 </p>
               </div>
-              <div className="h-48 overflow-hidden rounded-2xl border border-border bg-muted md:h-full">
-                <img
-                  src={aboutPrinterImage}
-                  alt="Business printer setup representing Zestek Digital LLP support and deployment expertise"
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
+                <div className="h-48 overflow-hidden rounded-2xl border border-border bg-muted md:h-full">
+                  <img
+                    src={aboutWorkspaceImage}
+                    alt="Business workspace representing Zestek Digital LLP guidance, consultation, and print planning"
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
               </div>
             </div>
           </div>
@@ -232,7 +303,16 @@ const About = () => {
                     <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-highlight/15 text-highlight">
                       <Icon className="h-5 w-5" />
                     </span>
-                    <p className="mt-4 font-display text-xl font-bold text-navy">{item.value}</p>
+                    {item.animatedValue ? (
+                      <AnimatedStatValue
+                        end={item.animatedValue.end}
+                        suffix={item.animatedValue.suffix}
+                        durationMs={item.animatedValue.durationMs}
+                        className="mt-4 font-display text-xl font-bold text-navy"
+                      />
+                    ) : (
+                      <p className="mt-4 font-display text-xl font-bold text-navy">{item.value}</p>
+                    )}
                     <p className="mt-2 text-sm text-muted-foreground">{item.label}</p>
                   </div>
                 );
@@ -266,7 +346,6 @@ const About = () => {
             When you choose Zestek, you are not just buying a printer. You are choosing a long-term print partner.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            <span className="text-sm font-semibold text-navy">Discuss your requirement</span>
             <div className="flex flex-wrap gap-3">
               <a href="#about-contact" className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground">
                 Discuss Your Requirement
@@ -332,85 +411,96 @@ const About = () => {
       </div>
     </section>
 
-    <TestimonialsSection />
-
-    <section className="section-padding pt-0" id="about-contact">
-      <div className="container mx-auto grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+    <section className="section-padding pt-8 md:pt-10 lg:pt-12" id="about-contact">
+      <div className="container mx-auto mt-8 grid items-start gap-8 md:mt-10 lg:grid-cols-[1.1fr_0.9fr]">
         <article className="rounded-2xl border border-border bg-card p-6">
           <span className="inline-flex items-center rounded-full bg-highlight/15 px-3 py-1 text-xs font-semibold text-highlight">
             Talk to our experts for the right solution & best pricing
           </span>
-          <h2 className="mt-4 text-2xl font-bold text-navy md:text-3xl">Need help planning your next print setup?</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Talk to us for sales guidance and best pricing. We will guide you to the right next step.
-          </p>
-          <div className="mt-6 space-y-4">
-            <div className="rounded-xl border border-border bg-muted/60 p-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Sales</p>
-              <p className="mt-2 text-sm">
-                <a href="tel:+919920909700" className="font-semibold text-navy">
-                  9920909700
-                </a>
-              </p>
-              <p className="text-sm text-muted-foreground">
-                <a href="mailto:connect@zestek.in">connect@zestek.in</a>
-              </p>
-            </div>
+          <div className="mt-6 h-96 overflow-hidden rounded-2xl border border-border md:h-[30rem] lg:h-[34rem]">
+            <img
+              src={aboutDeskPrinterImage}
+              alt="Office printer setup representing print planning and business guidance"
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
           </div>
         </article>
 
-        <form onSubmit={handleSubmit} className="grid gap-4 rounded-2xl border border-border bg-card p-6">
-          <h3 className="font-display text-xl font-bold text-navy">Talk to our experts for the right solution & best pricing</h3>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label className="text-xs font-semibold text-navy">Name</label>
-              <input name="name" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
+        <div className="grid content-start self-start gap-6">
+          <form onSubmit={handleSubmit} className="grid content-start self-start gap-4 rounded-2xl border border-border bg-card p-6">
+            <h3 className="font-display text-xl font-bold text-navy">Talk to our experts for the right solution & best pricing</h3>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className="text-xs font-semibold text-navy">Name</label>
+                <input name="name" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-navy">Company Name</label>
+                <input name="company_name" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className="text-xs font-semibold text-navy">Work Email</label>
+                <input name="work_email" type="email" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-navy">Phone Number</label>
+                <input name="phone_number" type="tel" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
+              </div>
+            </div>
+            <div className="grid gap-3">
+              <div>
+                <label className="text-xs font-semibold text-navy">Request Type</label>
+                <select name="request_type" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required>
+                  <option value="">Select request type</option>
+                  <option>New Printer Quote</option>
+                  <option>Service Request</option>
+                  <option>AMC / Contract Renewal</option>
+                  <option>Free Print Audit</option>
+                </select>
+              </div>
             </div>
             <div>
-              <label className="text-xs font-semibold text-navy">Company Name</label>
-              <input name="company_name" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
+              <label className="text-xs font-semibold text-navy">Message / Requirements</label>
+              <textarea
+                name="message"
+                rows={3}
+                placeholder="Share your requirement or support concern."
+                className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                required
+              />
             </div>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label className="text-xs font-semibold text-navy">Work Email</label>
-              <input name="work_email" type="email" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {isSubmitting ? "Submitting..." : "Submit Request"}
+            </button>
+          </form>
+
+          <article className="rounded-2xl border border-border bg-card p-6">
+            <h2 className="text-2xl font-bold text-navy md:text-3xl">Need help planning your next print setup?</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Talk to us for sales guidance and best pricing. We will guide you to the right next step.
+            </p>
+            <div className="mt-6 space-y-4">
+              <div className="rounded-xl border border-border bg-muted/60 p-4">
+                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Sales</p>
+                <p className="mt-2 text-sm">
+                  <a href="tel:+919920909700" className="font-semibold text-navy">
+                    9920909700
+                  </a>
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  <a href="mailto:connect@zestek.in">connect@zestek.in</a>
+                </p>
+              </div>
             </div>
-            <div>
-              <label className="text-xs font-semibold text-navy">Phone Number</label>
-              <input name="phone_number" type="tel" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
-            </div>
-          </div>
-          <div className="grid gap-3">
-            <div>
-              <label className="text-xs font-semibold text-navy">Request Type</label>
-              <select name="request_type" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required>
-                <option value="">Select request type</option>
-                <option>New Printer Quote</option>
-                <option>Service Request</option>
-                <option>AMC / Contract Renewal</option>
-                <option>Free Print Audit</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label className="text-xs font-semibold text-navy">Message / Requirements</label>
-            <textarea
-              name="message"
-              rows={3}
-              placeholder="Share your requirement or support concern."
-              className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isSubmitting ? "Submitting..." : "Submit Request"}
-          </button>
-        </form>
+          </article>
+        </div>
       </div>
     </section>
 

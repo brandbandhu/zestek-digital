@@ -1,9 +1,9 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
-import corporatePrinterImage from "@/assets/hero-printer.jpg";
 import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
 import PageMeta from "@/components/PageMeta";
+import { officeShowroomImage, printFloorImage, printWorkspaceImage } from "@/lib/siteVisuals";
 import {
   BarChart3,
   Boxes,
@@ -173,7 +173,7 @@ const CorporateSolutions = () => {
         className="-mt-16 pb-8"
         style={{
           backgroundImage:
-            "linear-gradient(90deg, rgba(18, 32, 60, 0.93) 0%, rgba(34, 55, 95, 0.88) 44%, rgba(73, 87, 120, 0.45) 72%, rgba(230, 236, 244, 0.08) 100%), url('https://zestek.vercel.app/assets/images/bg/print-floor.jpg')",
+            `linear-gradient(90deg, rgba(18, 32, 60, 0.93) 0%, rgba(34, 55, 95, 0.88) 44%, rgba(73, 87, 120, 0.45) 72%, rgba(230, 236, 244, 0.08) 100%), url('${printFloorImage}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -230,8 +230,8 @@ const CorporateSolutions = () => {
           <div className="overflow-hidden rounded-3xl border border-border bg-card">
             <div className="h-full min-h-[320px] overflow-hidden bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(232,241,255,0.88)_58%,rgba(183,206,234,0.45)_100%)]">
               <img
-                src={corporatePrinterImage}
-                alt="Managed print services with centralized device and service control"
+                src={officeShowroomImage}
+                alt="Managed print services with centralized device planning and office workflow control"
                 className="h-full w-full object-cover object-center"
                 loading="lazy"
               />
@@ -376,6 +376,14 @@ const CorporateSolutions = () => {
                 {point}
               </div>
             ))}
+          </div>
+          <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-muted/40">
+            <img
+              src={printWorkspaceImage}
+              alt="Print management workflow and business operations planning"
+              className="h-56 w-full object-cover"
+              loading="lazy"
+            />
           </div>
           <div className="mt-6">
             <Link to="/roi-calculator" className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground">

@@ -56,6 +56,7 @@ const App = () => (
           <Route path="/corporate-solutions.html" element={<CorporateSolutions />} />
           <Route path="/roi-calculator" element={<RoiCalculator />} />
           <Route path="/roi-calculator.html" element={<RoiCalculator />} />
+          <Route path="/service" element={<Contact />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,22 +1,28 @@
 import { motion } from "framer-motion";
-import { Send, Clock, Target, MapPin } from "lucide-react";
+import { Headset, Package, ShieldCheck, Send } from "lucide-react";
 import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
 
 const stats = [
-  { icon: Clock, label: "15 min", desc: "Lead response target" },
-  { icon: Target, label: "Right-fit", desc: "Device shortlist" },
-  { icon: MapPin, label: "Local", desc: "Sales and service coverage" },
+  { icon: Headset, label: "Structured", desc: "Support routing" },
+  { icon: ShieldCheck, label: "AMC", desc: "Renewal guidance" },
+  { icon: Package, label: "Original", desc: "Consumables planning" },
+];
+
+const supportHighlights = [
+  "Breakdown, installation, AMC, and consumables request handling",
+  "Official Epson portal links plus direct Zestek follow-up support",
+  "Coverage for service coordination, supply planning, and escalation",
 ];
 
 const InquiryForm = () => {
   const { isSubmitting, handleSubmit } = useLeadFormSubmission({
-    formId: "contact-inquiry-form",
-    formName: "Contact Inquiry Form",
-    successMessage: "Your inquiry has been sent. Our team will contact you shortly.",
+    formId: "service-support-form",
+    formName: "Service Support Form",
+    successMessage: "Your support request has been sent. Our team will contact you shortly.",
   });
 
   return (
-    <section className="section-padding">
+    <section className="section-padding bg-card">
       <div className="container mx-auto">
         <div className="grid items-start gap-12 lg:grid-cols-2">
           <motion.div
@@ -24,23 +30,28 @@ const InquiryForm = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-highlight">
-              Simple Inquiry Form
+            <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-highlight">
+              Raise a Request
             </span>
-            <h2 className="section-title mb-4">Get the right device recommendation</h2>
+            <h2 className="section-title mb-4">Talk to our support team for the right next step</h2>
             <p className="mb-8 text-muted-foreground">
-              Share your monthly print volume, preferred usage, and paper size needs. We&apos;ll recommend the right
-              device and supply plan.
+              Use this form for service support, installation requests, AMC renewals, consumables planning, escalation,
+              or even sales guidance if you were redirected here from a product page.
             </p>
-            <ul className="mb-8 space-y-3 text-sm text-muted-foreground">
-              <li>✓ Model guidance based on mono/color usage and volume</li>
-              <li>✓ Consumables planning and local delivery support</li>
-              <li>✓ Service coverage across Mumbai, Boisar, and Khopoli</li>
+
+            <ul className="mb-8 space-y-3">
+              {supportHighlights.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground">
+                  <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-highlight" />
+                  <span className="leading-7">{item}</span>
+                </li>
+              ))}
             </ul>
-            <div className="flex gap-6">
+
+            <div className="flex flex-wrap gap-6">
               {stats.map((item) => (
                 <div key={item.label} className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-muted">
                     <item.icon className="h-5 w-5 text-highlight" />
                   </div>
                   <div>
@@ -57,9 +68,9 @@ const InquiryForm = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl border border-border bg-card p-8 shadow-lg"
+            className="rounded-3xl border border-border bg-background p-8 shadow-lg"
           >
-            <h3 className="mb-6 text-xl font-bold text-navy">Request Pricing</h3>
+            <h3 className="mb-6 text-xl font-bold text-navy">Submit support request</h3>
             <div className="space-y-4">
               <input
                 type="text"
@@ -89,19 +100,31 @@ const InquiryForm = () => {
                 className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               />
               <select
-                name="monthly_volume"
+                name="request_type"
+                defaultValue=""
+                required
                 className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               >
-                <option>Select monthly volume</option>
-                <option>Below 5,000 pages</option>
-                <option>5,000 - 15,000 pages</option>
-                <option>15,000 - 40,000 pages</option>
-                <option>40,000+ pages</option>
+                <option value="" disabled>
+                  Select request type
+                </option>
+                <option>Breakdown / Technical Issue</option>
+                <option>Installation Request</option>
+                <option>Extended Warranty / AMC</option>
+                <option>Consumables Support</option>
+                <option>Issue Escalation</option>
+                <option>Sales Guidance</option>
               </select>
+              <input
+                type="text"
+                name="machine_model"
+                placeholder="Printer Model / Product Name"
+                className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
               <textarea
                 name="message"
-                placeholder="Message / Requirements"
-                rows={3}
+                placeholder="Describe the issue or requirement"
+                rows={4}
                 className="w-full resize-none rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               />
               <button
@@ -109,7 +132,14 @@ const InquiryForm = () => {
                 disabled={isSubmitting}
                 className="flex w-full items-center justify-center gap-2 rounded-lg bg-navy px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-navy-light disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isSubmitting ? "Submitting..." : <><Send className="h-4 w-4" /> Submit Request</>}
+                {isSubmitting ? (
+                  "Submitting..."
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    Submit Request
+                  </>
+                )}
               </button>
             </div>
           </motion.form>

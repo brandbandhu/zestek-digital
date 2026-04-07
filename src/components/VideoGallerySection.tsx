@@ -5,6 +5,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { motion } from "framer-motion";
+import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 
 const videos = [
   { title: "Print demo 1", src: "/videos/video-1.mp4" },
@@ -20,23 +22,38 @@ const videos = [
 const VideoGallerySection = () => (
   <section className="section-padding">
     <div className="container mx-auto">
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={defaultViewport}
+        className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+      >
         <div>
           <span className="text-xs font-semibold uppercase tracking-widest text-highlight mb-2 block">
             Print Demo
           </span>
-          <h2 className="section-title">Print Demo &amp; Output Video Gallery</h2>
-          <p className="section-subtitle mt-3">
+          <motion.h2 variants={fadeUp} className="section-title">
+            Print Demo &amp; Output Video Gallery
+          </motion.h2>
+          <motion.p variants={fadeUp} className="section-subtitle mt-3">
             Watch quick demos of our latest printers and output quality.
-          </p>
+          </motion.p>
         </div>
-      </div>
+      </motion.div>
 
       <Carousel opts={{ loop: true }} className="w-full">
         <CarouselContent>
-          {videos.map((v) => (
+          {videos.map((v, index) => (
             <CarouselItem key={v.title} className="basis-full md:basis-1/2 lg:basis-1/3">
-              <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -8 }}
+                viewport={defaultViewport}
+                transition={{ duration: 0.5, delay: index * 0.06 }}
+                className="hover-lift surface-glow rounded-2xl border border-border bg-card p-4 shadow-sm"
+              >
                 <div className="aspect-video rounded-xl overflow-hidden bg-black">
                   <video
                     src={v.src}
@@ -47,7 +64,7 @@ const VideoGallerySection = () => (
                   />
                 </div>
                 <h3 className="mt-4 font-display font-bold text-navy text-base">{v.title}</h3>
-              </div>
+              </motion.div>
             </CarouselItem>
           ))}
         </CarouselContent>
