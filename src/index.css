@@ -59,8 +59,15 @@
   * {
     @apply border-border;
   }
+  html, body, #root {
+    min-height: 100%;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: hidden;
+  }
+  img, video {
+    max-width: 100%;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-display font-bold tracking-tight;
@@ -69,16 +76,16 @@
 
 @layer components {
   .section-padding {
-    @apply px-4 sm:px-6 lg:px-8 py-4 md:py-8;
+    @apply px-4 sm:px-6 lg:px-8 py-8 md:py-12;
   }
   .breadcrumb {
     @apply text-xs md:text-sm text-primary-foreground/80 flex items-center gap-2;
   }
   .section-title {
-    @apply text-3xl md:text-4xl lg:text-5xl font-display font-bold text-navy;
+    @apply text-2xl leading-tight md:text-4xl lg:text-5xl font-display font-bold text-navy;
   }
   .section-subtitle {
-    @apply text-lg text-muted-foreground max-w-2xl;
+    @apply text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed;
   }
   .text-navy {
     color: hsl(var(--navy));

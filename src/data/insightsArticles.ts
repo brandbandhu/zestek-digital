@@ -1,3 +1,7 @@
+import banner2Image from "@/assets/banner/2.png";
+import banner3Image from "@/assets/banner/3.png";
+import banner4Image from "@/assets/banner/4.png";
+
 export type InsightArticleSection = {
   heading: string;
   paragraphs: string[];
@@ -16,6 +20,8 @@ export type InsightArticle = {
   tag: string;
   title: string;
   cardDescription: string;
+  cardImageUrl?: string;
+  cardImageAlt?: string;
   heroTitle: string;
   heroDescription: string;
   imageUrl: string;
@@ -45,12 +51,14 @@ export const insightArticles: InsightArticle[] = [
     tag: "Case Study",
     title: "Say goodbye to RC machines",
     cardDescription: "Switch to efficient ink tank tech with lower print cost.",
+    cardImageUrl: banner4Image,
+    cardImageAlt: "Epson mono business printer banner for RC machine replacement",
     heroTitle: "Why many copy shops are moving away from older RC machine setups",
     heroDescription:
       "Running a print counter on ageing RC-style equipment usually means higher service attention, rising part dependency and weaker profit on everyday mono jobs. Newer Epson business inkjet platforms give shops a cleaner operating model.",
     imageUrl:
-      "https://images.unsplash.com/photo-1758630737361-ca7532fb5e7f?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
-    imageAlt: "Modern office print setup",
+      "https://mediaserver.goepson.com/adaptivemedia/rendition?assetDescr=24gro-mono_BIJpro_STD_22b&clid=SAPDAM&id=612562fe8125dd5065499e86215dcc859eba7006&prclid=banner&prid=1200Wx1200H&vid=612562fe8125dd5065499e86215dcc859eba7006",
+    imageAlt: "Epson mono business printer for RC machine replacement",
     metaTitle: "Say Goodbye to RC Machines | Zestek Print Insights",
     metaDescription:
       "Learn why print shops are replacing older RC machine workflows with lower-cost Epson business inkjet setups for better uptime and margins.",
@@ -149,11 +157,13 @@ export const insightArticles: InsightArticle[] = [
     tag: "Industry",
     title: "Upgrade your print business",
     cardDescription: "Scale production with a device built for high-volume demand.",
+    cardImageUrl: banner2Image,
+    cardImageAlt: "Konica Minolta production print banner for business growth",
     heroTitle: "How the right print setup helps a shop move from daily orders to bigger jobs",
     heroDescription:
       "Growth in printing usually does not come from working harder with the same setup. It comes from choosing machines that improve output speed, expand application range and protect profit as demand increases.",
-    imageUrl: "https://cdn.pixabay.com/photo/2021/10/08/20/15/printing-press-6692407_1280.jpg",
-    imageAlt: "High-volume print production machine",
+    imageUrl: "https://bt.konicaminolta.in/wp-content/themes/BIN/assets/images/Product_finder/AccurioPress-C14010S.jpg",
+    imageAlt: "Konica Minolta production press for print business growth",
     metaTitle: "Upgrade Your Print Business | Zestek Print Insights",
     metaDescription:
       "See how print shops can upgrade profitably by choosing devices with better speed, lower running cost and stronger application flexibility.",
@@ -252,11 +262,13 @@ export const insightArticles: InsightArticle[] = [
     tag: "Service",
     title: "Prevent printer downtime",
     cardDescription: "Proactive service schedules and original consumables.",
+    cardImageUrl: "https://cdn.pixabay.com/photo/2020/08/22/11/40/technician-5508210_1280.jpg",
+    cardImageAlt: "Technician checking printer hardware during preventive maintenance",
     heroTitle: "How proactive service and the right consumables reduce lost printing time",
     heroDescription:
       "Downtime usually feels sudden, but in most businesses it builds slowly through skipped maintenance, delayed parts replacement and inconsistent consumable choices. A stronger service routine keeps printing predictable.",
-    imageUrl: "https://cdn.pixabay.com/photo/2020/08/22/11/40/technician-5508210_1280.jpg",
-    imageAlt: "Technician servicing printer hardware",
+    imageUrl: "https://bt.konicaminolta.in/wp-content/themes/BIN/assets/images/Product_finder/bizhub_C250i.jpg",
+    imageAlt: "Office printer with preventive service and maintenance support",
     metaTitle: "Prevent Printer Downtime | Zestek Print Insights",
     metaDescription:
       "Learn practical ways to reduce printer downtime with preventive service planning, original consumables and better fleet care.",

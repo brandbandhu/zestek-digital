@@ -5,16 +5,16 @@ import zestekLogo from "../../assets/Zestek_Logo.png";
 const Footer = () => (
   <footer className="bg-navy text-primary-foreground">
     <div className="container mx-auto px-4 pb-14 pt-12">
-      <div className="grid gap-12 md:grid-cols-[1.15fr_0.95fr_1.2fr]">
-        <div className="max-w-md">
-          <Link to="/" className="mb-1 inline-flex items-center leading-none">
+      <div className="grid gap-10 md:grid-cols-[1.15fr_0.95fr_1.2fr]">
+        <div className="max-w-md md:max-w-none">
+          <Link to="/" className="mb-2 inline-flex items-center leading-none">
             <img
               src={zestekLogo}
               alt="Zestek Digital LLP"
-              className="block h-24 w-auto max-w-[340px] object-contain md:h-28 md:max-w-[390px]"
+              className="block h-20 w-auto max-w-[300px] object-contain sm:h-24 sm:max-w-[340px] md:h-28 md:max-w-[390px]"
             />
           </Link>
-          <h3 className="font-display text-3xl font-bold text-primary-foreground">Zestek Digital LLP</h3>
+          <h3 className="font-display text-2xl font-bold text-primary-foreground sm:text-3xl">Zestek Digital LLP</h3>
           <p className="mt-3 text-base leading-8 text-primary-foreground/92">
             Your trusted partner for Epson and Konica Minolta solutions, helping businesses reduce print cost,
             improve output, and scale with the right technology and products.
@@ -22,7 +22,7 @@ const Footer = () => (
         </div>
 
         <div>
-          <h4 className="font-display text-2xl font-bold text-primary-foreground">Product Tabs</h4>
+          <h4 className="font-display text-xl font-bold text-primary-foreground sm:text-2xl">Product Tabs</h4>
           <ul className="mt-6 space-y-6 text-base text-primary-foreground/92">
             <li>
               <Link to="/" className="transition-colors hover:text-highlight">
@@ -53,7 +53,7 @@ const Footer = () => (
         </div>
 
         <div>
-          <h4 className="font-display text-2xl font-bold text-primary-foreground">Get in Touch</h4>
+          <h4 className="font-display text-xl font-bold text-primary-foreground sm:text-2xl">Get in Touch</h4>
           <div className="mt-6 space-y-6 text-base leading-8 text-primary-foreground/92">
             <div className="flex items-start gap-4">
               <MapPin className="mt-1 h-5 w-5 shrink-0 text-highlight" />

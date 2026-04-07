@@ -25,6 +25,7 @@ const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) =
         description={page.metaDescription}
         keywords={page.metaKeywords}
         image={page.productImage}
+        canonicalPath={page.route}
       />
 
       <Header />

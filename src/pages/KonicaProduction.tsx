@@ -8,6 +8,7 @@ import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
 import { Link } from "react-router-dom";
 import { konicaProductionProducts } from "@/data/konicaProductionProducts";
 import { matchesSearchQuery, matchesSelectedOptions, parseLeadingNumber, toggleFilterValue } from "@/lib/productFilters";
+import PageMeta from "@/components/PageMeta";
 
 const valueCards = [
   {
@@ -91,6 +92,8 @@ const konicaSortOptions = [
 
 const konicaSpeedOptions = ["Any", "20", "40", "60", "80", "100", "120", "140", "200", "250", "300"];
 const salesPhoneHref = "tel:+919920909700";
+const consumablesContactUrl = "/contact#consumables";
+const serviceSupportContactUrl = "/contact#service-amc";
 
 const getKonicaDetail = (product: KonicaProduct, label: string) =>
   product.details.find((detail) => detail.label === label)?.value ?? "";
@@ -259,6 +262,19 @@ const KonicaProduction = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <PageMeta
+        title="Konica Minolta Production Printers | Commercial Print Solutions"
+        description="Discover Konica Minolta production and office printers with smart filters for speed, format, output mode, and print volume. Get quote and brochure support."
+        keywords={[
+          "Konica Minolta production printer India",
+          "AccurioPrint C4065",
+          "AccurioPress C4080",
+          "commercial print machine Mumbai",
+          "production printer quote India",
+        ]}
+        canonicalPath="/konica-production"
+        image="/zestek-logo.png"
+      />
       <Header />
 
       <section
@@ -466,17 +482,15 @@ const KonicaProduction = () => {
                           Call for Best Price
                         </a>
                         <div className="grid grid-cols-1 gap-2 pt-1">
-                          <a
-                            href={product.viewUrl}
-                            target="_blank"
-                            rel="noreferrer"
+                          <Link
+                            to={consumablesContactUrl}
                             className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
                           >
                             <Package className="h-4 w-4" />
                             View Toner & Consumables
-                          </a>
+                          </Link>
                           <Link
-                            to="/contact"
+                            to={serviceSupportContactUrl}
                             className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
                           >
                             <Wrench className="h-4 w-4" />

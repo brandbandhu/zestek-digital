@@ -18,13 +18,13 @@ const InsightsSection = () => (
         {insightArticles.map((item) => (
           <article
             key={item.slug}
-            className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background"
+            className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background"
           >
-            <div className="h-52 overflow-hidden bg-slate-50">
+            <div className="aspect-[16/9] w-full overflow-hidden bg-slate-50">
               <img
-                src={item.imageUrl}
-                alt={item.title}
-                className="h-full w-full object-cover object-center"
+                src={item.cardImageUrl ?? item.imageUrl}
+                alt={item.cardImageAlt ?? item.imageAlt}
+                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]"
                 loading="lazy"
               />
             </div>
@@ -32,15 +32,15 @@ const InsightsSection = () => (
               <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                 {item.tag}
               </span>
-              <h3 className="mt-2 font-display font-bold text-navy">
+              <h3 className="mt-2 min-h-[3rem] font-display font-bold text-navy">
                 <Link to={item.route} className="hover:text-highlight transition-colors">
                   {item.title}
                 </Link>
               </h3>
-              <p className="text-sm text-muted-foreground mt-2">{item.cardDescription}</p>
+              <p className="mt-2 min-h-[3.5rem] text-sm text-muted-foreground">{item.cardDescription}</p>
               <Link
                 to={item.route}
-                className="mt-auto pt-6 inline-flex text-xs font-semibold text-navy transition-colors hover:text-highlight"
+                className="mt-auto pt-4 inline-flex text-xs font-semibold text-navy transition-colors hover:text-highlight"
               >
                 Read more
               </Link>

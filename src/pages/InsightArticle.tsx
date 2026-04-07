@@ -22,6 +22,8 @@ const InsightArticle = () => {
         description={article.metaDescription}
         keywords={article.metaKeywords}
         image={article.imageUrl}
+        canonicalPath={article.route}
+        ogType="article"
       />
 
       <Header />

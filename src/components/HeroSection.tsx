@@ -135,7 +135,7 @@ const renderDesktopOverlay = (index: number) => {
             <p className="mt-4 max-w-2xl text-sm leading-7 text-foreground/80 md:text-base md:leading-8">{overlay.body}</p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
-                to="/contact"
+                to="/contact#service-amc"
                 className="inline-flex items-center justify-center rounded-full bg-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-navy/90"
               >
                 Request Support Now
@@ -177,7 +177,7 @@ const renderMobileOverlay = (index: number) => {
           <p className="mt-3 text-xs leading-6 text-foreground/80">{overlay.body}</p>
           <div className="mt-4 flex flex-wrap gap-2.5">
             <Link
-              to="/contact"
+              to="/contact#service-amc"
               className="inline-flex items-center justify-center rounded-full bg-navy px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-navy/90"
             >
               Request Support Now
@@ -196,7 +196,7 @@ const renderMobileOverlay = (index: number) => {
 };
 
 const HeroSection = () => (
-  <section className="relative h-[calc(100svh-4rem)] min-h-[620px] max-h-[780px] overflow-hidden md:h-[680px] md:min-h-0 md:max-h-none lg:h-[760px] xl:h-[calc(100vh-4.5rem)] xl:max-h-[860px]">
+  <section className="relative h-[calc(100svh-4rem)] min-h-[520px] max-h-[760px] overflow-hidden sm:min-h-[560px] md:h-[680px] md:min-h-0 md:max-h-none lg:h-[760px] xl:h-[calc(100vh-4.5rem)] xl:max-h-[860px]">
     <Carousel opts={{ loop: true }} className="hidden h-full w-full md:block">
       <CarouselContent className="h-full">
         {desktopBanners.map((banner, index) => (
@@ -225,7 +225,7 @@ const HeroSection = () => (
               <img
                 src={banner}
                 alt={`Zestek mobile banner ${index + 1}`}
-                className="relative z-0 h-full w-full bg-white object-contain object-center"
+                className="relative z-0 h-full w-full object-cover object-center"
                 loading={index === 0 ? "eager" : "lazy"}
               />
               {renderMobileOverlay(index)}

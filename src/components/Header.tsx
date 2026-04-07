@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,10 +18,14 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-md border-b border-border">
-      <div className="container mx-auto h-16 px-4 sm:h-[68px] sm:px-5">
-        <div className="hidden h-full lg:flex lg:items-center lg:justify-center">
+      <div className="container mx-auto h-16 px-4 sm:h-[70px] sm:px-5">
+        <div className="hidden h-full xl:flex xl:items-center xl:justify-center">
           <div className="flex items-center gap-6 xl:gap-8">
             <Link to="/" className="flex shrink-0 items-center gap-2">
               <img src={zestekLogo} alt="Zestek" className="h-10 w-auto rounded-md object-contain xl:h-12" />
@@ -45,7 +49,7 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="flex h-full items-center justify-between gap-3 lg:hidden">
+        <div className="flex h-full items-center justify-between gap-3 xl:hidden">
           <Link to="/" className="flex shrink-0 items-center gap-2">
             <img src={zestekLogo} alt="Zestek" className="h-10 w-auto rounded-md object-contain sm:h-11" />
           </Link>
@@ -66,7 +70,7 @@ const Header = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-border bg-card lg:hidden"
+            className="overflow-hidden border-t border-border bg-card xl:hidden"
           >
             <div className="max-h-[calc(100vh-4rem)] space-y-1 overflow-y-auto px-4 py-4">
               {navLinks.map((link) => (

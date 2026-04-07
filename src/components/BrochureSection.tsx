@@ -1,17 +1,17 @@
 const brochures = [
   {
-    title: "AccurioPrint C4065 brochure",
-    desc: "High-speed production platform for commercial print businesses.",
-    tag: "AccurioPrint",
+    title: "Konica Minolta AccurioPrint C4065 brochure",
+    desc: "Konica Minolta high-speed production platform for commercial print businesses.",
+    tag: "Konica Minolta",
     size: "6.8 MB PDF",
     href: "/brochures/AccurioPrint-C4065-brochure.pdf",
   },
   {
-    title: "Exhibition Flyer 2025",
-    desc: "Discover the newest print technologies and media solutions.",
-    tag: "Events",
+    title: "Epson Print Solutions brochure",
+    desc: "Epson product range, business use cases, and print solution guidance.",
+    tag: "Epson",
     size: "3.2 MB PDF",
-    href: "/brochures/Exhibition-Flyer-2025.pdf",
+    href: "/brochures/Epson-Print-Solutions-brochure.pdf",
   },
 ];
 

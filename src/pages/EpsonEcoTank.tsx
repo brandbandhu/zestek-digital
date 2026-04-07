@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Droplets, PhoneCall, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 import { matchesSearchQuery, matchesSelectedOptions, toggleFilterValue } from "@/lib/productFilters";
+import PageMeta from "@/components/PageMeta";
 
 type EcoTankProduct = {
   name: string;
@@ -268,7 +269,9 @@ const productCards: EcoTankProduct[] = [
   },
 ];
 
-const salesPhoneHref = "tel:+919876543210";
+const salesPhoneHref = "tel:+919920909700";
+const consumablesContactUrl = "/contact#consumables";
+const serviceSupportContactUrl = "/contact#service-amc";
 
 type EcoTankFilterState = {
   paperSizes: string[];
@@ -446,6 +449,19 @@ const EpsonEcoTank = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <PageMeta
+        title="Epson EcoTank Printers India | Product Finder by Zestek"
+        description="Compare Epson EcoTank models with smart filters by paper size, output type, workflow, and features. Get pricing, consumables, and expert support."
+        keywords={[
+          "Epson EcoTank printers India",
+          "EcoTank price in India",
+          "A3 ink tank printer",
+          "Epson printer dealer Mumbai",
+          "low-cost color printer for office",
+        ]}
+        canonicalPath="/epson-ecotank"
+        image="/zestek-logo.png"
+      />
       <Header />
 
       <section
@@ -599,17 +615,15 @@ const EpsonEcoTank = () => {
                             Call for Best Price
                           </a>
                           <div className="grid grid-cols-1 gap-2 pt-1">
-                            <a
-                              href={meta.inkUrl}
-                              target="_blank"
-                              rel="noreferrer"
+                            <Link
+                              to={consumablesContactUrl}
                               className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
                             >
                               <Droplets className="h-4 w-4" />
                               View Ink & Consumables
-                            </a>
+                            </Link>
                             <Link
-                              to="/contact"
+                              to={serviceSupportContactUrl}
                               className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
                             >
                               <Wrench className="h-4 w-4" />

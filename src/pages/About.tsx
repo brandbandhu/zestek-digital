@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import aboutPrinterImage from "@/assets/hero-printer.jpg";
 import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
+import PageMeta from "@/components/PageMeta";
 import { BadgeCheck, BriefcaseBusiness, Handshake, MapPin, Printer, ShieldCheck, Wrench, type LucideIcon } from "lucide-react";
 
 const differenceCards = [
@@ -119,6 +120,19 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background">
+    <PageMeta
+      title="About Zestek Digital LLP | 14+ Years in Printer Solutions"
+      description="Learn about Zestek Digital LLP, our customer-first print consulting approach, and 14+ years of Epson and Konica Minolta solution expertise."
+      keywords={[
+        "About Zestek Digital LLP",
+        "printer solutions company Mumbai",
+        "Epson partner Mumbai",
+        "Konica Minolta partner Mumbai",
+        "managed print consulting India",
+      ]}
+      canonicalPath="/about"
+      image="/zestek-logo.png"
+    />
     <Header />
 
     <section
@@ -328,8 +342,7 @@ const About = () => {
           </span>
           <h2 className="mt-4 text-2xl font-bold text-navy md:text-3xl">Need help planning your next print setup?</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Talk to us for sales guidance, consumables planning, support coordination, or AMC renewals. We will guide you
-            to the right next step.
+            Talk to us for sales guidance and best pricing. We will guide you to the right next step.
           </p>
           <div className="mt-6 space-y-4">
             <div className="rounded-xl border border-border bg-muted/60 p-4">
@@ -340,29 +353,7 @@ const About = () => {
                 </a>
               </p>
               <p className="text-sm text-muted-foreground">
-                <a href="mailto:connect@zestek.in">Connect@zestek.in</a>
-              </p>
-            </div>
-            <div className="rounded-xl border border-border bg-muted/60 p-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Consumables</p>
-              <p className="mt-2 text-sm">
-                <a href="tel:+919920909023" className="font-semibold text-navy">
-                  +91 99209 09023
-                </a>
-              </p>
-              <p className="text-sm text-muted-foreground">
-                <a href="mailto:sales@zestek.in">sales@zestek.in</a>
-              </p>
-            </div>
-            <div className="rounded-xl border border-border bg-muted/60 p-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Support / AMC</p>
-              <p className="mt-2 text-sm">
-                <a href="tel:+919920905073" className="font-semibold text-navy">
-                  +91 99209 05073
-                </a>
-              </p>
-              <p className="text-sm text-muted-foreground">
-                <a href="mailto:support@zestek.in">support@zestek.in</a> | AMC: <a href="tel:+919920909023">+91 99209 09023</a>
+                <a href="mailto:connect@zestek.in">connect@zestek.in</a>
               </p>
             </div>
           </div>

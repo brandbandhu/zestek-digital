@@ -7,6 +7,7 @@ import { ArrowUpRight, Droplets, PhoneCall, Wrench } from "lucide-react";
 import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
 import { Link } from "react-router-dom";
 import { matchesSearchQuery, matchesSelectedOptions, toggleFilterValue } from "@/lib/productFilters";
+import PageMeta from "@/components/PageMeta";
 
 type WorkforceProduct = {
   name: string;
@@ -139,6 +140,10 @@ const workforceProducts: WorkforceProduct[] = [
 ];
 
 const salesPhoneHref = "tel:+919920909700";
+const salesWhatsAppHref =
+  "https://wa.me/919920909700?text=Hi%20Zestek%2C%20I%20need%20details%20for%20Epson%20WorkForce%20printers.";
+const consumablesContactUrl = "/contact#consumables";
+const serviceSupportContactUrl = "/contact#service-amc";
 
 const createEmptyWorkforceFilters = (): WorkforceFilterState => ({
   paperSizes: [],
@@ -297,6 +302,19 @@ const EpsonWorkforce = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <PageMeta
+        title="Epson WorkForce Printers | Business Inkjet Solutions by Zestek"
+        description="Find Epson WorkForce business printers with filters for paper size, output mode, enterprise/pro series, usage, and workflow features."
+        keywords={[
+          "Epson WorkForce printers India",
+          "business inkjet printer",
+          "A3 multifunction printer for office",
+          "Epson enterprise printer",
+          "WorkForce printer price Mumbai",
+        ]}
+        canonicalPath="/epson-workforce"
+        image="/zestek-logo.png"
+      />
       <Header />
 
       <section
@@ -317,9 +335,20 @@ const EpsonWorkforce = () => {
             Epson WorkForce Printers for secure, high-output business teams.
           </h1>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link to="/contact" className="rounded-full bg-white text-navy px-5 py-2 text-xs font-semibold">
-              Quick Enquiry
-            </Link>
+            <a
+              href={salesPhoneHref}
+              className="rounded-full bg-white text-navy px-5 py-2 text-xs font-semibold"
+            >
+              Call Now
+            </a>
+            <a
+              href={salesWhatsAppHref}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white"
+            >
+              WhatsApp
+            </a>
             <a
               href="https://epsonadvantage.in"
               target="_blank"
@@ -510,17 +539,15 @@ const EpsonWorkforce = () => {
                           Call for Best Price
                         </a>
                         <div className="grid grid-cols-1 gap-2 pt-1">
-                          <a
-                            href={product.meta.consumablesUrl}
-                            target="_blank"
-                            rel="noreferrer"
+                          <Link
+                            to={consumablesContactUrl}
                             className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
                           >
                             <Droplets className="h-4 w-4" />
                             View Ink & Consumables
-                          </a>
+                          </Link>
                           <Link
-                            to="/contact"
+                            to={serviceSupportContactUrl}
                             className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
                           >
                             <Wrench className="h-4 w-4" />
