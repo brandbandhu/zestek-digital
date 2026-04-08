@@ -38,9 +38,6 @@ const PartnersSection = () => (
         viewport={defaultViewport}
         className="mb-10 text-left"
       >
-        <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-highlight">
-          Brand Partners
-        </span>
         <motion.h2 variants={fadeUp} className="section-title">
           Reliable Brands. Smarter Print Solutions.
         </motion.h2>
