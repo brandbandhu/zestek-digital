@@ -106,44 +106,6 @@ const Contact = () => (
               without interruptions.
             </p>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-3xl border border-border bg-background/95 p-5 shadow-sm">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-highlight/10 text-highlight">
-                    <ClipboardCheck className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Official Epson Support</p>
-                    <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                      Breakdown handling, warranty checks, installation requests, and official support routing.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-3xl border border-border bg-background/95 p-5 shadow-sm">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-highlight/10 text-highlight">
-                    <Phone className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Zestek Helpdesk</p>
-                    <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                      AMC renewals, consumables planning, and follow-up support from our service team.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 rounded-3xl border border-border bg-background/95 p-5 shadow-sm">
-              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Epson Support Numbers</p>
-              <p className="mt-3 text-sm font-semibold text-navy">
-                Toll Free: 1800 425 00 11 / 1860 3000 1600 / 1800 123 001 600
-              </p>
-              <p className="mt-2 text-sm font-semibold text-navy">
-                WhatsApp Support: +91 96400 00333
-              </p>
-            </div>
           </motion.div>
 
           <motion.div
@@ -185,66 +147,26 @@ const Contact = () => (
                     </div>
                   </div>
 
-                  <div className="order-1 flex items-center justify-center lg:order-2">
-                    <div className="flex h-[280px] w-full max-w-[380px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-white/85 p-3 shadow-[0_24px_32px_rgba(15,30,70,0.18)] sm:h-[340px] md:h-[440px]">
+                  <div className="order-1 flex w-full flex-col items-center gap-4 lg:order-2">
+                    <div className="flex h-[280px] w-full max-w-[380px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-white/85 p-3 shadow-[0_24px_32px_rgba(15,30,70,0.18)] sm:h-[340px] md:h-[380px]">
                       <img
                         src={serviceHeroImage}
                         alt="Support coordination and printer planning environment"
                         className="h-full w-full object-contain"
                       />
                     </div>
+                    <div className="w-full max-w-[380px] rounded-2xl border border-border/70 bg-white/90 p-4 shadow-sm">
+                      <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Epson Support Numbers</p>
+                      <p className="mt-2 text-sm font-semibold leading-6 text-navy">
+                        Toll Free: 1800 425 00 11 / 1860 3000 1600 / 1800 123 001 600
+                      </p>
+                      <p className="mt-2 text-sm font-semibold text-navy">WhatsApp Support: +91 96400 00333</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </motion.div>
-        </div>
-      </div>
-    </section>
-
-    <section className="section-padding bg-background">
-      <div className="container mx-auto">
-        <div className="max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-highlight">Service Support</p>
-          <h2 className="mt-3 text-3xl font-bold text-navy md:text-4xl">Talk to our support team for the right next step</h2>
-          <p className="mt-3 text-base leading-7 text-muted-foreground">
-            Use the official Epson links below for registration, warranty checks, installation requests, and driver
-            downloads.
-          </p>
-        </div>
-
-        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {officialSupportLinks.map((item, index) => (
-            <motion.article
-              key={item.title}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.08 }}
-              className="group flex h-full flex-col rounded-3xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-highlight/40 hover:shadow-lg"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-highlight/10 text-highlight">
-                <item.icon className="h-6 w-6" />
-              </div>
-              <h3 className="mt-5 text-xl font-bold text-navy">{item.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.description}</p>
-              <div className="mt-auto pt-6">
-                <a
-                  href={item.href}
-                  target={item.opensExternally ? "_blank" : undefined}
-                  rel={item.opensExternally ? "noreferrer" : undefined}
-                  className="inline-flex items-center gap-2 rounded-full border border-highlight/25 bg-highlight/5 px-4 py-2 text-sm font-semibold text-highlight transition-colors hover:border-highlight hover:bg-highlight hover:text-white"
-                >
-                  {item.actionLabel}
-                  {item.opensExternally ? (
-                    <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                  ) : (
-                    <Phone className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                  )}
-                </a>
-              </div>
-            </motion.article>
-          ))}
         </div>
       </div>
     </section>
@@ -307,6 +229,53 @@ const Contact = () => (
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="section-padding bg-background">
+      <div className="container mx-auto">
+        <div className="max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-highlight">Service Support</p>
+          <h2 className="mt-3 text-3xl font-bold text-navy md:text-4xl">Talk to our support team for the right next step</h2>
+          <p className="mt-3 text-base leading-7 text-muted-foreground">
+            Use the official Epson links below for registration, warranty checks, installation requests, and driver
+            downloads.
+          </p>
+        </div>
+
+        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {officialSupportLinks.map((item, index) => (
+            <motion.article
+              key={item.title}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.08 }}
+              className="group flex h-full flex-col rounded-3xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-highlight/40 hover:shadow-lg"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-highlight/10 text-highlight">
+                <item.icon className="h-6 w-6" />
+              </div>
+              <h3 className="mt-5 text-xl font-bold text-navy">{item.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.description}</p>
+              <div className="mt-auto pt-6">
+                <a
+                  href={item.href}
+                  target={item.opensExternally ? "_blank" : undefined}
+                  rel={item.opensExternally ? "noreferrer" : undefined}
+                  className="inline-flex items-center gap-2 rounded-full border border-highlight/25 bg-highlight/5 px-4 py-2 text-sm font-semibold text-highlight transition-colors hover:border-highlight hover:bg-highlight hover:text-white"
+                >
+                  {item.actionLabel}
+                  {item.opensExternally ? (
+                    <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  ) : (
+                    <Phone className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  )}
+                </a>
+              </div>
+            </motion.article>
+          ))}
         </div>
       </div>
     </section>

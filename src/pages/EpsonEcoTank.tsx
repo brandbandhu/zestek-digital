@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductFilterPanel from "@/components/ProductFilterPanel";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Wrench } from "lucide-react";
+import { ArrowUpRight, PhoneCall, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 import { matchesSearchQuery, matchesSelectedOptions, toggleFilterValue } from "@/lib/productFilters";
 import PageMeta from "@/components/PageMeta";
@@ -271,6 +271,8 @@ const productCards: EcoTankProduct[] = [
 ];
 
 const serviceSupportContactUrl = "/contact#service-amc";
+const salesPhoneNumber = "9920909700";
+const salesPhoneHref = "tel:+919920909700";
 
 type EcoTankFilterState = {
   paperSizes: string[];
@@ -608,6 +610,14 @@ const EpsonEcoTank = () => {
                             <ArrowUpRight className="h-4 w-4" />
                           </a>
                           <div className="grid grid-cols-1 gap-2 pt-1">
+                            <a
+                              href={salesPhoneHref}
+                              className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
+                            >
+                              <PhoneCall className="h-4 w-4" />
+                              <span>Call for Best Price</span>
+                              <span className="text-navy/80">{salesPhoneNumber}</span>
+                            </a>
                             <Link
                               to={serviceSupportContactUrl}
                               className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"

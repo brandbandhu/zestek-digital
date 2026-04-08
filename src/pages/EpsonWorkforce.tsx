@@ -140,6 +140,7 @@ const workforceProducts: WorkforceProduct[] = [
 ];
 
 const salesPhoneHref = "tel:+919920909700";
+const salesPhoneNumber = "9920909700";
 const salesWhatsAppHref =
   "https://wa.me/919920909700?text=Hi%20Zestek%2C%20I%20need%20details%20for%20Epson%20WorkForce%20printers.";
 const serviceSupportContactUrl = "/contact#service-amc";
@@ -528,6 +529,14 @@ const EpsonWorkforce = () => {
                           </a>
                         )}
                         <div className="grid grid-cols-1 gap-2 pt-1">
+                          <a
+                            href={salesPhoneHref}
+                            className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
+                          >
+                            <PhoneCall className="h-4 w-4" />
+                            <span>Call for Best Price</span>
+                            <span className="text-navy/80">{salesPhoneNumber}</span>
+                          </a>
                           <Link
                             to={serviceSupportContactUrl}
                             className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
