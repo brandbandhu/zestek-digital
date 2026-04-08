@@ -1,5 +1,8 @@
 import { motion } from "framer-motion";
 import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
+import logo1 from "@/assets/logo/1.jpeg";
+import logo2 from "@/assets/logo/2.png";
+import logo3 from "@/assets/logo/3.jpeg";
 
 const partners = [
   {
@@ -7,18 +10,21 @@ const partners = [
     badge: "Accredited Partner",
     desc:
       "Power your print business with Epson EcoTank and WorkForce printers, built for high-volume output, low cost per print, and dependable performance, backed by our expert guidance and service support.",
+    logo: logo1,
   },
   {
     name: "Konica Minolta production printers",
     badge: "Authorized Partner",
     desc:
       "Scale your print business with Konica Minolta production printers, delivering high-speed output, superior print quality, and media versatility, backed by expert installation, color management, and reliable service support.",
+    logo: logo2,
   },
   {
     name: "WYTE specialty solutions",
     badge: "Specialty Printing",
     desc:
       "Expand your offerings with WYTE solutions for signage and specialty printing, ideal for vinyl, flex, and customized media, supported with the right machine setup and application guidance.",
+    logo: logo3,
   },
 ];
 
@@ -55,8 +61,11 @@ const PartnersSection = () => (
             transition={{ delay: i * 0.12, duration: 0.55 }}
             className="hover-lift surface-glow group flex h-full flex-col rounded-2xl border border-border bg-background p-6 transition-shadow"
           >
-            <div className="mb-4 flex justify-end">
-              <span className="text-[11px] font-semibold uppercase leading-tight tracking-widest text-muted-foreground">
+            <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex h-12 w-24 items-center justify-center rounded-xl border border-border bg-[#E9F2FF] p-2 sm:w-28">
+                <img src={p.logo} alt={`${p.name} logo`} className="h-full w-full object-contain" />
+              </div>
+              <span className="text-[11px] font-semibold uppercase leading-tight tracking-widest text-muted-foreground sm:text-right">
                 {p.badge}
               </span>
             </div>
