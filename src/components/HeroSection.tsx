@@ -74,11 +74,11 @@ const renderDesktopOverlay = (index: number) => {
               variants={staggerContainer}
               initial="hidden"
               animate="show"
-              className="ml-auto w-full max-w-[35rem] text-left text-[#101828] lg:-translate-x-12 xl:max-w-[38rem] xl:-translate-x-20 2xl:-translate-x-24"
+              className="ml-auto w-full max-w-[24rem] text-left text-[#101828] sm:max-w-[30rem] lg:max-w-[35rem] lg:-translate-x-12 xl:max-w-[38rem] xl:-translate-x-20 2xl:-translate-x-24"
             >
               <motion.h1 variants={fadeInRight} className="mt-4 max-w-[34rem] text-3xl font-extrabold leading-[1.06] tracking-tight md:text-4xl lg:text-[3.55rem]">
-                <span className="block whitespace-nowrap text-[#101828]">
-                  Print buddy <span className="inline-block whitespace-nowrap text-highlight">of every</span>
+                <span className="block text-[#101828]">
+                  Print buddy <span className="inline-block text-highlight">of every</span>
                 </span>
                 <span className="mt-5 block text-[#101828]">print shop.</span>
               </motion.h1>
@@ -201,12 +201,6 @@ const renderMobileOverlay = (index: number) => {
             >
               Request Support Now
             </Link>
-            <a
-              href="tel:+919920909700"
-              className="inline-flex items-center justify-center rounded-full border border-navy/20 bg-white/85 px-4 py-2.5 text-xs font-semibold text-navy transition hover:bg-white"
-            >
-              Call Now
-            </a>
           </motion.div>
         </motion.div>
       </div>
@@ -215,7 +209,11 @@ const renderMobileOverlay = (index: number) => {
 };
 
 const HeroSection = () => (
-  <section className="relative h-[calc(100svh-4rem)] min-h-[520px] max-h-[760px] overflow-hidden sm:min-h-[560px] md:h-[680px] md:min-h-0 md:max-h-none lg:h-[760px] xl:h-[calc(100vh-4.5rem)] xl:max-h-[860px]">
+  <section
+    id="banner-images"
+    aria-label="Banner images"
+    className="relative h-[calc(100svh-4rem)] min-h-[440px] max-h-[760px] overflow-hidden sm:min-h-[520px] md:h-[680px] md:min-h-0 md:max-h-none lg:h-[760px] xl:h-[calc(100vh-4.5rem)] xl:max-h-[860px]"
+  >
     <Carousel opts={{ loop: true }} className="hidden h-full w-full md:block">
       <CarouselContent className="h-full">
         {desktopBanners.map((banner, index) => (

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Headset, Package, ShieldCheck, Send } from "lucide-react";
 import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
+import { requestTypes } from "@/lib/requestTypes";
 
 const stats = [
   { icon: Headset, label: "Structured", desc: "Support routing" },
@@ -24,7 +25,7 @@ const InquiryForm = () => {
   return (
     <section className="section-padding bg-card">
       <div className="container mx-auto">
-        <div className="grid items-start gap-12 lg:grid-cols-2">
+        <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -68,7 +69,7 @@ const InquiryForm = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-3xl border border-border bg-background p-8 shadow-lg"
+            className="rounded-3xl border border-border bg-background p-6 shadow-lg sm:p-8"
           >
             <h3 className="mb-6 text-xl font-bold text-navy">Submit support request</h3>
             <div className="space-y-4">
@@ -108,17 +109,22 @@ const InquiryForm = () => {
                 <option value="" disabled>
                   Select request type
                 </option>
-                <option>Breakdown / Technical Issue</option>
-                <option>Installation Request</option>
-                <option>Extended Warranty / AMC</option>
-                <option>Consumables Support</option>
-                <option>Issue Escalation</option>
-                <option>Sales Guidance</option>
+                {requestTypes.map((requestType) => (
+                  <option key={requestType} value={requestType}>
+                    {requestType}
+                  </option>
+                ))}
               </select>
               <input
                 type="text"
                 name="machine_model"
                 placeholder="Printer Model / Product Name"
+                className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+              <input
+                type="text"
+                name="serial_number"
+                placeholder="Serial Number"
                 className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               />
               <textarea

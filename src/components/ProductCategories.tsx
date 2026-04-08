@@ -1,64 +1,58 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Printer, Building2, Factory, Settings, Info, Calculator } from "lucide-react";
-import { officeShowroomImage, printFloorImage, printWorkspaceImage } from "@/lib/siteVisuals";
+import { Building2, Factory, Printer, Settings, Wrench } from "lucide-react";
 import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
+
+const corporateSolutionsImage = new URL("../../assets/corporate solution.jpg", import.meta.url).href;
+const serviceSupportImage = new URL("../../assets/support.png", import.meta.url).href;
 
 const categories = [
   {
     icon: Printer,
     tag: "Home & Office",
-    title: "Epson EcoTank Printers",
-    desc: "Colour ink tank products for home and small office use.",
+    title: "Printers for Home and Small Offices",
+    desc: "Start with Epson EcoTank models designed for everyday home use and compact office printing.",
     link: "/epson-ecotank",
     imageUrl:
       "https://mediaserver.goepson.com/adaptivemedia/rendition?id=3679c7960a7a7a1feea5c47e1ee23470f69c52b0&vid=3679c7960a7a7a1feea5c47e1ee23470f69c52b0&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=L3250-%281%29",
   },
   {
     icon: Building2,
-    tag: "Business",
-    title: "Epson WorkForce Printers",
-    desc: "Low running cost business inkjet printers for daily document printing.",
+    tag: "Medium & Large Office",
+    title: "Printers for Medium and Large Offices",
+    desc: "Explore Epson WorkForce printers for business teams that need dependable speed, efficiency, and daily output.",
     link: "/epson-workforce",
     imageUrl:
       "https://mediaserver.goepson.com/adaptivemedia/rendition?id=497de13b25347068dce62d42ce18bbe12579f0ea&vid=497de13b25347068dce62d42ce18bbe12579f0ea&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=C4000",
   },
   {
     icon: Factory,
-    tag: "Production",
-    title: "Konica Minolta Production",
-    desc: "High-speed production systems for print shops and commercial use.",
-    link: "/konica-production",
+    tag: "Photocopy & Commercial",
+    title: "Printers for Photocopy Centre & Commercial Segment",
+    desc: "Compare Epson and Konica Minolta options for photocopy centres and commercial print businesses.",
+    link: "/photocopy-commercial",
     imageUrl: "https://bt.konicaminolta.in/wp-content/themes/BIN/assets/images/Product_finder/AccurioPress-C14010S.jpg",
   },
   {
     icon: Settings,
-    tag: "Managed Print",
+    tag: "Corporate",
     title: "Corporate Solutions / MPS",
-    desc: "Managed print services for secure, cost-controlled office printing.",
+    desc: "Managed print services and structured office printing plans for business control and efficiency.",
     link: "/corporate-solutions",
-    imageUrl: printFloorImage,
+    imageUrl: corporateSolutionsImage,
   },
   {
-    icon: Info,
-    tag: "About",
-    title: "Why Choose Zestek",
-    desc: "Reliable service and ongoing guidance for profitable operations.",
-    link: "/about",
-    imageUrl: officeShowroomImage,
-  },
-  {
-    icon: Calculator,
-    tag: "ROI",
-    title: "ROI Calculator",
-    desc: "Estimate business print value before choosing the right setup.",
-    link: "/roi-calculator",
-    imageUrl: printWorkspaceImage,
+    icon: Wrench,
+    tag: "Service",
+    title: "Service Support",
+    desc: "Get service help, installation support, AMC guidance, and printer assistance from our team.",
+    link: "/service",
+    imageUrl: serviceSupportImage,
   },
 ];
 
 const ProductCategories = () => (
-  <section className="section-padding">
+  <section id="segments-categories" className="section-padding">
     <div className="container mx-auto">
       <motion.div
         variants={staggerContainer}
@@ -67,41 +61,45 @@ const ProductCategories = () => (
         viewport={defaultViewport}
         className="mb-10 text-left"
       >
-        <span className="text-xs font-semibold uppercase tracking-widest text-highlight mb-2 block">
-          Categories &amp; Solutions
+        <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-highlight">
+          Segments / Categories
         </span>
-        <motion.h2 variants={fadeUp} className="section-title">Choose the right category and print solution</motion.h2>
+        <motion.h2 variants={fadeUp} className="section-title">
+          Choose your segment and the right print category
+        </motion.h2>
         <motion.p variants={fadeUp} className="section-subtitle mt-4">
-          Start with the printer range that matches your print volume, application, and business goals.
+          Explore home office, business, photocopy centre, corporate, and service categories to find the best fit for
+          your daily print volume and application needs.
         </motion.p>
       </motion.div>
+
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {categories.map((c, i) => (
+        {categories.map((category, index) => (
           <motion.div
-            key={c.title}
+            key={category.title}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             whileHover={{ y: -8 }}
             viewport={defaultViewport}
-            transition={{ duration: 0.55, delay: i * 0.08 }}
+            transition={{ duration: 0.55, delay: index * 0.08 }}
           >
             <Link
-              to={c.link}
+              to={category.link}
               className="hover-lift surface-glow group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all hover:border-highlight hover:shadow-md md:p-6"
             >
               <div className="mb-4 overflow-hidden rounded-xl border border-border bg-muted/60">
                 <img
-                  src={c.imageUrl}
-                  alt={`${c.title} category`}
+                  src={category.imageUrl}
+                  alt={`${category.title} category`}
                   className="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-[1.04] sm:h-36 lg:h-40"
                   loading="lazy"
                 />
               </div>
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{c.tag}</span>
-              <h3 className="font-display font-bold text-navy mt-2 mb-3">{c.title}</h3>
-              <p className="mb-4 min-h-[3rem] text-sm text-muted-foreground">{c.desc}</p>
-              <div className="mt-auto h-10 w-10 rounded-lg bg-muted flex items-center justify-center transition-colors group-hover:bg-highlight/10">
-                <c.icon className="w-5 h-5 text-navy group-hover:text-highlight transition-colors" />
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{category.tag}</span>
+              <h3 className="mb-3 mt-2 font-display font-bold text-navy">{category.title}</h3>
+              <p className="mb-4 text-sm text-muted-foreground md:min-h-[3rem]">{category.desc}</p>
+              <div className="mt-auto flex h-10 w-10 items-center justify-center rounded-lg bg-muted transition-colors group-hover:bg-highlight/10">
+                <category.icon className="h-5 w-5 text-navy transition-colors group-hover:text-highlight" />
               </div>
             </Link>
           </motion.div>

@@ -3,11 +3,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductFilterPanel from "@/components/ProductFilterPanel";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Droplets, PhoneCall, Wrench } from "lucide-react";
-import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
+import { ArrowUpRight, PhoneCall, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 import { matchesSearchQuery, matchesSelectedOptions, toggleFilterValue } from "@/lib/productFilters";
 import PageMeta from "@/components/PageMeta";
+import workforceBreadcrumbImage from "../../assets/breadcrub/workforce.png";
 
 type WorkforceProduct = {
   name: string;
@@ -142,7 +142,6 @@ const workforceProducts: WorkforceProduct[] = [
 const salesPhoneHref = "tel:+919920909700";
 const salesWhatsAppHref =
   "https://wa.me/919920909700?text=Hi%20Zestek%2C%20I%20need%20details%20for%20Epson%20WorkForce%20printers.";
-const consumablesContactUrl = "/contact#consumables";
 const serviceSupportContactUrl = "/contact#service-amc";
 
 const createEmptyWorkforceFilters = (): WorkforceFilterState => ({
@@ -164,6 +163,15 @@ const workforceSpotlightPaths: Record<string, string> = {
   "Epson WorkForce Pro EM-C8100": "/epson-em-c8100",
   "Epson WorkForce Enterprise AM-M5500": "/epson-m5500",
 };
+
+const excludedWorkforceProductNames = new Set([
+  "Epson WorkForce Enterprise AM-M5500",
+  "Epson WorkForce Enterprise WF-C20750",
+  "Epson WorkForce Enterprise WF-C21000",
+  "Epson WorkForce Enterprise WF-M21000",
+  "Epson WorkForce Pro EM-C8100",
+  "Epson WorkForce Pro EM-C8101",
+]);
 
 const buildWorkforceFeatureList = (features: string[]) => {
   if (features.length === 0) {
@@ -243,25 +251,14 @@ const getWorkforceProductMeta = (product: WorkforceProduct): WorkforceProductMet
   };
 };
 
-const normalizedWorkforceProducts = workforceProducts.map((product) => ({
-  ...product,
-  meta: getWorkforceProductMeta(product),
-}));
+const normalizedWorkforceProducts = workforceProducts
+  .filter((product) => !excludedWorkforceProductNames.has(product.name))
+  .map((product) => ({
+    ...product,
+    meta: getWorkforceProductMeta(product),
+  }));
 
 const EpsonWorkforce = () => {
-  const { isSubmitting, handleSubmit } = useLeadFormSubmission({
-    formId: "epson-workforce-quote-form",
-    formName: "Epson WorkForce Quote Form",
-    successMessage: "Your WorkForce enquiry has been sent. Our team will get in touch shortly.",
-    mapFields: (fields) => ({
-      name: fields.name,
-      company_name: fields.company_name,
-      work_email: fields.work_email,
-      phone_number: fields.phone_number,
-      monthly_print_volume: fields.monthly_print_volume,
-      message: fields.message,
-    }),
-  });
   const [searchValue, setSearchValue] = useState("");
   const [sortValue, setSortValue] = useState("recommended");
   const [selectedFilters, setSelectedFilters] = useState<WorkforceFilterState>(createEmptyWorkforceFilters);
@@ -320,24 +317,25 @@ const EpsonWorkforce = () => {
       <section
         className="pb-10 -mt-16"
         style={{
-          backgroundImage:
-            "linear-gradient(90deg, rgba(18, 32, 60, 0.92) 0%, rgba(34, 55, 95, 0.88) 40%, rgba(73, 87, 120, 0.6) 65%, rgba(230, 236, 244, 0.12) 100%), url('https://zestek.vercel.app/assets/images/products/epson-am-c4000.png')",
-          backgroundSize: "auto 84%",
-          backgroundPosition: "88% center",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: `url('${workforceBreadcrumbImage}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <div className="container mx-auto section-padding pt-16 md:pt-20">
-          <span className="mt-4 inline-flex items-center rounded-full bg-white/15 px-4 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
+          <span className="mt-4 inline-flex items-center rounded-full bg-navy/10 px-4 py-1 text-[11px] font-semibold uppercase tracking-widest text-navy">
             Print Buddy of Every Print Shop
           </span>
-          <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-primary-foreground max-w-3xl">
+          <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-navy/80">
+            Home / Epson WorkForce
+          </p>
+          <h1 className="mt-4 max-w-3xl text-3xl font-display font-extrabold text-navy md:text-4xl lg:text-5xl">
             Epson WorkForce Printers for secure, high-output business teams.
           </h1>
           <div className="mt-6 flex flex-wrap gap-3">
             <a
               href={salesPhoneHref}
-              className="rounded-full bg-white text-navy px-5 py-2 text-xs font-semibold"
+              className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground"
             >
               Call Now
             </a>
@@ -345,7 +343,7 @@ const EpsonWorkforce = () => {
               href={salesWhatsAppHref}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white"
+              className="rounded-full border border-navy/30 px-5 py-2 text-xs font-semibold text-navy"
             >
               WhatsApp
             </a>
@@ -353,18 +351,18 @@ const EpsonWorkforce = () => {
               href="https://epsonadvantage.in"
               target="_blank"
               rel="noreferrer"
-              className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white"
+              className="rounded-full border border-navy/30 px-5 py-2 text-xs font-semibold text-navy"
             >
               Download Brochure
             </a>
-            <Link to="/roi-calculator" className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white">
+            <Link to="/roi-calculator" className="rounded-full border border-navy/30 px-5 py-2 text-xs font-semibold text-navy">
               ROI Calculator
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="section-padding pt-0">
+      <section className="section-padding pt-6 md:pt-8">
         <div className="container mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-8">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Epson WorkForce</p>
@@ -400,8 +398,6 @@ const EpsonWorkforce = () => {
               />
             </div>
             <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-navy">
-              <span className="rounded-full bg-highlight/20 px-3 py-1">Call for Best Price</span>
-              <span className="rounded-full bg-highlight/20 px-3 py-1">View Ink & Consumables</span>
               <span className="rounded-full bg-highlight/20 px-3 py-1">Service & Support</span>
             </div>
           </div>
@@ -497,17 +493,17 @@ const EpsonWorkforce = () => {
                       <div className="mb-4 flex h-40 items-center justify-center overflow-hidden rounded-xl border border-border bg-muted/60">
                         <img src={product.imageUrl} alt={product.name} className="h-full w-full object-contain p-3" />
                       </div>
-                      <div className="mb-3 flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-widest text-highlight">
+                      <div className="mb-3 flex flex-wrap content-start gap-2 text-[10px] font-semibold uppercase tracking-widest text-highlight md:min-h-[3.5rem]">
                         <span className="rounded-full bg-highlight/15 px-3 py-1">{product.meta.paperSize}</span>
                         <span className="rounded-full bg-highlight/15 px-3 py-1">{product.meta.outputMode}</span>
                         <span className="rounded-full bg-highlight/15 px-3 py-1">{product.meta.deviceType}</span>
                       </div>
-                      <h3 className="font-display font-bold text-navy">{product.name}</h3>
-                      <p className="mt-3 text-sm leading-6 text-muted-foreground">{product.meta.description}</p>
-                      <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-navy/80">
+                      <h3 className="font-display font-bold text-navy md:min-h-[3.75rem]">{product.name}</h3>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground md:mt-3 md:min-h-[4.5rem]">{product.meta.description}</p>
+                      <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-navy/80 md:mt-4 md:min-h-[2.5rem]">
                         {product.meta.highlights.join(" | ")}
                       </p>
-                      <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                      <p className="mt-3 text-sm leading-6 text-muted-foreground md:mt-4 md:min-h-[3.25rem]">
                         <span className="font-semibold text-navy">Best for:</span> {product.meta.bestFor}
                       </p>
 
@@ -531,21 +527,7 @@ const EpsonWorkforce = () => {
                             <ArrowUpRight className="h-4 w-4" />
                           </a>
                         )}
-                        <a
-                          href={salesPhoneHref}
-                          className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-border px-4 py-2.5 text-xs font-semibold text-navy"
-                        >
-                          <PhoneCall className="h-4 w-4" />
-                          Call for Best Price
-                        </a>
                         <div className="grid grid-cols-1 gap-2 pt-1">
-                          <Link
-                            to={consumablesContactUrl}
-                            className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
-                          >
-                            <Droplets className="h-4 w-4" />
-                            View Ink & Consumables
-                          </Link>
                           <Link
                             to={serviceSupportContactUrl}
                             className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
@@ -573,73 +555,6 @@ const EpsonWorkforce = () => {
                   </button>
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-padding pt-0">
-        <div className="container mx-auto">
-          <div className="rounded-3xl border border-border bg-card p-6 md:p-8">
-            <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Request a Quote</p>
-                <h3 className="mt-3 font-display font-bold text-navy text-2xl">Zestek Digital LLP</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Managed corporate print solutions with Epson WorkForce expertise.
-                </p>
-              </div>
-              <form onSubmit={handleSubmit} className="grid gap-3">
-                <input name="name" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="Name" required />
-                <input
-                  name="company_name"
-                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                  placeholder="Company Name"
-                  required
-                />
-                <input
-                  name="work_email"
-                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                  placeholder="Work Email"
-                  type="email"
-                  required
-                />
-                <input
-                  name="phone_number"
-                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                  placeholder="Phone Number"
-                  type="tel"
-                  required
-                />
-                <select name="monthly_print_volume" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-                  <option>Monthly Print Volume</option>
-                  <option>Below 20,000 pages</option>
-                  <option>20,000 - 50,000 pages</option>
-                  <option>50,000 - 100,000 pages</option>
-                  <option>100,000+ pages</option>
-                </select>
-                <textarea
-                  name="message"
-                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                  rows={4}
-                  placeholder="Message / Requirements"
-                />
-                <div className="flex flex-wrap gap-3">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {isSubmitting ? "Submitting..." : "Quick Enquiry"}
-                  </button>
-                  <a
-                    href="tel:+919920909700"
-                    className="rounded-full border border-border px-5 py-2 text-xs font-semibold text-navy"
-                  >
-                    Call Now
-                  </a>
-                </div>
-              </form>
             </div>
           </div>
         </div>

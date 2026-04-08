@@ -4,6 +4,17 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 import zestekLogo from "../../assets/Zestek_Logo.png";
 
+const WhatsAppIcon = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+    className={className}
+  >
+    <path d="M19.05 4.94A9.87 9.87 0 0 0 12.03 2C6.55 2 2.09 6.46 2.09 11.94c0 1.75.46 3.46 1.33 4.97L2 22l5.24-1.37a9.9 9.9 0 0 0 4.79 1.22h.01c5.48 0 9.94-4.46 9.94-9.94a9.86 9.86 0 0 0-2.93-6.97Zm-7.02 15.23h-.01a8.23 8.23 0 0 1-4.19-1.14l-.3-.18-3.11.81.83-3.03-.2-.31a8.23 8.23 0 0 1-1.27-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.85 5.83 2.41a8.18 8.18 0 0 1 2.42 5.83c0 4.55-3.7 8.23-8.25 8.23Zm4.52-6.17c-.25-.12-1.48-.73-1.71-.81-.23-.09-.39-.12-.56.12-.17.24-.64.81-.79.98-.15.18-.29.19-.54.06-.25-.12-1.04-.38-1.98-1.21-.73-.65-1.22-1.45-1.37-1.69-.14-.24-.02-.37.11-.49.11-.11.25-.29.37-.43.13-.15.17-.24.25-.4.09-.18.04-.33-.02-.46-.07-.12-.56-1.35-.76-1.84-.2-.48-.4-.42-.56-.42h-.48c-.17 0-.45.06-.68.31-.23.24-.88.86-.88 2.09 0 1.23.9 2.43 1.02 2.6.13.16 1.77 2.69 4.28 3.77.6.26 1.07.41 1.43.52.6.19 1.14.16 1.57.1.48-.07 1.48-.61 1.69-1.2.21-.59.21-1.09.15-1.2-.06-.1-.23-.16-.48-.28Z" />
+  </svg>
+);
+
 const Footer = () => (
   <footer className="bg-navy text-primary-foreground">
     <div className="container mx-auto px-4 pb-14 pt-12">
@@ -78,6 +89,19 @@ const Footer = () => (
               <Mail className="mt-1 h-5 w-5 shrink-0 text-highlight" />
               <a href="mailto:Connect@zestek.in" className="transition-colors hover:text-highlight">
                 Connect@zestek.in
+              </a>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center text-[#25D366]">
+                <WhatsAppIcon className="h-5 w-5" />
+              </div>
+              <a
+                href="https://wa.me/919920909700"
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-highlight"
+              >
+                WhatsApp: 9920909700
               </a>
             </div>
           </div>

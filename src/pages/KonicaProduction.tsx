@@ -3,12 +3,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductFilterPanel from "@/components/ProductFilterPanel";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Package, PhoneCall, Wrench } from "lucide-react";
-import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
+import { ArrowUpRight, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { konicaProductionProducts } from "@/data/konicaProductionProducts";
 import { matchesSearchQuery, matchesSelectedOptions, parseLeadingNumber, toggleFilterValue } from "@/lib/productFilters";
 import PageMeta from "@/components/PageMeta";
+import konicaBreadcrumbImage from "../../assets/breadcrub/konica.png";
 
 const valueCards = [
   {
@@ -69,10 +69,15 @@ const topKonicaProductNames = [
 ];
 
 const topKonicaProductNameSet = new Set(topKonicaProductNames);
+const konicaProductsWithoutBizhub = konicaProductionProducts.filter(
+  (product) => !product.name.toLowerCase().includes("bizhub"),
+);
 
 const prioritizedKonicaProducts = [
-  ...topKonicaProductNames.flatMap((name) => konicaProductionProducts.filter((product) => product.name === name)),
-  ...konicaProductionProducts.filter((product) => !topKonicaProductNameSet.has(product.name)),
+  ...topKonicaProductNames.flatMap((name) =>
+    konicaProductsWithoutBizhub.filter((product) => product.name === name),
+  ),
+  ...konicaProductsWithoutBizhub.filter((product) => !topKonicaProductNameSet.has(product.name)),
 ];
 
 const createEmptyKonicaFilters = (): KonicaFilterState => ({
@@ -92,8 +97,11 @@ const konicaSortOptions = [
 
 const konicaSpeedOptions = ["Any", "20", "40", "60", "80", "100", "120", "140", "200", "250", "300"];
 const salesPhoneHref = "tel:+919920909700";
-const consumablesContactUrl = "/contact#consumables";
-const serviceSupportContactUrl = "/contact#service-amc";
+const salesPhoneDisplay = "9920909700";
+const konicaProductFinderUrl = "https://bt.konicaminolta.in/product-finder/";
+
+const resolveKonicaViewUrl = (viewUrl: string) =>
+  !viewUrl || viewUrl.includes("zestek.vercel.app") ? konicaProductFinderUrl : viewUrl;
 
 const getKonicaDetail = (product: KonicaProduct, label: string) =>
   product.details.find((detail) => detail.label === label)?.value ?? "";
@@ -200,19 +208,6 @@ const normalizedKonicaProducts = prioritizedKonicaProducts.map((product) => ({
 }));
 
 const KonicaProduction = () => {
-  const { isSubmitting, handleSubmit } = useLeadFormSubmission({
-    formId: "konica-production-pricing-form",
-    formName: "Konica Production Pricing Form",
-    successMessage: "Your production pricing request has been sent. Our team will contact you soon.",
-    mapFields: (fields) => ({
-      name: fields.name,
-      company_name: fields.company_name,
-      work_email: fields.work_email,
-      phone_number: fields.phone_number,
-      monthly_print_volume: fields.monthly_print_volume,
-      message: fields.message,
-    }),
-  });
   const [searchValue, setSearchValue] = useState("");
   const [sortValue, setSortValue] = useState("recommended");
   const [minSpeed, setMinSpeed] = useState("Any");
@@ -280,37 +275,39 @@ const KonicaProduction = () => {
       <section
         className="relative overflow-hidden -mt-16"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(10, 25, 60, 0.75), rgba(10, 25, 60, 0.75)), url('https://zestek.vercel.app/assets/images/hero/konica-production-hero-printer.jpg')",
+          backgroundImage: `url('${konicaBreadcrumbImage}')`,
           backgroundSize: "cover",
-          backgroundPosition: "right center",
+          backgroundPosition: "center",
         }}
       >
         <div className="container mx-auto section-padding pt-16 md:pt-20">
-          <div className="max-w-3xl text-primary-foreground">
-            <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest">
+          <div className="max-w-3xl text-navy">
+            <span className="inline-flex items-center rounded-full bg-navy/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest">
               Product Finder
             </span>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-navy/80">
+              Home / Konica Production
+            </p>
             <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold">
               Konica Minolta Production Printers
             </h1>
-            <p className="mt-3 text-sm md:text-base text-primary-foreground/80">
+            <p className="mt-3 text-sm text-navy/80 md:text-base">
               Press-grade output for commercial print, packaging mockups, textured media, and short-run production with
               SLA-backed uptime.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#konica-quote-form" className="rounded-full bg-white text-navy px-5 py-2 text-xs font-semibold">
+              <Link to="/contact#sales-inquiry" className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground">
                 Request a Quote
-              </a>
+              </Link>
               <a
                 href="https://bt.konicaminolta.in/brochure-download/"
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-primary-foreground"
+                className="rounded-full border border-navy/30 px-5 py-2 text-xs font-semibold text-navy"
               >
                 Download Brochures
               </a>
-              <Link to="/roi-calculator" className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold">
+              <Link to="/roi-calculator" className="rounded-full border border-navy/30 px-5 py-2 text-xs font-semibold">
                 ROI Calculator
               </Link>
             </div>
@@ -353,7 +350,7 @@ const KonicaProduction = () => {
               extraControls={
                 <div className="rounded-2xl border border-border bg-background/70 p-4">
                   <p className="text-xs font-semibold uppercase tracking-widest text-navy/75">Speed Range (PPM)</p>
-                  <div className="mt-3 grid grid-cols-2 gap-3">
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     <label className="block">
                       <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Min</span>
                       <select
@@ -457,16 +454,16 @@ const KonicaProduction = () => {
                         ))}
                       </div>
                       <h3 className="font-display font-bold text-navy">{product.name}</h3>
-                      <p className="mt-3 text-sm leading-6 text-muted-foreground">{product.meta.description}</p>
-                      <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-navy/80">
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground md:min-h-[4.5rem]">{product.meta.description}</p>
+                      <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-navy/80 md:mt-4 md:min-h-[2.5rem]">
                         {product.meta.highlights.join(" | ")}
                       </p>
-                      <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                      <p className="mt-3 text-sm leading-6 text-muted-foreground md:mt-4 md:min-h-[3.25rem]">
                         <span className="font-semibold text-navy">Best for:</span> {product.meta.bestFor}
                       </p>
                         <div className="mt-auto space-y-2 pt-5">
                         <a
-                          href={product.viewUrl}
+                          href={resolveKonicaViewUrl(product.viewUrl)}
                           target="_blank"
                           rel="noreferrer"
                           className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-navy px-4 py-2.5 text-xs font-semibold text-primary-foreground"
@@ -476,27 +473,12 @@ const KonicaProduction = () => {
                         </a>
                         <a
                           href={salesPhoneHref}
-                          className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-border px-4 py-2.5 text-xs font-semibold text-navy"
+                          className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
                         >
-                          <PhoneCall className="h-4 w-4" />
+                          <Phone className="h-4 w-4" />
                           Call for Best Price
+                          <span className="text-[11px] font-semibold text-navy/70">{salesPhoneDisplay}</span>
                         </a>
-                        <div className="grid grid-cols-1 gap-2 pt-1">
-                          <Link
-                            to={consumablesContactUrl}
-                            className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
-                          >
-                            <Package className="h-4 w-4" />
-                            View Toner & Consumables
-                          </Link>
-                          <Link
-                            to={serviceSupportContactUrl}
-                            className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
-                          >
-                            <Wrench className="h-4 w-4" />
-                            Service & Support
-                          </Link>
-                        </div>
                       </div>
                     </motion.div>
                   ))}
@@ -534,95 +516,6 @@ const KonicaProduction = () => {
               </li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      <section className="section-padding pt-0" id="konica-quote-form">
-        <div className="container mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-8">
-          <div className="rounded-2xl bg-card border border-border p-6">
-            <h2 className="section-title text-2xl md:text-3xl">Need a Production Print Quote?</h2>
-            <p className="section-subtitle mt-2">
-              Share your substrates, monthly load, and finishing requirements. We will recommend the best press and ROI plan.
-            </p>
-            <div className="mt-6 grid sm:grid-cols-3 gap-4">
-              {[
-                {
-                  tag: "MED",
-                  title: "Media Mix",
-                  body: "Coated stock, textured paper, envelopes, labels, and long-sheet applications.",
-                },
-                {
-                  tag: "FIN",
-                  title: "Finishing Flow",
-                  body: "Booklets, trimming, punching, stacking, and output requirements for live jobs.",
-                },
-                {
-                  tag: "ROI",
-                  title: "ROI Planning",
-                  body: "Monthly volume, uptime expectations, and the best-fit press shortlist for your floor.",
-                },
-              ].map((item) => (
-                <div key={item.tag} className="rounded-2xl bg-muted/60 border border-border p-4">
-                  <span className="text-xs font-semibold uppercase tracking-widest text-highlight">{item.tag}</span>
-                  <h3 className="mt-2 font-display font-bold text-navy">{item.title}</h3>
-                  <p className="mt-2 text-xs text-muted-foreground">{item.body}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 rounded-xl border border-border bg-white p-4 text-sm text-muted-foreground">
-              <strong className="text-navy">Includes</strong> Site-readiness checklist, uptime SLA, and operator training plan.
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="grid gap-4 rounded-2xl border border-border bg-card p-6">
-            <h3 className="font-display font-bold text-navy text-xl">Request Production Pricing</h3>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs font-semibold text-navy">Name</label>
-                <input name="name" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-navy">Company Name</label>
-                <input name="company_name" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
-              </div>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs font-semibold text-navy">Work Email</label>
-                <input name="work_email" type="email" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-navy">Phone Number</label>
-                <input name="phone_number" type="tel" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required />
-              </div>
-            </div>
-            <div>
-              <label className="text-xs font-semibold text-navy">Monthly Print Volume</label>
-              <select name="monthly_print_volume" className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-                <option>Select volume</option>
-                <option>Below 20,000 impressions</option>
-                <option>20,000 - 100,000 impressions</option>
-                <option>100,000 - 250,000 impressions</option>
-                <option>250,000+ impressions</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs font-semibold text-navy">Message / Requirements</label>
-              <textarea
-                name="message"
-                rows={3}
-                placeholder="Tell us about substrates, finishing, or timeline."
-                className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              {isSubmitting ? "Submitting..." : "Submit Request"}
-            </button>
-          </form>
         </div>
       </section>
 

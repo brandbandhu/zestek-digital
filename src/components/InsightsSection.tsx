@@ -4,7 +4,7 @@ import { insightArticles } from "@/data/insightsArticles";
 import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 
 const InsightsSection = () => (
-  <section className="section-padding bg-card">
+  <section id="blogs" className="section-padding bg-card">
     <div className="container mx-auto">
       <motion.div
         variants={staggerContainer}
@@ -14,13 +14,14 @@ const InsightsSection = () => (
         className="mb-12 text-center"
       >
         <span className="text-xs font-semibold uppercase tracking-widest text-highlight mb-2 block">
-          Blog
+          Blogs
         </span>
         <motion.h2 variants={fadeUp} className="section-title">
-          Latest blog &amp; print insights
+          Latest blogs and print insights
         </motion.h2>
         <motion.p variants={fadeUp} className="section-subtitle mx-auto mt-3">
-          Read useful guides and updates to help you choose the right print setup.
+          Read practical guides, customer stories, and print-business updates to make better buying and service
+          decisions.
         </motion.p>
       </motion.div>
 
@@ -47,12 +48,12 @@ const InsightsSection = () => (
               <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                 {item.tag}
               </span>
-              <h3 className="mt-2 min-h-[3rem] font-display font-bold text-navy">
+              <h3 className="mt-2 font-display font-bold text-navy md:min-h-[3rem]">
                 <Link to={item.route} className="hover:text-highlight transition-colors">
                   {item.title}
                 </Link>
               </h3>
-              <p className="mt-2 min-h-[3.5rem] text-sm text-muted-foreground">{item.cardDescription}</p>
+              <p className="mt-2 text-sm text-muted-foreground md:min-h-[3.5rem]">{item.cardDescription}</p>
               <Link
                 to={item.route}
                 className="mt-auto pt-4 inline-flex text-xs font-semibold text-navy transition-colors hover:text-highlight"

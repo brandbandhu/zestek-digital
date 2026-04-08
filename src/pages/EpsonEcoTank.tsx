@@ -3,10 +3,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductFilterPanel from "@/components/ProductFilterPanel";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Droplets, PhoneCall, Wrench } from "lucide-react";
+import { ArrowUpRight, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 import { matchesSearchQuery, matchesSelectedOptions, toggleFilterValue } from "@/lib/productFilters";
 import PageMeta from "@/components/PageMeta";
+import ecoTankBreadcrumbImage from "../../assets/breadcrub/ecotank.png";
 
 type EcoTankProduct = {
   name: string;
@@ -269,8 +270,6 @@ const productCards: EcoTankProduct[] = [
   },
 ];
 
-const salesPhoneHref = "tel:+919920909700";
-const consumablesContactUrl = "/contact#consumables";
 const serviceSupportContactUrl = "/contact#service-amc";
 
 type EcoTankFilterState = {
@@ -467,36 +466,37 @@ const EpsonEcoTank = () => {
       <section
         className="relative overflow-hidden min-h-[360px] md:min-h-[420px] -mt-16"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(10, 25, 60, 0.78), rgba(10, 25, 60, 0.78)), url('https://zestek.vercel.app/assets/images/products/epson-l3252.png')",
-          backgroundSize: "auto 84%",
-          backgroundPosition: "92% center",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: `url('${ecoTankBreadcrumbImage}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <div className="container mx-auto section-padding pt-16 md:pt-20">
-          <span className="mt-4 inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
+          <span className="mt-4 inline-flex items-center rounded-full bg-navy/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-navy">
             Product Finder
           </span>
-          <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-primary-foreground">
+          <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-navy/80">
+            Home / Epson EcoTank
+          </p>
+          <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-navy">
             Epson EcoTank Printers
           </h1>
-          <p className="mt-3 text-sm md:text-base text-primary-foreground/80 max-w-3xl">
+          <p className="mt-3 max-w-3xl text-sm text-navy/80 md:text-base">
             Browse the full Epson EcoTank range with product filters, official details, and guided support from Zestek
             Digital LLP.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="/contact" className="rounded-full bg-white text-navy px-5 py-2 text-xs font-semibold">
+            <a href="/contact" className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground">
               Request a Quote
             </a>
-            <a href="/" className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white">
+            <a href="/" className="rounded-full border border-navy/30 px-5 py-2 text-xs font-semibold text-navy">
               Back to Home
             </a>
           </div>
         </div>
       </section>
 
-      <section className="section-padding pt-0">
+      <section className="section-padding pt-6 md:pt-8">
         <div className="container mx-auto">
           <div className="grid items-start gap-8 lg:grid-cols-[320px_minmax(0,1fr)]">
             <ProductFilterPanel
@@ -588,12 +588,12 @@ const EpsonEcoTank = () => {
                           </span>
                           <span className="text-xs text-muted-foreground">{product.sku}</span>
                         </div>
-                        <h3 className="font-display font-bold text-lg text-navy">{product.name}</h3>
-                        <p className="mt-3 text-sm leading-6 text-muted-foreground">{meta.description}</p>
-                        <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-navy/80">
+                        <h3 className="font-display text-lg font-bold text-navy md:min-h-[3.75rem]">{product.name}</h3>
+                        <p className="mt-2 text-sm leading-6 text-muted-foreground md:mt-3 md:min-h-[4.5rem]">{meta.description}</p>
+                        <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-navy/80 md:mt-4 md:min-h-[2.5rem]">
                           {meta.highlights.join(" | ")}
                         </p>
-                        <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                        <p className="mt-3 text-sm leading-6 text-muted-foreground md:mt-4 md:min-h-[3.25rem]">
                           <span className="font-semibold text-navy">Best for:</span> {meta.bestFor}
                         </p>
 
@@ -607,21 +607,7 @@ const EpsonEcoTank = () => {
                             Check Price & Details
                             <ArrowUpRight className="h-4 w-4" />
                           </a>
-                          <a
-                            href={salesPhoneHref}
-                            className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-border px-4 py-2.5 text-xs font-semibold text-navy"
-                          >
-                            <PhoneCall className="h-4 w-4" />
-                            Call for Best Price
-                          </a>
                           <div className="grid grid-cols-1 gap-2 pt-1">
-                            <Link
-                              to={consumablesContactUrl}
-                              className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"
-                            >
-                              <Droplets className="h-4 w-4" />
-                              View Ink & Consumables
-                            </Link>
                             <Link
                               to={serviceSupportContactUrl}
                               className="inline-flex items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-xs font-semibold text-navy"

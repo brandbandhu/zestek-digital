@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { toast } from "@/hooks/use-toast";
-import { formDataToFields, isGoogleSheetsConfigured, submitLeadToGoogleSheets, type LeadFieldMap } from "@/lib/googleSheets";
+import { formDataToFields, isLeadSubmissionConfigured, submitLeadToGoogleSheets, type LeadFieldMap } from "@/lib/googleSheets";
 
 type UseLeadFormSubmissionOptions = {
   formId: string;
@@ -54,9 +54,9 @@ export const useLeadFormSubmission = ({
       toast({
         variant: "destructive",
         title: "Submission failed",
-        description: isGoogleSheetsConfigured
+        description: isLeadSubmissionConfigured
           ? errorMessage || "We could not submit your request right now. Please try again."
-          : "Google Sheets is not connected yet. Add the Apps Script web app URL to enable form syncing.",
+          : "Lead submission is not configured yet. Add the Google Sheets web app URL or Web3Forms access key.",
       });
     } finally {
       setIsSubmitting(false);

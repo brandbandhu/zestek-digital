@@ -6,27 +6,30 @@ import logo3 from "@/assets/logo/3.jpeg";
 
 const partners = [
   {
-    name: "Epson",
-    badge: "Epson printers",
-    desc: "Epson print solutions",
+    name: "Epson printing solutions",
+    badge: "Accredited Partner",
+    desc:
+      "Power your print business with Epson EcoTank and WorkForce printers, built for high-volume output, low cost per print, and dependable performance, backed by our expert guidance and service support.",
     logo: logo1,
   },
   {
-    name: "Konica Minolta",
-    badge: "KM production print",
-    desc: "Konica Minolta production print",
+    name: "Konica Minolta production printers",
+    badge: "Authorized Partner",
+    desc:
+      "Scale your print business with Konica Minolta production printers, delivering high-speed output, superior print quality, and media versatility, backed by expert installation, color management, and reliable service support.",
     logo: logo2,
   },
   {
-    name: "WYTE",
-    badge: "WYTE print solutions",
-    desc: "WYTE specialty solutions",
+    name: "WYTE specialty solutions",
+    badge: "Specialty Printing",
+    desc:
+      "Expand your offerings with WYTE solutions for signage and specialty printing, ideal for vinyl, flex, and customized media, supported with the right machine setup and application guidance.",
     logo: logo3,
   },
 ];
 
 const PartnersSection = () => (
-  <section className="section-padding bg-card pt-8 md:pt-10">
+  <section id="brand-logos" className="section-padding bg-card pt-8 md:pt-10">
     <div className="container mx-auto">
       <motion.div
         variants={staggerContainer}
@@ -35,17 +38,18 @@ const PartnersSection = () => (
         viewport={defaultViewport}
         className="mb-10 text-left"
       >
-        <span className="text-xs font-semibold uppercase tracking-widest text-highlight mb-2 block">
-          Our Partners
+        <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-highlight">
+          Brand Logos
         </span>
-        <motion.h2 variants={fadeUp} className="section-title">Reliable Brands. Smarter Print Solutions.</motion.h2>
+        <motion.h2 variants={fadeUp} className="section-title">
+          Authorized brands behind every Zestek print solution
+        </motion.h2>
         <motion.p variants={fadeUp} className="section-subtitle mt-4 max-w-4xl">
-          Looking for <strong className="font-semibold text-navy">Zestek printer solutions</strong>? Zestek Digital LLP
-          helps businesses choose the right Epson printers, Konica Minolta production systems, and managed print
-          services from one official website.
+          Browse the brand logos we work with across office printing, commercial production, and specialty applications,
+          backed by machine selection, installation support, and dependable service coverage.
         </motion.p>
       </motion.div>
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid gap-8 md:grid-cols-3">
         {partners.map((p, i) => (
           <motion.div
             key={p.name}
@@ -54,7 +58,7 @@ const PartnersSection = () => (
             whileHover={{ y: -8 }}
             viewport={defaultViewport}
             transition={{ delay: i * 0.12, duration: 0.55 }}
-            className="hover-lift surface-glow group rounded-2xl border border-border bg-background p-6 transition-shadow"
+            className="hover-lift surface-glow group flex h-full flex-col rounded-2xl border border-border bg-background p-6 transition-shadow"
           >
             <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex items-center gap-3">
@@ -69,8 +73,8 @@ const PartnersSection = () => (
                 {p.badge}
               </span>
             </div>
-            <h3 className="font-display font-bold text-lg text-navy mb-2">{p.name}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+            <h3 className="mb-2 font-display text-lg font-bold text-navy">{p.name}</h3>
+            <p className="text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
           </motion.div>
         ))}
       </div>

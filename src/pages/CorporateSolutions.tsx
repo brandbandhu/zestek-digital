@@ -1,9 +1,9 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
-import { useLeadFormSubmission } from "@/hooks/useLeadFormSubmission";
 import PageMeta from "@/components/PageMeta";
 import { officeShowroomImage, printFloorImage, printWorkspaceImage } from "@/lib/siteVisuals";
+import corporateSolutionsPageImage from "../../assets/corporate solution.jpg";
 import {
   BarChart3,
   Boxes,
@@ -134,24 +134,22 @@ const challengePoints = [
   "Inefficient device usage",
 ];
 
+const mpsQuickHighlights: { title: string; icon: LucideIcon }[] = [
+  { title: "Centralized Control", icon: ClipboardList },
+  { title: "Predictable Costing", icon: BarChart3 },
+  { title: "Better Uptime", icon: ShieldCheck },
+];
+
+const mpsCoverage: { label: string; icon: LucideIcon }[] = [
+  { label: "Devices", icon: Printer },
+  { label: "Service", icon: Wrench },
+  { label: "Consumables", icon: Droplets },
+];
+
 const brochureUrl =
   "https://mediaserver.goepson.com/ImConvServlet/imconv/c97c6aae0a9bc4083bc00bceba5150c75485311f/original?assetDescr=BIJ-Epson-Solutions-Suite";
 
 const CorporateSolutions = () => {
-  const { isSubmitting, handleSubmit } = useLeadFormSubmission({
-    formId: "corporate-solutions-consultation-form",
-    formName: "Corporate Solutions Consultation Form",
-    successMessage: "Your managed print request has been sent. We will contact you shortly.",
-    mapFields: (fields) => ({
-      name: fields.name,
-      company_name: fields.company_name,
-      work_email: fields.work_email,
-      phone_number: fields.phone_number,
-      current_fleet_size: fields.current_fleet_size,
-      message: fields.message,
-    }),
-  });
-
   return (
     <div className="min-h-screen bg-background">
       <PageMeta
@@ -173,7 +171,7 @@ const CorporateSolutions = () => {
         className="-mt-16 pb-8"
         style={{
           backgroundImage:
-            `linear-gradient(90deg, rgba(18, 32, 60, 0.93) 0%, rgba(34, 55, 95, 0.88) 44%, rgba(73, 87, 120, 0.45) 72%, rgba(230, 236, 244, 0.08) 100%), url('${printFloorImage}')`,
+            `linear-gradient(90deg, rgba(18, 32, 60, 0.93) 0%, rgba(34, 55, 95, 0.88) 44%, rgba(73, 87, 120, 0.45) 72%, rgba(230, 236, 244, 0.08) 100%), url('${corporateSolutionsPageImage}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -191,9 +189,9 @@ const CorporateSolutions = () => {
               optimize print costs, streamline operations, and ensure consistent performance across departments.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#mps-consultation" className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-navy">
+              <Link to="/contact#sales-inquiry" className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-navy">
                 Request an MPS Plan
-              </a>
+              </Link>
               <a
                 href={brochureUrl}
                 target="_blank"
@@ -208,30 +206,71 @@ const CorporateSolutions = () => {
       </section>
 
       <section className="section-padding pt-10">
-        <div className="container mx-auto grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <article className="rounded-3xl border border-border bg-card p-6 md:p-8">
-            <p className="text-xs font-semibold uppercase tracking-widest text-highlight">What Is MPS</p>
-            <h2 className="mt-3 text-2xl font-bold text-navy md:text-3xl">What is Managed Print Services?</h2>
-            <p className="mt-4 text-sm leading-7 text-muted-foreground md:text-base">
-              Managed Print Services (MPS) is a comprehensive approach to managing your complete print environment,
-              covering devices, service support, and consumables under one optimized framework.
-            </p>
-            <p className="mt-3 text-sm leading-7 text-muted-foreground md:text-base">
-              Instead of handling multiple vendors and unpredictable costs, MPS gives centralized control, predictable
-              expenses, and improved operational efficiency.
-            </p>
-            <ul className="mt-5 space-y-2 text-sm text-muted-foreground">
-              <li>Centralized control</li>
-              <li>Predictable expenses</li>
-              <li>Improved operational efficiency</li>
-            </ul>
+        <div className="container mx-auto grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
+          <article className="flex h-full flex-col justify-between rounded-3xl border border-border bg-card p-6 md:p-8">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">What Is MPS</p>
+              <h2 className="mt-3 text-2xl font-bold text-navy md:text-3xl">What is Managed Print Services?</h2>
+              <p className="mt-4 text-sm leading-7 text-muted-foreground md:text-base">
+                Managed Print Services (MPS) is a comprehensive approach to managing your complete print environment,
+                covering devices, service support, and consumables under one optimized framework.
+              </p>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground md:text-base">
+                Instead of handling multiple vendors and unpredictable costs, MPS gives centralized control, predictable
+                expenses, and improved operational efficiency.
+              </p>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {mpsQuickHighlights.map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <div key={item.title} className="rounded-2xl border border-border bg-muted/50 p-4">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-background text-highlight shadow-sm">
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <p className="mt-3 text-sm font-semibold text-navy">{item.title}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-highlight/20 bg-[linear-gradient(135deg,rgba(255,247,231,0.95)_0%,rgba(245,248,255,0.98)_100%)] p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-widest text-highlight">MPS Coverage</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    One structured print plan covering deployment, service routing, and consumable continuity.
+                  </p>
+                </div>
+                <span className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-highlight shadow-sm sm:inline-flex">
+                  <FileText className="h-5 w-5" />
+                </span>
+              </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                {mpsCoverage.map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <div key={item.label} className="rounded-2xl border border-white/80 bg-white/90 p-4">
+                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-highlight/10 text-highlight">
+                        <Icon className="h-4 w-4" />
+                      </span>
+                      <p className="mt-3 text-sm font-semibold text-navy">{item.label}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </article>
 
-          <div className="overflow-hidden rounded-3xl border border-border bg-card">
-            <div className="h-full min-h-[320px] overflow-hidden bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(232,241,255,0.88)_58%,rgba(183,206,234,0.45)_100%)]">
+          <div className="h-full overflow-hidden rounded-3xl border border-border bg-card">
+            <div className="h-72 overflow-hidden bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(232,241,255,0.88)_58%,rgba(183,206,234,0.45)_100%)] sm:h-80 md:h-[28rem] lg:h-full">
               <img
-                src={officeShowroomImage}
-                alt="Managed print services with centralized device planning and office workflow control"
+                src={corporateSolutionsPageImage}
+                alt="Corporate managed print services planning and business print workflow support"
                 className="h-full w-full object-cover object-center"
                 loading="lazy"
               />
@@ -401,9 +440,9 @@ const CorporateSolutions = () => {
             Partner with Zestek to streamline print operations, reduce costs, and ensure consistent performance.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="#mps-consultation" className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-navy">
+            <Link to="/contact#sales-inquiry" className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-navy">
               Request an MPS Plan
-            </a>
+            </Link>
             <Link to="/contact#sales-inquiry" className="rounded-full border border-white/40 px-5 py-2 text-xs font-semibold text-white">
               Talk to an Expert
             </Link>
@@ -430,69 +469,6 @@ const CorporateSolutions = () => {
                 {item}
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section-padding pt-0" id="mps-consultation">
-        <div className="container mx-auto rounded-3xl border border-border bg-card p-6 md:p-8">
-          <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr]">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Request MPS Consultation</p>
-              <h3 className="mt-3 font-display text-2xl font-bold text-navy">Share your current print environment</h3>
-              <p className="mt-3 text-sm text-muted-foreground">
-                Our team will review your current setup and suggest a practical MPS structure aligned to your cost,
-                output, and reliability goals.
-              </p>
-              <div className="mt-5 rounded-2xl border border-border bg-muted/50 p-4 text-sm text-muted-foreground">
-                <p>Phone: 9920909700</p>
-                <p>Email: connect@zestek.in</p>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="grid gap-3">
-              <input name="name" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="Name" required />
-              <input
-                name="company_name"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                placeholder="Company Name"
-                required
-              />
-              <input
-                name="work_email"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                placeholder="Work Email"
-                type="email"
-                required
-              />
-              <input
-                name="phone_number"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                placeholder="Phone Number"
-                type="tel"
-                required
-              />
-              <select name="current_fleet_size" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-                <option>Current Fleet Size</option>
-                <option>1 - 5 devices</option>
-                <option>6 - 20 devices</option>
-                <option>21 - 50 devices</option>
-                <option>50+ devices</option>
-              </select>
-              <textarea
-                name="message"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                rows={4}
-                placeholder="Message / Requirements"
-              />
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {isSubmitting ? "Submitting..." : "Submit Request"}
-              </button>
-            </form>
           </div>
         </div>
       </section>

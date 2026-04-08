@@ -1,16 +1,43 @@
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { motion } from "framer-motion";
-import { Award, ShieldCheck, Wrench, PackagePlus } from "lucide-react";
 import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 
-const signals = [
-  { icon: Award, title: "Epson Authorized Partner", desc: "Certified guidance and support for Epson SOHO and WorkForce printer deployments." },
-  { icon: ShieldCheck, title: "Konica Minolta Certified", desc: "Trained engineers supporting production and office devices with SLA-backed service." },
-  { icon: Wrench, title: "Service Excellence", desc: "Consistent response times and proactive maintenance for business-critical printing." },
-  { icon: PackagePlus, title: "New Installations", desc: "Fresh machine installations completed monthly for photocopy centers and commercial units." },
-];
+const achievementFiles = import.meta.glob("../../assets/achievements/*.{png,jpg,jpeg,webp,avif}", {
+  eager: true,
+  import: "default",
+}) as Record<string, string>;
+
+const achievementPriority = [
+  "WhatsApp Image 2026-04-07 at 11.42.11 PM (2).jpeg",
+  "WhatsApp Image 2026-04-07 at 11.42.11 PM.jpeg",
+] as const;
+
+const achievements = Object.entries(achievementFiles)
+  .map(([path, src]) => ({
+    fileName: path.split("/").pop() ?? "achievement",
+    src,
+  }))
+  .sort((a, b) => {
+    const aPriority = achievementPriority.indexOf(a.fileName as (typeof achievementPriority)[number]);
+    const bPriority = achievementPriority.indexOf(b.fileName as (typeof achievementPriority)[number]);
+
+    if (aPriority !== -1 || bPriority !== -1) {
+      if (aPriority === -1) return 1;
+      if (bPriority === -1) return -1;
+      return aPriority - bPriority;
+    }
+
+    return a.fileName.localeCompare(b.fileName, undefined, { numeric: true, sensitivity: "base" });
+  });
 
 const TrustSignals = () => (
-  <section className="section-padding bg-card">
+  <section id="awards-achievements" className="section-padding bg-card">
     <div className="container mx-auto">
       <motion.div
         variants={staggerContainer}
@@ -19,35 +46,56 @@ const TrustSignals = () => (
         viewport={defaultViewport}
         className="mb-10 text-left"
       >
-        <span className="text-xs font-semibold uppercase tracking-widest text-highlight mb-2 block">
-          Achievements
+        <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-highlight">
+          Awards &amp; Achievements
         </span>
         <motion.h2 variants={fadeUp} className="section-title">
-          Achievements that build confidence from day one
+          Award pictures, installations, and achievement highlights
         </motion.h2>
         <motion.p variants={fadeUp} className="section-subtitle mt-3">
-          Authorized partnerships, responsive service, and consistent installations.
+          Browse real-world visuals from our awards, business milestones, partnership moments, and customer-facing
+          installations.
         </motion.p>
       </motion.div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {signals.map((s, i) => (
-          <motion.div
-            key={s.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            whileHover={{ y: -8 }}
-            viewport={defaultViewport}
-            transition={{ duration: 0.55, delay: i * 0.08 }}
-            className="hover-lift surface-glow rounded-2xl border border-border bg-background p-6"
-          >
-            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center mb-4">
-              <s.icon className="w-5 h-5 text-navy" />
-            </div>
-            <h3 className="font-display font-bold mb-2 text-navy">{s.title}</h3>
-            <p className="text-sm text-muted-foreground">{s.desc}</p>
-          </motion.div>
-        ))}
-      </div>
+
+      {achievements.length > 0 ? (
+        <Carousel opts={{ align: "start", loop: achievements.length > 1 }} className="w-full px-1">
+          <CarouselContent className="items-stretch">
+            {achievements.map((achievement, index) => (
+              <CarouselItem key={achievement.fileName} className="flex basis-full md:basis-1/2 lg:basis-1/3">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -8 }}
+                  viewport={defaultViewport}
+                  transition={{ duration: 0.5, delay: index * 0.06 }}
+                  className="hover-lift surface-glow flex h-full w-full rounded-2xl border border-border bg-background p-3 shadow-sm"
+                >
+                  <div className="aspect-[4/5] w-full overflow-hidden rounded-xl bg-muted">
+                    <img
+                      src={achievement.src}
+                      alt="Zestek award and achievement photograph"
+                      loading="lazy"
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </div>
+                </motion.div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          {achievements.length > 1 ? (
+            <>
+              <CarouselPrevious className="-left-4 border-border bg-white text-navy shadow" />
+              <CarouselNext className="-right-4 border-border bg-white text-navy shadow" />
+            </>
+          ) : null}
+        </Carousel>
+      ) : (
+        <div className="rounded-2xl border border-border bg-background p-6 text-sm text-muted-foreground shadow-sm">
+          No achievement photos were found in the achievements folder.
+        </div>
+      )}
     </div>
   </section>
 );

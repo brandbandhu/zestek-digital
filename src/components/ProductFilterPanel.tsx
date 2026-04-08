@@ -71,7 +71,7 @@ const ProductFilterPanel = ({
 
         {isSidebar ? (
           <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl border border-border bg-background px-4 py-3">
                 <p className="text-[11px] font-semibold uppercase tracking-widest text-navy/70">Showing</p>
                 <p className="mt-1 text-sm text-muted-foreground">

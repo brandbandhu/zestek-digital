@@ -10,6 +10,8 @@ import EpsonEcoTank from "./pages/EpsonEcoTank.tsx";
 import EpsonWorkforce from "./pages/EpsonWorkforce.tsx";
 import CorporateSolutions from "./pages/CorporateSolutions.tsx";
 import KonicaProduction from "./pages/KonicaProduction.tsx";
+import PhotocopyCommercial from "./pages/PhotocopyCommercial.tsx";
+import CommercialProduct from "./pages/CommercialProduct.tsx";
 import RoiCalculator from "./pages/RoiCalculator.tsx";
 import Contact from "./pages/Contact.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -52,6 +54,9 @@ const App = () => (
           <Route path="/insights/:slug" element={<InsightArticle />} />
           <Route path="/konica-production" element={<KonicaProduction />} />
           <Route path="/konica-production.html" element={<KonicaProduction />} />
+          <Route path="/photocopy-commercial" element={<PhotocopyCommercial />} />
+          <Route path="/photocopy-commercial.html" element={<PhotocopyCommercial />} />
+          <Route path="/commercial/:slug" element={<CommercialProduct />} />
           <Route path="/corporate-solutions" element={<CorporateSolutions />} />
           <Route path="/corporate-solutions.html" element={<CorporateSolutions />} />
           <Route path="/roi-calculator" element={<RoiCalculator />} />

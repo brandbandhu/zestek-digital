@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { isGoogleSheetsConfigured, submitLeadToGoogleSheets } from "@/lib/googleSheets";
+import roiBreadcrumbImage from "../../assets/breadcrub/roi.png";
 
 const RoiCalculatorContent = () => {
   const [decisionMakerName, setDecisionMakerName] = useState("");
@@ -362,14 +363,14 @@ const RoiCalculatorContent = () => {
 
   return (
     <>
-      <section className="relative overflow-hidden -mt-16 bg-[#12203c] pb-6">
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(18,32,60,0.96)_0%,rgba(34,55,95,0.92)_42%,rgba(87,119,170,0.55)_72%,rgba(226,239,255,0.82)_100%)]" />
-        <img
-          src="https://zestek.vercel.app/assets/images/products/epson-am-c4000.png"
-          alt="Business printer for ROI calculator"
-          className="pointer-events-none absolute bottom-0 right-4 hidden h-[84%] w-auto object-contain mix-blend-multiply opacity-95 drop-shadow-[0_18px_40px_rgba(15,32,66,0.25)] md:block lg:right-10"
-          loading="eager"
-        />
+      <section
+        className="relative overflow-hidden -mt-16 pb-6"
+        style={{
+          backgroundImage: `url('${roiBreadcrumbImage}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <div className="relative container mx-auto flex min-h-[320px] items-center px-4 pb-12 pt-20 md:min-h-[390px] md:pb-14 md:pt-24">
           <div className="max-w-3xl">
             <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
@@ -387,8 +388,8 @@ const RoiCalculatorContent = () => {
       </section>
 
       <section className="section-padding">
-        <div className="container mx-auto grid lg:grid-cols-[1fr_1fr] gap-8">
-          <form onSubmit={handleSubmit} className="rounded-2xl bg-card border border-border p-6 space-y-4">
+        <div className="container mx-auto grid gap-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
+          <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-card p-4 space-y-4 sm:p-6">
             <div>
               <h2 className="text-2xl md:text-3xl font-display font-bold text-navy">Generate ROI in 60 Seconds</h2>
               <p className="text-sm text-muted-foreground mt-2">
@@ -527,7 +528,7 @@ const RoiCalculatorContent = () => {
             </div>
           </form>
 
-          <section className="rounded-2xl bg-card border border-border p-6 space-y-6 lg:sticky lg:top-24 max-h-[calc(100vh-6rem)] overflow-y-auto pr-2">
+          <section className="rounded-2xl border border-border bg-card p-4 space-y-6 sm:p-6 lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:pr-2">
             <div>
               <h2 className="text-2xl md:text-3xl font-display font-bold text-navy">Your ROI Snapshot</h2>
               <p className="text-sm text-muted-foreground mt-2">
@@ -627,7 +628,7 @@ const RoiCalculatorContent = () => {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left border-collapse">
+              <table className="min-w-[640px] w-full border-collapse text-left text-sm">
                 <thead>
                   <tr className="text-xs uppercase tracking-widest text-muted-foreground border-b">
                     <th className="py-2">Cost Component (Monthly)</th>
