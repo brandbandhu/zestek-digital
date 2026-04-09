@@ -474,10 +474,7 @@ const EpsonEcoTank = () => {
         }}
       >
         <div className="container mx-auto section-padding pt-16 md:pt-20">
-          <span className="mt-4 inline-flex items-center rounded-full bg-navy/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-navy">
-            Product Finder
-          </span>
-          <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-navy/80">
+          <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-navy/80">
             Home / Epson EcoTank
           </p>
           <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-navy">

@@ -21,7 +21,7 @@ const partners = [
   },
   {
     name: "WYTE specialty solutions",
-    badge: "Specialty Printing",
+    badge: "",
     desc:
       "Expand your offerings with WYTE solutions for signage and specialty printing, ideal for vinyl, flex, and customized media, supported with the right machine setup and application guidance.",
     logo: logo3,
@@ -62,9 +62,11 @@ const PartnersSection = () => (
               <div className="flex h-12 w-24 items-center justify-center rounded-xl border border-border bg-[#E9F2FF] p-2 sm:w-28">
                 <img src={p.logo} alt={`${p.name} logo`} className="h-full w-full object-contain" />
               </div>
-              <span className="text-[11px] font-semibold uppercase leading-tight tracking-widest text-muted-foreground sm:text-right">
-                {p.badge}
-              </span>
+              {p.badge ? (
+                <span className="text-[11px] font-semibold uppercase leading-tight tracking-widest text-muted-foreground sm:text-right">
+                  {p.badge}
+                </span>
+              ) : null}
             </div>
             <h3 className="mb-2 font-display text-lg font-bold text-navy">{p.name}</h3>
             <p className="text-sm leading-relaxed text-muted-foreground">{p.desc}</p>

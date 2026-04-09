@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
-import zestekLogo from "../../assets/logo/logo.svg";
+import zestekLogo from "../../assets/zestek_logo.png";
 
 const navLinks = [
   { label: "Home", path: "/" },

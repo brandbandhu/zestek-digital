@@ -68,13 +68,6 @@ const workforceProducts: WorkforceProduct[] = [
       "https://mediaserver.goepson.com/adaptivemedia/rendition?id=341c418f7bb0a487ad3e195e1336dcc067c2c641&vid=341c418f7bb0a487ad3e195e1336dcc067c2c641&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=24gro-mono_BIJpro_STD_9b_resized",
   },
   {
-    name: "Epson WorkForce Enterprise WF-C20750",
-    productUrl:
-      "https://www.epson.co.in/For-Work/Printers/Business-Inkjet-Printers/WorkForce-Enterprise-WF-C20750-A3-Colour-Multifunction-Printer/p/C11CH87503",
-    imageUrl:
-      "https://mediaserver.goepson.com/adaptivemedia/rendition?id=4bfd14bf0ccc2f6644cf16a8f4b0c1caa3f66f86&vid=4bfd14bf0ccc2f6644cf16a8f4b0c1caa3f66f86&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=WF-C20590_01_2-1",
-  },
-  {
     name: "Epson WorkForce Enterprise WF-C21000",
     productUrl:
       "https://www.epson.co.in/For-Work/Printers/Business-Inkjet-Printers/WorkForce-Enterprise-WF-C21000-A3-Colour-Multifunction-Printer/p/C11CH88503",
@@ -165,15 +158,6 @@ const workforceSpotlightPaths: Record<string, string> = {
   "Epson WorkForce Enterprise AM-M5500": "/epson-m5500",
 };
 
-const excludedWorkforceProductNames = new Set([
-  "Epson WorkForce Enterprise AM-M5500",
-  "Epson WorkForce Enterprise WF-C20750",
-  "Epson WorkForce Enterprise WF-C21000",
-  "Epson WorkForce Enterprise WF-M21000",
-  "Epson WorkForce Pro EM-C8100",
-  "Epson WorkForce Pro EM-C8101",
-]);
-
 const buildWorkforceFeatureList = (features: string[]) => {
   if (features.length === 0) {
     return "shared office printing";
@@ -252,12 +236,10 @@ const getWorkforceProductMeta = (product: WorkforceProduct): WorkforceProductMet
   };
 };
 
-const normalizedWorkforceProducts = workforceProducts
-  .filter((product) => !excludedWorkforceProductNames.has(product.name))
-  .map((product) => ({
-    ...product,
-    meta: getWorkforceProductMeta(product),
-  }));
+const normalizedWorkforceProducts = workforceProducts.map((product) => ({
+  ...product,
+  meta: getWorkforceProductMeta(product),
+}));
 
 const EpsonWorkforce = () => {
   const [searchValue, setSearchValue] = useState("");

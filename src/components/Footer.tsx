@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
-import zestekLogo from "../../assets/Zestek_Logo.png";
+import zestekLogo from "../../assets/zestek_logo.png";
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg

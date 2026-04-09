@@ -282,10 +282,7 @@ const KonicaProduction = () => {
       >
         <div className="container mx-auto section-padding pt-16 md:pt-20">
           <div className="max-w-3xl text-navy">
-            <span className="inline-flex items-center rounded-full bg-navy/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest">
-              Product Finder
-            </span>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-navy/80">
+            <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-navy/80">
               Home / Konica Production
             </p>
             <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold">

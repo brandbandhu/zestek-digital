@@ -1,364 +1,489 @@
-import { useMemo, useState } from "react";
-import { toast } from "@/hooks/use-toast";
-import { isGoogleSheetsConfigured, submitLeadToGoogleSheets } from "@/lib/googleSheets";
+import { useEffect, useMemo, useState } from "react";
 import roiBreadcrumbImage from "../../assets/breadcrub/roi.png";
 
-const RoiCalculatorContent = () => {
-  const [decisionMakerName, setDecisionMakerName] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [industry, setIndustry] = useState("commercial");
-  const [monoPages, setMonoPages] = useState(60000);
-  const [colorPages, setColorPages] = useState(10000);
-  const [fleetAge, setFleetAge] = useState("mid");
-  const [downtimeCriticality, setDowntimeCriticality] = useState("medium");
-  const [sellingMode, setSellingMode] = useState("b2c");
-  const [message, setMessage] = useState("");
-  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
+type BusinessType = "home" | "small_office" | "corporate_office" | "print_shop" | "education_legal";
+type PaperSize = "A4" | "A3" | "A3+";
+type PaperType = "plain" | "photo" | "art" | "sticker" | "texture" | "other";
+type UsageType = "cost_focused" | "quality_focused" | "balanced";
+type CurrentMachine = "rc_machine" | "laser_printer" | "ink_tank" | "no_machine";
+type ModelKey =
+  | "l3250"
+  | "l6270"
+  | "l4360"
+  | "m2120"
+  | "m3170"
+  | "em_c8100"
+  | "am_m5500"
+  | "wf_m21000"
+  | "wf_c21000"
+  | "konica_c4065"
+  | "konica_c4080";
 
-  const isCommercial = industry === "commercial";
+type BusinessDefaultProfile = {
+  monoPages: number;
+  colorPages: number;
+  paperSize: PaperSize;
+  paperType: PaperType;
+  usageType: UsageType;
+  currentMachine: CurrentMachine;
+  usesRcMachine: boolean;
+  monoSellPrice: number;
+  colorSellPrice: number;
+  guidance: string;
+};
+
+type ModelProfile = {
+  name: string;
+  oneLineReason: string;
+  bestFor: string;
+  capex: number;
+  monoCpp: number;
+  colorCpp: number;
+  includedMonoPrints: number;
+  includedColorPrints: number;
+};
+
+const businessTypeOptions: Array<{ value: BusinessType; label: string }> = [
+  { value: "home", label: "Home" },
+  { value: "small_office", label: "Small Office" },
+  { value: "corporate_office", label: "Corporate / Big Office" },
+  { value: "print_shop", label: "Print Shop / Photocopy Centre" },
+  { value: "education_legal", label: "Education / Legal" },
+];
+
+const paperTypeOptions: Array<{ value: PaperType; label: string }> = [
+  { value: "plain", label: "Plain paper" },
+  { value: "photo", label: "Photo paper" },
+  { value: "art", label: "Art paper" },
+  { value: "sticker", label: "Sticker" },
+  { value: "texture", label: "Texture" },
+  { value: "other", label: "Any other" },
+];
+
+const businessDefaults: Record<BusinessType, BusinessDefaultProfile> = {
+  home: {
+    monoPages: 600,
+    colorPages: 400,
+    paperSize: "A4",
+    paperType: "plain",
+    usageType: "balanced",
+    currentMachine: "no_machine",
+    usesRcMachine: false,
+    monoSellPrice: 2,
+    colorSellPrice: 8,
+    guidance: "Home profile focuses on low-cost daily prints and occasional color work.",
+  },
+  small_office: {
+    monoPages: 3500,
+    colorPages: 1200,
+    paperSize: "A4",
+    paperType: "plain",
+    usageType: "cost_focused",
+    currentMachine: "ink_tank",
+    usesRcMachine: false,
+    monoSellPrice: 2,
+    colorSellPrice: 8,
+    guidance: "Small office profile optimizes running cost and stable output for team workflows.",
+  },
+  corporate_office: {
+    monoPages: 35000,
+    colorPages: 10000,
+    paperSize: "A3",
+    paperType: "plain",
+    usageType: "balanced",
+    currentMachine: "laser_printer",
+    usesRcMachine: false,
+    monoSellPrice: 2,
+    colorSellPrice: 8,
+    guidance: "Corporate profile prioritizes reliability, scale, and monthly cost visibility.",
+  },
+  print_shop: {
+    monoPages: 120000,
+    colorPages: 45000,
+    paperSize: "A3+",
+    paperType: "art",
+    usageType: "quality_focused",
+    currentMachine: "rc_machine",
+    usesRcMachine: true,
+    monoSellPrice: 2,
+    colorSellPrice: 5,
+    guidance: "Print-shop profile is tuned for margin, media flexibility, and production-grade uptime.",
+  },
+  education_legal: {
+    monoPages: 45000,
+    colorPages: 8000,
+    paperSize: "A3",
+    paperType: "plain",
+    usageType: "cost_focused",
+    currentMachine: "laser_printer",
+    usesRcMachine: false,
+    monoSellPrice: 2,
+    colorSellPrice: 8,
+    guidance: "Education and legal profile emphasizes stable bulk printing and predictable budgets.",
+  },
+};
+
+const currentMachineBenchmarks: Record<CurrentMachine, { monoCpp: number; colorCpp: number }> = {
+  rc_machine: { monoCpp: 1.8, colorCpp: 6.5 },
+  laser_printer: { monoCpp: 1.2, colorCpp: 7.0 },
+  ink_tank: { monoCpp: 0.8, colorCpp: 2.4 },
+  no_machine: { monoCpp: 2.0, colorCpp: 8.0 },
+};
+
+const paperTypeMultipliers: Record<PaperType, number> = {
+  plain: 1,
+  photo: 1.35,
+  art: 1.25,
+  sticker: 1.3,
+  texture: 1.2,
+  other: 1.4,
+};
+
+const modelProfiles: Record<ModelKey, ModelProfile> = {
+  l3250: {
+    name: "Epson EcoTank L3250",
+    oneLineReason: "Low-volume color printing with very low running cost.",
+    bestFor: "Home users and very small offices printing basic A4 documents.",
+    capex: 18000,
+    monoCpp: 0.6,
+    colorCpp: 1,
+    includedMonoPrints: 6000,
+    includedColorPrints: 7500,
+  },
+  l6270: {
+    name: "Epson EcoTank L6270",
+    oneLineReason: "Balanced speed and output quality for mixed office/home usage.",
+    bestFor: "Small offices needing A4 duplex with frequent color documents.",
+    capex: 28000,
+    monoCpp: 0.55,
+    colorCpp: 0.95,
+    includedMonoPrints: 6000,
+    includedColorPrints: 7500,
+  },
+  l4360: {
+    name: "Epson EcoTank L4360",
+    oneLineReason: "Affordable everyday color output with dependable refill economics.",
+    bestFor: "Small teams needing consistent A4 color output without high CAPEX.",
+    capex: 26000,
+    monoCpp: 0.58,
+    colorCpp: 1.05,
+    includedMonoPrints: 6000,
+    includedColorPrints: 7500,
+  },
+  m2120: {
+    name: "Epson EcoTank M2120",
+    oneLineReason: "Entry mono cost control for low monthly volumes.",
+    bestFor: "Mono-heavy home and micro-office users with low print volume.",
+    capex: 16000,
+    monoCpp: 0.45,
+    colorCpp: 0,
+    includedMonoPrints: 5000,
+    includedColorPrints: 0,
+  },
+  m3170: {
+    name: "Epson EcoTank M3170",
+    oneLineReason: "Higher mono throughput than entry models with efficient running cost.",
+    bestFor: "Small offices that mostly print mono and need better monthly capacity.",
+    capex: 24000,
+    monoCpp: 0.42,
+    colorCpp: 0,
+    includedMonoPrints: 11000,
+    includedColorPrints: 0,
+  },
+  em_c8100: {
+    name: "Epson WorkForce Pro EM-C8100",
+    oneLineReason: "Strong mid-to-high volume A3 color output for managed office workflows.",
+    bestFor: "Departments with mixed mono/color workloads and regular A3 output.",
+    capex: 160000,
+    monoCpp: 0.7,
+    colorCpp: 2.2,
+    includedMonoPrints: 60000,
+    includedColorPrints: 40000,
+  },
+  am_m5500: {
+    name: "Epson WorkForce Enterprise AM-M5500",
+    oneLineReason: "Efficient mono engine built for predictable high-volume document printing.",
+    bestFor: "Medium-to-high volume mono offices prioritizing cost reduction.",
+    capex: 350000,
+    monoCpp: 0.4,
+    colorCpp: 0,
+    includedMonoPrints: 200000,
+    includedColorPrints: 0,
+  },
+  wf_m21000: {
+    name: "Epson WorkForce Enterprise WF-M21000",
+    oneLineReason: "Enterprise mono productivity for large-volume print environments.",
+    bestFor: "Central print rooms and high-volume mono workflows.",
+    capex: 950000,
+    monoCpp: 0.35,
+    colorCpp: 0,
+    includedMonoPrints: 250000,
+    includedColorPrints: 0,
+  },
+  wf_c21000: {
+    name: "Epson WorkForce Enterprise WF-C21000",
+    oneLineReason: "Enterprise color throughput for heavy monthly demand.",
+    bestFor: "High-volume offices needing both speed and color output at scale.",
+    capex: 1100000,
+    monoCpp: 0.55,
+    colorCpp: 1.95,
+    includedMonoPrints: 120000,
+    includedColorPrints: 80000,
+  },
+  konica_c4065: {
+    name: "Konica Minolta AccurioPress C4065",
+    oneLineReason: "Production-class digital press for premium print shop workloads.",
+    bestFor: "Print shops with frequent short-runs, color jobs, and media variety.",
+    capex: 950000,
+    monoCpp: 0.65,
+    colorCpp: 2.8,
+    includedMonoPrints: 0,
+    includedColorPrints: 0,
+  },
+  konica_c4080: {
+    name: "Konica Minolta AccurioPress C4080",
+    oneLineReason: "Higher production performance for color-intensive commercial jobs.",
+    bestFor: "Premium print shops requiring robust quality and heavy production.",
+    capex: 1150000,
+    monoCpp: 0.6,
+    colorCpp: 2.6,
+    includedMonoPrints: 0,
+    includedColorPrints: 0,
+  },
+};
+
+const formatInr = (value: number) => {
+  if (!Number.isFinite(value)) return "INR 0";
+  return `INR ${Math.round(value).toLocaleString("en-IN")}`;
+};
+
+const formatInrSigned = (value: number) => `${value >= 0 ? "+" : "-"} ${formatInr(Math.abs(value))}`;
+
+const parseOptionalNumber = (value: string) => {
+  if (value.trim().length === 0) return null;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) return null;
+  return parsed;
+};
+
+const RoiCalculatorContent = () => {
+  const [businessType, setBusinessType] = useState<BusinessType>("small_office");
+  const [paperSize, setPaperSize] = useState<PaperSize>(businessDefaults.small_office.paperSize);
+  const [paperType, setPaperType] = useState<PaperType>(businessDefaults.small_office.paperType);
+  const [usageType, setUsageType] = useState<UsageType>(businessDefaults.small_office.usageType);
+  const [monoPages, setMonoPages] = useState(businessDefaults.small_office.monoPages);
+  const [colorPages, setColorPages] = useState(businessDefaults.small_office.colorPages);
+  const [currentMachine, setCurrentMachine] = useState<CurrentMachine>(businessDefaults.small_office.currentMachine);
+  const [usesRcMachine, setUsesRcMachine] = useState(businessDefaults.small_office.usesRcMachine);
+  const [currentMonoCost, setCurrentMonoCost] = useState("");
+  const [currentColorCost, setCurrentColorCost] = useState("");
+  const [monoSellPrice, setMonoSellPrice] = useState(businessDefaults.small_office.monoSellPrice);
+  const [colorSellPrice, setColorSellPrice] = useState(businessDefaults.small_office.colorSellPrice);
+
+  useEffect(() => {
+    const defaults = businessDefaults[businessType];
+    setPaperSize(defaults.paperSize);
+    setPaperType(defaults.paperType);
+    setUsageType(defaults.usageType);
+    setMonoPages(defaults.monoPages);
+    setColorPages(defaults.colorPages);
+    setCurrentMachine(defaults.currentMachine);
+    setUsesRcMachine(defaults.usesRcMachine);
+    setMonoSellPrice(defaults.monoSellPrice);
+    setColorSellPrice(defaults.colorSellPrice);
+    setCurrentMonoCost("");
+    setCurrentColorCost("");
+  }, [businessType]);
 
   const recommendation = useMemo(() => {
-    const total = monoPages + colorPages;
-    const colorShare = total > 0 ? colorPages / total : 0;
-
-    if (industry === "commercial") {
-      if (total >= 80000) {
-        return {
-          model: "Konica Minolta C4065",
-          range: "CAPEX benchmark: INR 9.5 Lakh - INR 11.5 Lakh",
-          reason: "High monthly volume with commercial throughput requirements.",
-        };
-      }
-      if (total >= 40000) {
-        return {
-          model: "Epson AM-C4000",
-          range: "CAPEX benchmark: INR 7.5 Lakh - INR 9.5 Lakh",
-          reason: "Balanced speed and duty cycle for mid-volume commercial print.",
-        };
-      }
-      return {
-        model: "Epson AM-C400",
-        range: "CAPEX benchmark: INR 3.5 Lakh - INR 5.5 Lakh",
-        reason: "Entry commercial requirement with moderate monthly load.",
-      };
-    }
-
-    if (industry === "education") {
-      if (total >= 50000) {
-        return {
-          model: "Epson WorkForce Enterprise WF-C20750",
-          range: "CAPEX benchmark: INR 8.5 Lakh - INR 10.5 Lakh",
-          reason: "High-volume shared campus printing with consistent uptime needs.",
-        };
-      }
-      return {
-        model: "Epson WorkForce Pro EM-C8100",
-        range: "CAPEX benchmark: INR 5.5 Lakh - INR 7.5 Lakh",
-        reason: "Departmental printing with strong mono + color mix.",
-      };
-    }
-
-    if (colorShare > 0.25) {
-      return {
-        model: "Epson WorkForce Pro WF-C5890",
-        range: "CAPEX benchmark: INR 2.1 Lakh - INR 2.8 Lakh",
-        reason: "Color-heavy office usage with moderate monthly volume.",
-      };
-    }
-    return {
-      model: "Epson WorkForce Pro WF-M5899",
-      range: "CAPEX benchmark: INR 1.6 Lakh - INR 2.2 Lakh",
-      reason: "Mono-focused corporate printing with predictable volumes.",
-    };
-  }, [industry, monoPages, colorPages]);
-
-  const roiMetrics = useMemo(() => {
     const totalPages = monoPages + colorPages;
     const colorShare = totalPages > 0 ? colorPages / totalPages : 0;
 
-    const currentCppMono = industry === "commercial" ? 0.76 : 0.9;
-    const currentCppColor = industry === "commercial" ? 4.35 : 4.9;
-    const projectedCppMono = industry === "commercial" ? 0.49 : 0.6;
-    const projectedCppColor = industry === "commercial" ? 2.81 : 3.2;
+    let primaryKey: ModelKey = "l3250";
+    let alternateKeys: ModelKey[] = ["l4360", "l6270"];
+    let why = "Entry profile for low monthly print volume.";
 
-    const currentConsumables = monoPages * currentCppMono + colorPages * currentCppColor;
-    const projectedConsumables = monoPages * projectedCppMono + colorPages * projectedCppColor;
+    if (businessType === "print_shop") {
+      if (usageType === "quality_focused" || colorPages >= 50000 || paperType !== "plain") {
+        primaryKey = "konica_c4080";
+        alternateKeys = ["konica_c4065", "wf_c21000"];
+        why = "High-color production and media flexibility need a production-class platform.";
+      } else if (monoPages >= 100000 || colorPages >= 25000) {
+        primaryKey = "konica_c4065";
+        alternateKeys = ["wf_c21000", "em_c8100"];
+        why = "Volume profile matches commercial print jobs with strong monthly throughput.";
+      } else if (colorPages > 0) {
+        primaryKey = "em_c8100";
+        alternateKeys = ["l6270", "wf_c21000"];
+        why = "Balanced commercial workload that still needs strong color output.";
+      } else {
+        primaryKey = "am_m5500";
+        alternateKeys = ["wf_m21000", "m3170"];
+        why = "Mono-heavy print load with clear focus on cost per page.";
+      }
+    } else if (monoPages >= 150000 || colorPages >= 60000 || (totalPages >= 160000 && colorShare >= 0.2)) {
+      if (colorPages >= 30000) {
+        primaryKey = "wf_c21000";
+        alternateKeys = ["konica_c4065", "em_c8100"];
+        why = "High-volume color demand requires enterprise-grade output capacity.";
+      } else {
+        primaryKey = "wf_m21000";
+        alternateKeys = ["am_m5500", "wf_c21000"];
+        why = "High-volume mono usage aligns with enterprise monochrome optimization.";
+      }
+    } else if (businessType === "corporate_office" || businessType === "education_legal" || totalPages >= 20000) {
+      if (colorPages > 0 || usageType === "quality_focused" || paperSize !== "A4") {
+        primaryKey = "em_c8100";
+        alternateKeys = ["am_m5500", "wf_c21000"];
+        why = "Medium-to-high office volume with color and larger paper handling needs.";
+      } else {
+        primaryKey = "am_m5500";
+        alternateKeys = ["wf_m21000", "m3170"];
+        why = "Mono-centric office profile where stable high-volume cost control matters.";
+      }
+    } else if (colorPages > 0) {
+      if (usageType === "cost_focused") {
+        primaryKey = "l3250";
+        alternateKeys = ["l4360", "l6270"];
+        why = "Cost-focused color profile with low monthly page count.";
+      } else if (usageType === "quality_focused" || paperType === "photo" || paperType === "art" || paperSize !== "A4") {
+        primaryKey = "l6270";
+        alternateKeys = ["l4360", "l3250"];
+        why = "Quality-first setup needing better consistency on mixed document types.";
+      } else {
+        primaryKey = "l4360";
+        alternateKeys = ["l3250", "l6270"];
+        why = "Balanced low-volume color usage with practical running economics.";
+      }
+    } else if (monoPages >= 4000) {
+      primaryKey = "m3170";
+      alternateKeys = ["m2120", "am_m5500"];
+      why = "Mono-only usage with moderate load and low running cost priority.";
+    } else {
+      primaryKey = "m2120";
+      alternateKeys = ["m3170", "l3250"];
+      why = "Very low mono demand where simple ownership cost matters most.";
+    }
 
-    const maintenance = industry === "commercial" ? 17907 : 12000;
-    const energy = industry === "commercial" ? 8412 : 3200;
-    const downtimeHours = downtimeCriticality === "high" ? 14 : downtimeCriticality === "medium" ? 11 : 6;
-    const downtimeRate = industry === "commercial" ? 5000 : 2500;
-    const downtimeCost = downtimeHours * downtimeRate;
+    return {
+      primary: modelProfiles[primaryKey],
+      alternates: alternateKeys.map((modelKey) => modelProfiles[modelKey]),
+      why,
+    };
+  }, [businessType, monoPages, colorPages, paperSize, paperType, usageType]);
 
-    const emi = totalPages >= 80000 ? 35778 : totalPages >= 40000 ? 32000 : 18000;
-    const capex = totalPages >= 80000 ? 1120000 : totalPages >= 40000 ? 920000 : 520000;
+  const metrics = useMemo(() => {
+    const totalPages = Math.max(monoPages, 0) + Math.max(colorPages, 0);
+    const benchmark = currentMachineBenchmarks[currentMachine];
+    const customMonoCost = parseOptionalNumber(currentMonoCost);
+    const customColorCost = parseOptionalNumber(currentColorCost);
+    const rcDriven = usesRcMachine || currentMachine === "rc_machine";
 
-    const currentCost = currentConsumables + maintenance + energy + downtimeCost;
-    const projectedCost = projectedConsumables + maintenance * 0.82 + energy * 0.82 + downtimeCost * 0.65 + emi;
-    const monthlySavings = Math.max(currentCost - projectedCost, 0);
-    const annualSavings = monthlySavings * 12;
-    const paybackMonths = monthlySavings > 0 ? capex / monthlySavings : 0;
-    const roi3Years = capex > 0 ? ((annualSavings * 3 - capex) / capex) * 100 : 0;
+    let currentMonoCpp = customMonoCost ?? benchmark.monoCpp;
+    let currentColorCpp = customColorCost ?? benchmark.colorCpp;
 
-    const sellPrice = isCommercial ? (sellingMode === "b2c" ? 22.5 : 12) : 0;
-    const revenue = isCommercial ? totalPages * sellPrice : 0;
-    const costPerPrint = isCommercial ? 7.35 : 0;
-    const pnlConsumables = isCommercial ? totalPages * costPerPrint : projectedConsumables;
-    const netCashflow = isCommercial ? revenue - pnlConsumables - emi : monthlySavings;
-    const grossProfitPerPrint = isCommercial ? (revenue - pnlConsumables) / Math.max(totalPages, 1) : 0;
+    if (rcDriven) {
+      currentMonoCpp = Math.max(currentMonoCpp, 1.4);
+      currentColorCpp = Math.max(currentColorCpp, 5.5);
+    }
+
+    const usageMultiplier = usageType === "cost_focused" ? 0.94 : usageType === "quality_focused" ? 1.08 : 1;
+    const paperMultiplier = paperTypeMultipliers[paperType];
+
+    const suggestedMonoCpp = recommendation.primary.monoCpp * usageMultiplier * paperMultiplier;
+    const suggestedColorCpp = recommendation.primary.colorCpp * usageMultiplier * paperMultiplier;
+
+    const currentMonthlySpend = monoPages * currentMonoCpp + colorPages * currentColorCpp;
+    const suggestedMonthlySpend = monoPages * suggestedMonoCpp + colorPages * suggestedColorCpp;
+
+    const monthlySavings = currentMonthlySpend - suggestedMonthlySpend;
+    const yearlySavings = monthlySavings * 12;
+    const roiMonths = monthlySavings > 0 ? recommendation.primary.capex / monthlySavings : null;
+
+    const includedMonoValue = Math.min(monoPages, recommendation.primary.includedMonoPrints) * suggestedMonoCpp;
+    const includedColorValue = Math.min(colorPages, recommendation.primary.includedColorPrints) * suggestedColorCpp;
+    const includedPrintValue = includedMonoValue + includedColorValue;
+
+    const currentBlendedCpp = totalPages > 0 ? currentMonthlySpend / totalPages : 0;
+    const suggestedBlendedCpp = totalPages > 0 ? suggestedMonthlySpend / totalPages : 0;
+    const monthlyCostReductionPercent = currentMonthlySpend > 0 ? (monthlySavings / currentMonthlySpend) * 100 : 0;
+
+    const currentMonthlyProfit =
+      monoPages * Math.max(monoSellPrice - currentMonoCpp, 0) + colorPages * Math.max(colorSellPrice - currentColorCpp, 0);
+    const suggestedMonthlyProfit =
+      monoPages * Math.max(monoSellPrice - suggestedMonoCpp, 0) + colorPages * Math.max(colorSellPrice - suggestedColorCpp, 0);
+    const monthlyProfitIncrease = suggestedMonthlyProfit - currentMonthlyProfit;
+    const dailyProfitIncrease = monthlyProfitIncrease / 30;
 
     return {
       totalPages,
-      colorShare,
-      currentCppMono,
-      currentCppColor,
-      maintenance,
-      energy,
-      downtimeHours,
-      downtimeRate,
-      downtimeCost,
-      emi,
-      capex,
-      currentCost,
-      projectedCost,
+      currentMonoCpp,
+      currentColorCpp,
+      suggestedMonoCpp,
+      suggestedColorCpp,
+      currentMonthlySpend,
+      suggestedMonthlySpend,
       monthlySavings,
-      annualSavings,
-      paybackMonths,
-      roi3Years,
-      projectedConsumables,
-      pnlConsumables,
-      currentConsumables,
-      costPerPrint,
-      netCashflow,
-      revenue,
-      grossProfitPerPrint,
-      sellPrice,
+      yearlySavings,
+      roiMonths,
+      includedPrintValue,
+      currentBlendedCpp,
+      suggestedBlendedCpp,
+      monthlyCostReductionPercent,
+      monthlyProfitIncrease,
+      dailyProfitIncrease,
     };
-  }, [monoPages, colorPages, industry, downtimeCriticality, sellingMode, isCommercial]);
+  }, [
+    monoPages,
+    colorPages,
+    currentMachine,
+    currentMonoCost,
+    currentColorCost,
+    usesRcMachine,
+    usageType,
+    paperType,
+    recommendation.primary,
+    monoSellPrice,
+    colorSellPrice,
+  ]);
 
-  const formatInr = (value: number, compact = false) => {
-    if (!Number.isFinite(value)) return "INR 0";
-    return `INR ${value.toLocaleString("en-IN", {
-      maximumFractionDigits: compact ? 0 : 0,
-    })}`;
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const industryLabel =
-      industry === "commercial"
-        ? "Commercial Print & Packaging"
-        : industry === "education"
-          ? "Education & Universities"
-          : "Corporates & MSME";
-    const fleetAgeLabel = fleetAge === "new" ? "0 - 2 years" : fleetAge === "mid" ? "3 - 5 years" : "5+ years";
-    const downtimeLabel = downtimeCriticality === "high" ? "High" : downtimeCriticality === "medium" ? "Medium" : "Low";
-    const sellingModeLabel =
-      sellingMode === "b2c" ? "End Customer (B2C Retail)" : "Reseller (B2B Trade)";
-
-    const reportInputs = [
-      `Decision maker: ${decisionMakerName || "Not provided"}`,
-      `Company name: ${companyName || "Not provided"}`,
-      `Industry: ${industryLabel}`,
-      `Monthly mono pages: ${monoPages.toLocaleString("en-IN")}`,
-      `Monthly color pages: ${colorPages.toLocaleString("en-IN")}`,
-      `Current printer fleet age: ${fleetAgeLabel}`,
-      `Downtime criticality: ${downtimeLabel}`,
-      `Selling mode: ${isCommercial ? sellingModeLabel : "Not applicable"}`,
-    ];
-
-    const summaryMetrics = [
-      `Recommended model: ${recommendation.model}`,
-      `CAPEX benchmark: ${recommendation.range.replace("CAPEX benchmark: ", "")}`,
-      `Projected monthly net cash flow: ${formatInr(roiMetrics.netCashflow)}`,
-      `Projected monthly gross revenue: ${formatInr(roiMetrics.revenue)}`,
-      `Monthly EMI commitment: ${formatInr(roiMetrics.emi)}`,
-      `Current monthly operating cost: ${formatInr(roiMetrics.currentCost)}`,
-      `Projected monthly operating cost: ${formatInr(roiMetrics.projectedCost)}`,
-      `Estimated monthly savings: ${formatInr(roiMetrics.monthlySavings)}`,
-      `Estimated annual savings: ${formatInr(roiMetrics.annualSavings)}`,
-      `Three-year ROI: ${roiMetrics.roi3Years.toFixed(1)}%`,
-      `Payback period: ${
-        roiMetrics.paybackMonths > 0 ? `${roiMetrics.paybackMonths.toFixed(1)} months` : "Payback not available"
-      }`,
-      `Gross profit per print: ${
-        isCommercial ? `INR ${roiMetrics.grossProfitPerPrint.toFixed(2)}` : "Not applicable"
-      }`,
-    ];
-
-    const costComparison = [
-      `Print output cost: ${formatInr(roiMetrics.currentConsumables)} current vs ${formatInr(
-        roiMetrics.projectedConsumables,
-      )} projected`,
-      `Maintenance: ${formatInr(roiMetrics.maintenance)} current vs ${formatInr(roiMetrics.maintenance * 0.82)} projected`,
-      `Energy: ${formatInr(roiMetrics.energy)} current vs ${formatInr(roiMetrics.energy * 0.82)} projected`,
-      `Downtime impact: ${formatInr(roiMetrics.downtimeCost)} current vs ${formatInr(roiMetrics.downtimeCost * 0.65)} projected`,
-      `Total monthly cost: ${formatInr(roiMetrics.currentCost)} current vs ${formatInr(roiMetrics.projectedCost)} projected`,
-    ];
-
-    let sheetsSyncMessage = "";
-
-    try {
-      setIsGeneratingReport(true);
-      setMessage("Generating ROI report PDF...");
-
-      try {
-        await submitLeadToGoogleSheets({
-          formId: "roi-calculator-form",
-          formName: "ROI Calculator Form",
-          pagePath: typeof window !== "undefined" ? window.location.pathname : "",
-          fields: {
-            decision_maker_name: decisionMakerName || "Not provided",
-            company_name: companyName || "Not provided",
-            industry: industryLabel,
-            monthly_mono_pages: monoPages,
-            monthly_color_pages: colorPages,
-            current_printer_fleet_age: fleetAgeLabel,
-            downtime_criticality: downtimeLabel,
-            commercial_selling_mode: isCommercial ? sellingModeLabel : "Not applicable",
-          },
-          context: {
-            recommended_model: recommendation.model,
-            capex_benchmark: recommendation.range.replace("CAPEX benchmark: ", ""),
-            projected_monthly_net_cash_flow: formatInr(roiMetrics.netCashflow),
-            projected_monthly_gross_revenue: formatInr(roiMetrics.revenue),
-            monthly_emi_commitment: formatInr(roiMetrics.emi),
-            estimated_monthly_savings: formatInr(roiMetrics.monthlySavings),
-            estimated_annual_savings: formatInr(roiMetrics.annualSavings),
-            three_year_roi: `${roiMetrics.roi3Years.toFixed(1)}%`,
-          },
-        });
-
-        sheetsSyncMessage = " Lead synced to Google Sheets.";
-      } catch (syncError) {
-        console.error("Unable to sync ROI form to Google Sheets", syncError);
-        sheetsSyncMessage = isGoogleSheetsConfigured
-          ? " PDF downloaded, but Google Sheets sync could not be confirmed."
-          : " PDF downloaded, but Google Sheets is not configured yet.";
-      }
-
-      const { jsPDF } = await import("jspdf");
-      const doc = new jsPDF({ unit: "pt", format: "a4" });
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const pageHeight = doc.internal.pageSize.getHeight();
-      const marginX = 48;
-      const topMargin = 52;
-      const bottomMargin = 52;
-      const contentWidth = pageWidth - marginX * 2;
-      let currentY = topMargin;
-
-      const ensureSpace = (requiredHeight: number) => {
-        if (currentY + requiredHeight > pageHeight - bottomMargin) {
-          doc.addPage();
-          currentY = topMargin;
-        }
+  const industryInsight = useMemo(() => {
+    if (businessType === "print_shop") {
+      return {
+        title: "Print Shop View",
+        points: [
+          `Cost per print: ${formatInr(metrics.currentBlendedCpp)} current vs ${formatInr(metrics.suggestedBlendedCpp)} suggested`,
+          `Estimated daily profit increase: ${formatInr(metrics.dailyProfitIncrease)}`,
+          `Estimated monthly profit uplift: ${formatInr(metrics.monthlyProfitIncrease)}`,
+        ],
       };
-
-      const addWrappedText = (
-        text: string,
-        options?: { fontSize?: number; color?: [number, number, number]; indent?: number; lineGap?: number },
-      ) => {
-        const fontSize = options?.fontSize ?? 11;
-        const indent = options?.indent ?? 0;
-        const lineGap = options?.lineGap ?? 6;
-        const lines = doc.splitTextToSize(text, contentWidth - indent);
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(fontSize);
-        if (options?.color) {
-          doc.setTextColor(...options.color);
-        } else {
-          doc.setTextColor(72, 85, 99);
-        }
-
-        const blockHeight = lines.length * fontSize * 1.25 + lineGap;
-        ensureSpace(blockHeight);
-        doc.text(lines, marginX + indent, currentY);
-        currentY += blockHeight;
-      };
-
-      const addSectionHeading = (title: string) => {
-        ensureSpace(28);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(15);
-        doc.setTextColor(15, 32, 66);
-        doc.text(title, marginX, currentY);
-        currentY += 18;
-      };
-
-      const addBulletList = (items: string[]) => {
-        items.forEach((item) => {
-          addWrappedText(`- ${item}`, { fontSize: 11, indent: 4, lineGap: 5 });
-        });
-      };
-
-      doc.setFillColor(15, 32, 66);
-      doc.roundedRect(marginX, currentY, contentWidth, 78, 18, 18, "F");
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(22);
-      doc.setTextColor(255, 255, 255);
-      doc.text("Zestek ROI Report", marginX + 18, currentY + 28);
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "normal");
-      doc.text(`${recommendation.model} recommendation summary`, marginX + 18, currentY + 48);
-      doc.text(`Generated on ${new Date().toLocaleString("en-IN")}`, marginX + 18, currentY + 66);
-      currentY += 102;
-
-      addSectionHeading("Customer profile");
-      addBulletList(reportInputs);
-
-      addSectionHeading("Recommendation");
-      addWrappedText(recommendation.reason, { fontSize: 11 });
-      addBulletList(summaryMetrics);
-
-      addSectionHeading("Cost comparison");
-      addBulletList(costComparison);
-
-      addSectionHeading("Working assumptions");
-      addBulletList([
-        `Current CPP mono / color: INR ${roiMetrics.currentCppMono.toFixed(2)} / INR ${roiMetrics.currentCppColor.toFixed(2)}`,
-        `Projected consumables spend: ${formatInr(roiMetrics.projectedConsumables)} per month`,
-        `Consumables budget annualised: ${formatInr(roiMetrics.pnlConsumables * 12)}`,
-        `Downtime benchmark: ${roiMetrics.downtimeHours.toFixed(1)} hours x ${formatInr(roiMetrics.downtimeRate)}`,
-        `Break-even volume: ${
-          roiMetrics.sellPrice > 0 ? Math.ceil(roiMetrics.emi / roiMetrics.sellPrice).toLocaleString("en-IN") : "-"
-        } prints per month`,
-        `FSMA plus paper cost per print: INR ${roiMetrics.costPerPrint.toFixed(2)}`,
-      ]);
-
-      addSectionHeading("Interpretation");
-      addWrappedText(
-        `Projected monthly net cash flow is ${formatInr(roiMetrics.netCashflow)}. ${
-          roiMetrics.revenue > 0
-            ? `This represents ${((roiMetrics.netCashflow / roiMetrics.revenue) * 100).toFixed(1)} percent margin on monthly revenue.`
-            : "Revenue-based margin is not applicable for the current selection."
-        }`,
-      );
-      addWrappedText(
-        `The calculator recommends ${recommendation.model} because it best matches the selected industry, volume profile and color mix. Same-day service SLA applies in Mumbai, Boisar and Khopoli.`,
-      );
-
-      const safeCompany = (companyName || "zestek-roi-report").trim().replace(/[^a-z0-9]+/gi, "-").toLowerCase();
-      const safeModel = recommendation.model.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
-      doc.save(`${safeCompany}-${safeModel}-roi-report.pdf`);
-
-      setMessage(`ROI report generated and PDF download has started.${sheetsSyncMessage}`);
-      toast({
-        title: "ROI report ready",
-        description: `The PDF download has started.${sheetsSyncMessage}`,
-      });
-    } catch (error) {
-      console.error("Unable to generate ROI report PDF", error);
-      setMessage("Unable to generate the ROI PDF right now. Please try again.");
-      toast({
-        variant: "destructive",
-        title: "ROI report failed",
-        description: "We could not generate the ROI report right now. Please try again.",
-      });
-    } finally {
-      setIsGeneratingReport(false);
     }
+
+    if (businessType === "education_legal") {
+      return {
+        title: "Education / Legal View",
+        points: [
+          `Bulk printing savings (monthly): ${formatInr(metrics.monthlySavings)}`,
+          `Bulk printing savings (yearly): ${formatInr(metrics.yearlySavings)}`,
+          "Stability focus: optimized for long, repetitive, document-heavy cycles.",
+        ],
+      };
+    }
+
+    return {
+      title: "Office View",
+      points: [
+        `Monthly cost reduction: ${metrics.monthlyCostReductionPercent.toFixed(1)}%`,
+        `Monthly spend visibility: ${formatInr(metrics.currentMonthlySpend)} current vs ${formatInr(metrics.suggestedMonthlySpend)}`,
+        "Efficiency focus: fewer interruptions and stronger output consistency for teams.",
+      ],
+    };
+  }, [businessType, metrics]);
+
+  const isRcSavingsCalloutVisible = businessType === "print_shop" || usesRcMachine || currentMachine === "rc_machine";
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
   };
 
   return (
@@ -374,14 +499,14 @@ const RoiCalculatorContent = () => {
         <div className="relative container mx-auto flex min-h-[320px] items-center px-4 pb-12 pt-20 md:min-h-[390px] md:pb-14 md:pt-24">
           <div className="max-w-3xl">
             <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
-            Market-Benchmarked Self-Serve Tool
-          </span>
+              ROI Decision Tool
+            </span>
             <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-primary-foreground">
-              Low-Effort Print ROI Calculator
+              Find the right printer, monthly spend, and savings in one flow
             </h1>
             <p className="mt-3 max-w-2xl text-sm text-primary-foreground/80 md:text-base">
-              You only enter a few details. Market cost parameters are fixed from current Mumbai and MMR B2B
-              benchmarks, so buyers can quickly get a decision-ready ROI report and PDF.
+              This calculator is built to answer three business questions fast: which machine is best, how much you will spend
+              per month, and how much you can save versus your current setup.
             </p>
           </div>
         </div>
@@ -389,387 +514,315 @@ const RoiCalculatorContent = () => {
 
       <section className="section-padding">
         <div className="container mx-auto grid gap-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
-          <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-card p-4 space-y-4 sm:p-6">
+          <form onSubmit={handleFormSubmit} className="rounded-2xl border border-border bg-card p-4 sm:p-6 space-y-5">
             <div>
-              <h2 className="text-2xl md:text-3xl font-display font-bold text-navy">Generate ROI in 60 Seconds</h2>
-              <p className="text-sm text-muted-foreground mt-2">
-                Minimal buyer effort. Benchmarked costs and CAPEX assumptions are auto-applied. Printer is
-                auto-recommended from your profile.
+              <h2 className="text-2xl md:text-3xl font-display font-bold text-navy">ROI Calculator</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Final flow: select business type, enter monthly volume, choose paper setup, then calculate.
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs font-semibold text-navy">Decision Maker Name</label>
-                <input
-                  value={decisionMakerName}
-                  onChange={(e) => setDecisionMakerName(e.target.value)}
-                  className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                  placeholder="Example: Head of IT"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-navy">Company Name</label>
-                <input
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                  required
-                />
-              </div>
-            </div>
-
             <div>
-              <label className="text-xs font-semibold text-navy">Industry</label>
-              <select
-                className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                value={industry}
-                onChange={(e) => setIndustry(e.target.value)}
-              >
-                <option value="commercial">Commercial Print & Packaging</option>
-                <option value="education">Education & Universities</option>
-                <option value="corporate">Corporates & MSME</option>
-              </select>
+              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Step 1</p>
+              <label className="mt-2 block text-sm font-semibold text-navy">Select Your Business Type</label>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {businessTypeOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setBusinessType(option.value)}
+                    className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
+                      businessType === option.value
+                        ? "border-navy bg-navy text-primary-foreground"
+                        : "border-border bg-background text-navy hover:border-highlight"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">{businessDefaults[businessType].guidance}</p>
             </div>
 
-            {isCommercial && (
+            <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-xs font-semibold text-navy">Commercial Selling Mode</label>
-                <select
-                  className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                  value={sellingMode}
-                  onChange={(e) => setSellingMode(e.target.value)}
-                >
-                  <option value="b2c">End Customer (B2C Retail)</option>
-                  <option value="b2b">Reseller (B2B Trade)</option>
-                </select>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Used only for Commercial Print and Packaging P&amp;L projection.
-                </p>
-              </div>
-            )}
-
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs font-semibold text-navy">Monochrome Pages / Month</label>
+                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Step 2</p>
+                <label className="mt-2 block text-sm font-semibold text-navy">B/W pages per month</label>
                 <input
                   type="number"
                   min={0}
                   step={100}
                   value={monoPages}
-                  onChange={(e) => setMonoPages(Number(e.target.value))}
+                  onChange={(event) => setMonoPages(Math.max(Number(event.target.value) || 0, 0))}
                   className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-navy">Color Pages / Month</label>
+                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Step 2</p>
+                <label className="mt-2 block text-sm font-semibold text-navy">Color pages per month</label>
                 <input
                   type="number"
                   min={0}
                   step={100}
                   value={colorPages}
-                  onChange={(e) => setColorPages(Number(e.target.value))}
+                  onChange={(event) => setColorPages(Math.max(Number(event.target.value) || 0, 0))}
                   className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                 />
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border bg-muted/60 p-4">
-              <h3 className="font-display font-bold text-navy">Printer Recommendation Guide</h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                Based on sector, monthly volume, and color share, the calculator auto-selects a best-fit model before ROI
-                is calculated.
-              </p>
-              <div className="mt-4 rounded-xl border border-border bg-white p-4">
-                <span className="text-xs text-muted-foreground">Recommended Model</span>
-                <strong className="block text-navy text-lg">{recommendation.model}</strong>
-                <small className="text-muted-foreground">{recommendation.range}</small>
-                <p className="mt-2 text-sm text-muted-foreground">{recommendation.reason}</p>
-              </div>
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid gap-4 sm:grid-cols-3">
               <div>
-                <label className="text-xs font-semibold text-navy">Current Printer Fleet Age</label>
+                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Step 3</p>
+                <label className="mt-2 block text-sm font-semibold text-navy">Paper size</label>
                 <select
+                  value={paperSize}
+                  onChange={(event) => setPaperSize(event.target.value as PaperSize)}
                   className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                  value={fleetAge}
-                  onChange={(e) => setFleetAge(e.target.value)}
                 >
-                  <option value="new">0 - 2 years</option>
-                  <option value="mid">3 - 5 years</option>
-                  <option value="old">5+ years</option>
+                  <option value="A4">A4</option>
+                  <option value="A3">A3</option>
+                  <option value="A3+">A3+</option>
                 </select>
               </div>
               <div>
-                <label className="text-xs font-semibold text-navy">Downtime Criticality</label>
+                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Step 3</p>
+                <label className="mt-2 block text-sm font-semibold text-navy">Paper type</label>
                 <select
+                  value={paperType}
+                  onChange={(event) => setPaperType(event.target.value as PaperType)}
                   className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                  value={downtimeCriticality}
-                  onChange={(e) => setDowntimeCriticality(e.target.value)}
                 >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
+                  {paperTypeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Step 3</p>
+                <label className="mt-2 block text-sm font-semibold text-navy">Usage type</label>
+                <select
+                  value={usageType}
+                  onChange={(event) => setUsageType(event.target.value as UsageType)}
+                  className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="cost_focused">Cost Focused</option>
+                  <option value="quality_focused">Quality Focused</option>
+                  <option value="balanced">Balanced</option>
                 </select>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <button
-                type="submit"
-                disabled={isGeneratingReport}
-                className="w-full rounded-full bg-navy py-3 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {isGeneratingReport ? "Generating ROI Report..." : "Generate ROI Report + Download PDF"}
-              </button>
-              <p className="text-xs text-muted-foreground">PDF download starts automatically when report is generated.</p>
-              {message && <p className="text-xs text-muted-foreground">{message}</p>}
+            <div className="rounded-2xl border border-border bg-muted/40 p-4 space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Optional but powerful inputs</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="text-sm font-semibold text-navy">Current machine type</label>
+                  <select
+                    value={currentMachine}
+                    onChange={(event) => setCurrentMachine(event.target.value as CurrentMachine)}
+                    className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  >
+                    <option value="rc_machine">RC Machine</option>
+                    <option value="laser_printer">Laser Printer</option>
+                    <option value="ink_tank">Ink Tank</option>
+                    <option value="no_machine">No machine</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-navy">Do you use RC machine?</label>
+                  <select
+                    value={usesRcMachine ? "yes" : "no"}
+                    onChange={(event) => setUsesRcMachine(event.target.value === "yes")}
+                    className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  >
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="text-sm font-semibold text-navy">Current B/W cost per page (optional)</label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={currentMonoCost}
+                    onChange={(event) => setCurrentMonoCost(event.target.value)}
+                    placeholder="Example: 1.20"
+                    className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-navy">Current color cost per page (optional)</label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={currentColorCost}
+                    onChange={(event) => setCurrentColorCost(event.target.value)}
+                    placeholder="Example: 7.50"
+                    className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+              {businessType === "print_shop" ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="text-sm font-semibold text-navy">Mono selling price per print (INR)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      step={0.1}
+                      value={monoSellPrice}
+                      onChange={(event) => setMonoSellPrice(Math.max(Number(event.target.value) || 0, 0))}
+                      className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-navy">Color selling price per print (INR)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      step={0.1}
+                      value={colorSellPrice}
+                      onChange={(event) => setColorSellPrice(Math.max(Number(event.target.value) || 0, 0))}
+                      className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                    />
+                  </div>
+                </div>
+              ) : null}
             </div>
+
           </form>
 
-          <section className="rounded-2xl border border-border bg-card p-4 space-y-6 sm:p-6 lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:pr-2">
+          <section className="rounded-2xl border border-border bg-card p-4 sm:p-6 space-y-5 lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:pr-2">
             <div>
-              <h2 className="text-2xl md:text-3xl font-display font-bold text-navy">Your ROI Snapshot</h2>
-              <p className="text-sm text-muted-foreground mt-2">
-                Calculated from your inputs plus fixed market benchmark assumptions.
+              <h2 className="text-2xl md:text-3xl font-display font-bold text-navy">ROI Output</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Best machine recommendation, monthly spend clarity, and savings versus current setup.
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-4">
-              {[
-                { label: "Estimated Monthly Net Cash Flow", value: formatInr(roiMetrics.netCashflow) },
-                { label: "Projected Monthly Gross Revenue", value: formatInr(roiMetrics.revenue) },
-                { label: "Monthly EMI Commitment", value: formatInr(roiMetrics.emi) },
-                {
-                  label: "Gross Profit / Print (B2C)",
-                  value: isCommercial ? `INR ${roiMetrics.grossProfitPerPrint.toFixed(2)} / print` : "-",
-                },
-              ].map((item) => (
-                <div key={item.label} className="rounded-2xl border border-border bg-muted/60 p-4">
-                  <span className="text-xs text-muted-foreground">{item.label}</span>
-                  <strong className="block text-navy text-lg">{item.value}</strong>
+            <>
+                <div className="rounded-2xl border border-highlight/20 bg-[#fff8eb] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Best fit for your business</p>
+                  <h3 className="mt-2 text-xl font-display font-bold text-navy">{recommendation.primary.name}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{recommendation.why}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    <span className="font-semibold text-navy">Why recommended:</span> {recommendation.primary.oneLineReason}
+                  </p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    <span className="font-semibold text-navy">Best for:</span> {recommendation.primary.bestFor}
+                  </p>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Alternate options: {recommendation.alternates.map((option) => option.name).join(", ")}
+                  </p>
                 </div>
-              ))}
-            </div>
 
-            <div className="rounded-xl border border-border bg-muted/60 p-4 text-sm text-muted-foreground">
-              Own this machine for just {formatInr(roiMetrics.emi)}/month. 100% Funding Available (Subject to GST).
-            </div>
-            <div className="rounded-xl border border-border bg-muted/60 p-4 text-sm text-muted-foreground">
-              Includes 10,000 Free 12x18 Sheets! Estimated Retail Value: INR 2,25,000 (Effectively covers your first 7
-              months of EMI).
-            </div>
-
-            <div>
-              <h3 className="font-display font-bold text-navy">Cost of Recommended Printer</h3>
-              <div className="mt-3 grid sm:grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-border bg-muted/60 p-4">
-                  <span className="text-xs text-muted-foreground">CapEx (Standard MRP)</span>
-                  <strong className="block text-navy text-lg">{formatInr(roiMetrics.capex)}</strong>
-                  <small className="text-muted-foreground">One-time capital purchase benchmark</small>
+                <div className="rounded-2xl border border-border bg-muted/40 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Cost per page comparison</p>
+                  <div className="mt-3 overflow-x-auto">
+                    <table className="min-w-[360px] w-full text-sm border-collapse">
+                      <thead>
+                        <tr className="border-b text-left text-xs uppercase tracking-widest text-muted-foreground">
+                          <th className="py-2">Type</th>
+                          <th className="py-2">Current</th>
+                          <th className="py-2">Suggested</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b">
+                          <td className="py-2 text-muted-foreground">B/W</td>
+                          <td className="py-2 text-muted-foreground">{formatInr(metrics.currentMonoCpp)}</td>
+                          <td className="py-2 text-muted-foreground">{formatInr(metrics.suggestedMonoCpp)}</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 text-muted-foreground">Color</td>
+                          <td className="py-2 text-muted-foreground">{formatInr(metrics.currentColorCpp)}</td>
+                          <td className="py-2 text-muted-foreground">{formatInr(metrics.suggestedColorCpp)}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-                <div className="rounded-2xl border border-border bg-muted/60 p-4">
-                  <span className="text-xs text-muted-foreground">OpEx Lease Option</span>
-                  <strong className="block text-navy text-lg">{formatInr(roiMetrics.emi)} / month</strong>
-                  <small className="text-muted-foreground">
-                    Or lease for {formatInr(roiMetrics.emi)}/month (36 months)
-                  </small>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-border bg-muted/40 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Monthly spend</p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Current setup: <span className="font-semibold text-navy">{formatInr(metrics.currentMonthlySpend)}</span>
+                    </p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Suggested setup:{" "}
+                      <span className="font-semibold text-navy">{formatInr(metrics.suggestedMonthlySpend)}</span>
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-muted/40 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Savings summary</p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Monthly savings: <span className="font-semibold text-navy">{formatInrSigned(metrics.monthlySavings)}</span>
+                    </p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Yearly savings: <span className="font-semibold text-navy">{formatInrSigned(metrics.yearlySavings)}</span>
+                    </p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      ROI period:{" "}
+                      <span className="font-semibold text-navy">
+                        {metrics.roiMonths ? `${metrics.roiMonths.toFixed(1)} months` : "Payback not available"}
+                      </span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div>
-              <h3 className="font-display font-bold text-navy">Fixed Market Assumptions Applied</h3>
-              <div className="mt-3 grid sm:grid-cols-2 gap-4">
-                {[
-                  {
-                    label: "Current CPP (Mono / Color)",
-                    value: `INR ${roiMetrics.currentCppMono.toFixed(2)} / INR ${roiMetrics.currentCppColor.toFixed(2)}`,
-                  },
-                  { label: "Maintenance Benchmark", value: `${formatInr(roiMetrics.maintenance)} / month` },
-                  { label: "Energy Benchmark", value: `${formatInr(roiMetrics.energy)} / month` },
-                  {
-                    label: "Downtime Benchmark",
-                    value: `${roiMetrics.downtimeHours.toFixed(1)} hrs x ${formatInr(roiMetrics.downtimeRate)}`,
-                  },
-                  { label: "Model CAPEX Benchmark (Reference)", value: formatInr(roiMetrics.capex) },
-                  { label: "ROI Horizon", value: "3 years" },
-                ].map((item) => (
-                  <div key={item.label} className="rounded-2xl border border-border bg-muted/60 p-4">
-                    <span className="text-xs text-muted-foreground">{item.label}</span>
-                    <strong className="block text-navy text-lg">{item.value}</strong>
+                {recommendation.primary.includedMonoPrints > 0 || recommendation.primary.includedColorPrints > 0 ? (
+                  <div className="rounded-2xl border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+                    Included print value (first cycle estimate):{" "}
+                    <span className="font-semibold text-navy">{formatInr(metrics.includedPrintValue)}</span>
                   </div>
-                ))}
-              </div>
-            </div>
+                ) : null}
 
-            <div>
-              <h3 className="font-display font-bold text-navy">Estimated Ink / Toner Required</h3>
-              <div className="mt-3 grid sm:grid-cols-2 gap-4">
-                {[
-                  { label: "Black Consumable Requirement", value: `${(monoPages / 42695).toFixed(2)} Black Toner / month` },
-                  { label: "Color Consumable Requirement", value: `${(colorPages / 40000).toFixed(2)} CMY Toner Set / month` },
-                  { label: "Estimated Consumables Budget (Monthly)", value: formatInr(roiMetrics.pnlConsumables) },
-                  {
-                    label: "Estimated Consumables Budget (Annual)",
-                    value: formatInr(roiMetrics.pnlConsumables * 12),
-                  },
-                ].map((item) => (
-                  <div key={item.label} className="rounded-2xl border border-border bg-muted/60 p-4">
-                    <span className="text-xs text-muted-foreground">{item.label}</span>
-                    <strong className="block text-navy text-lg">{item.value}</strong>
+                <div className="rounded-2xl border border-border bg-muted/40 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-highlight">{industryInsight.title}</p>
+                  <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                    {industryInsight.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                {isRcSavingsCalloutVisible ? (
+                  <div className="rounded-2xl border border-highlight/30 bg-[#fff8eb] p-4 text-sm text-navy">
+                    Most print shops using RC machines save 30-50% after switching.
                   </div>
-                ))}
-              </div>
-              <p className="text-sm text-muted-foreground mt-2">
-                Includes mono + color consumable planning for the recommended device profile.
-              </p>
-            </div>
+                ) : null}
 
-            <div className="overflow-x-auto">
-              <table className="min-w-[640px] w-full border-collapse text-left text-sm">
-                <thead>
-                  <tr className="text-xs uppercase tracking-widest text-muted-foreground border-b">
-                    <th className="py-2">Cost Component (Monthly)</th>
-                    <th className="py-2">Current</th>
-                    <th className="py-2">Projected</th>
-                    <th className="py-2">Impact</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    {
-                      label: "Print output cost",
-                      current: roiMetrics.currentConsumables,
-                      projected: roiMetrics.projectedConsumables,
-                    },
-                    {
-                      label: "Maintenance",
-                      current: roiMetrics.maintenance,
-                      projected: roiMetrics.maintenance * 0.82,
-                    },
-                    {
-                      label: "Energy",
-                      current: roiMetrics.energy,
-                      projected: roiMetrics.energy * 0.82,
-                    },
-                    {
-                      label: "Downtime impact",
-                      current: roiMetrics.downtimeCost,
-                      projected: roiMetrics.downtimeCost * 0.65,
-                    },
-                  ].map((row) => (
-                    <tr key={row.label} className="border-b">
-                      <td className="py-3 text-muted-foreground">{row.label}</td>
-                      <td className="py-3 text-muted-foreground">{formatInr(row.current)}</td>
-                      <td className="py-3 text-muted-foreground">{formatInr(row.projected)}</td>
-                      <td className="py-3 text-muted-foreground">
-                        -{formatInr(Math.max(row.current - row.projected, 0))}
-                      </td>
-                    </tr>
-                  ))}
-                  <tr className="border-b">
-                    <td className="py-3 text-muted-foreground">Total</td>
-                    <td className="py-3 text-muted-foreground">{formatInr(roiMetrics.currentCost)}</td>
-                    <td className="py-3 text-muted-foreground">{formatInr(roiMetrics.projectedCost)}</td>
-                    <td className="py-3 text-muted-foreground">-{formatInr(roiMetrics.monthlySavings)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div className="rounded-xl border border-border bg-muted/60 p-4 text-sm text-muted-foreground">
-              <h3 className="font-display font-bold text-navy">Your Projected Monthly P&amp;L</h3>
-              <div className="mt-3 grid sm:grid-cols-2 gap-3 text-sm">
-                {[
-                  {
-                    label: "Selling model",
-                    value: isCommercial ? (sellingMode === "b2c" ? "End Customer (B2C Retail)" : "Reseller (B2B Trade)") : "-",
-                  },
-                  {
-                    label: "Monthly print volume",
-                    value: roiMetrics.totalPages.toLocaleString("en-IN"),
-                  },
-                  {
-                    label: "Sell price per print",
-                    value: isCommercial ? `INR ${roiMetrics.sellPrice}` : "-",
-                  },
-                  {
-                    label: "Total revenue",
-                    value: isCommercial ? formatInr(roiMetrics.revenue) : "-",
-                  },
-                  {
-                    label: "Consumables cost (FSMA + paper)",
-                    value: formatInr(roiMetrics.pnlConsumables),
-                  },
-                  {
-                    label: "Monthly EMI",
-                    value: formatInr(roiMetrics.emi),
-                  },
-                  {
-                    label: "Net take-home profit (cash flow)",
-                    value: formatInr(roiMetrics.netCashflow),
-                  },
-                  {
-                    label: "Gross profit per print (B2B / B2C)",
-                    value: isCommercial ? `INR 5.15 / INR ${roiMetrics.grossProfitPerPrint.toFixed(2)}` : "-",
-                  },
-                ].map((item) => (
-                  <div key={item.label} className="rounded-lg border border-border bg-white p-3">
-                    <p className="text-xs text-muted-foreground">{item.label}</p>
-                    <p className="text-sm text-navy mt-1">{item.value}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-muted/60 p-4 text-sm text-muted-foreground">
-              <p className="font-semibold text-navy">Interpretation</p>
-              <p className="mt-2">
-                Projected monthly net cash flow: {formatInr(roiMetrics.netCashflow)} (
-                {roiMetrics.revenue > 0
-                  ? `${((roiMetrics.netCashflow / roiMetrics.revenue) * 100).toFixed(1)}% margin on monthly revenue)`
-                  : "0% margin on monthly revenue"}
-                .
-              </p>
-              <p className="mt-2">
-                Break-even volume at selected selling mode:{" "}
-                {roiMetrics.sellPrice > 0
-                  ? Math.ceil(roiMetrics.emi / roiMetrics.sellPrice).toLocaleString("en-IN")
-                  : "-"}{" "}
-                prints / month.
-              </p>
-              <p className="mt-2">Total cost per print (FSMA + paper): INR {roiMetrics.costPerPrint.toFixed(2)}</p>
-              <p className="mt-2">
-                Commercial P&amp;L mode is active for {recommendation.model}. Use selected pricing mode to validate
-                monthly cash flow and production ramp-up. Same-day service SLA applies in Mumbai, Boisar, and Khopoli.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-muted/60 p-4">
-              <h3 className="font-display font-bold text-navy">Request Physical Print Demo (POC)</h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                Upload your test artwork file. Accepted formats: PDF, JPG, TIFF. Max size: 50 MB. This will be tagged as
-                &quot;POC Requested&quot; in CRM.
-              </p>
-              <div className="mt-4">
-                <label className="text-xs font-semibold text-navy">Demo File Upload</label>
-                <input
-                  type="file"
-                  accept=".pdf,.jpg,.jpeg,.tiff,.tif,application/pdf,image/jpeg,image/tiff"
-                  className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                />
-              </div>
-              <div className="mt-4">
-                <button type="button" className="rounded-full border border-border px-5 py-2 text-xs font-semibold text-navy">
-                  Upload File for POC
-                </button>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Generate ROI report first so this file maps to your report ID.
-                </p>
-              </div>
-            </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <a
+                    href="tel:+919920909700"
+                    className="inline-flex items-center justify-center rounded-full bg-navy px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-primary-foreground"
+                  >
+                    Get Best Price
+                  </a>
+                  <a
+                    href="https://wa.me/919920909700?text=Hi%20Zestek%2C%20I%20need%20ROI%20guidance%20for%20a%20printer."
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-full border border-navy/30 px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-navy"
+                  >
+                    WhatsApp Expert
+                  </a>
+                  <a
+                    href="/contact#sales-inquiry"
+                    className="inline-flex items-center justify-center rounded-full border border-border px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-navy"
+                  >
+                    Book Demo
+                  </a>
+                </div>
+            </>
           </section>
         </div>
       </section>
