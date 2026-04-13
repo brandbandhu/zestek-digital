@@ -97,7 +97,7 @@ const PhotocopyCommercial = () => (
                   {commercialProductGroups.epsonColor.map((product) => (
                     <Link
                       key={product.slug}
-                      to={`/commercial/${product.slug}`}
+                      to={product.detailPath ?? `/commercial/${product.slug}`}
                       className="rounded-2xl border border-border bg-background px-3 py-3 text-sm font-semibold text-navy transition hover:border-highlight"
                     >
                       {product.name}
@@ -111,7 +111,7 @@ const PhotocopyCommercial = () => (
                   {commercialProductGroups.epsonMono.map((product) => (
                     <Link
                       key={product.slug}
-                      to={`/commercial/${product.slug}`}
+                      to={product.detailPath ?? `/commercial/${product.slug}`}
                       className="rounded-2xl border border-border bg-background px-3 py-3 text-sm font-semibold text-navy transition hover:border-highlight"
                     >
                       {product.name}

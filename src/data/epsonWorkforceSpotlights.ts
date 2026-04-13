@@ -1,5 +1,10 @@
 export type EpsonWorkforceSpotlightKey = "em-c8100" | "am-m5500";
 
+const c8100CampaignPoster = new URL(
+  "../../assets/WhatsApp Image 2026-04-13 at 8.27.39 AM.jpeg",
+  import.meta.url,
+).href;
+
 type SpotlightCard = {
   title: string;
   body: string;
@@ -16,6 +21,17 @@ type SpotlightFact = {
   value: string;
 };
 
+type SpotlightShowcase = {
+  eyebrow: string;
+  title: string;
+  body: string;
+  tagline?: string;
+  chips: string[];
+  image: string;
+  imageAlt: string;
+  note?: string;
+};
+
 export type EpsonWorkforceSpotlight = {
   key: EpsonWorkforceSpotlightKey;
   route: string;
@@ -29,6 +45,7 @@ export type EpsonWorkforceSpotlight = {
   campaignLine: string;
   offerTitle: string;
   offerBody: string;
+  offerNote?: string;
   heroChips: string[];
   productImage: string;
   productImageAlt: string;
@@ -54,147 +71,166 @@ export type EpsonWorkforceSpotlight = {
   offerBannerBody: string;
   ctaTitle: string;
   ctaBody: string;
+  showcase?: SpotlightShowcase;
 };
 
 export const epsonWorkforceSpotlights: Record<EpsonWorkforceSpotlightKey, EpsonWorkforceSpotlight> = {
   "em-c8100": {
     key: "em-c8100",
     route: "/epson-em-c8100",
-    metaTitle: "Epson EM-C8100 A3 Printer | Low Cost Printing Machine for Print Shops",
+    metaTitle: "Epson EM-C8100 A3 Printer | High-Speed Low-Cost Printer for Print Shops",
     metaDescription:
-      "Buy Epson EM-C8100 A3 multifunction printer for low running cost, long-size output and reliable high-volume printing. Ideal for print shops. Call Zestek for pricing.",
+      "Explore the Epson EM-C8100 A3 multifunction printer for photocopy centres and print shops. High-speed output, low running cost, versatile media handling, and 1 lakh free prints via Zestek.",
     metaKeywords: [
-      "Epson C8100 printer India",
-      "A3 multifunction printer for print shop",
-      "low cost printing machine India",
-      "Epson ink tank A3 printer business",
-      "digital printing machine for shop",
+      "Epson EM-C8100 printer India",
+      "Epson C8100 print shop printer",
+      "A3 printer for photocopy centre",
+      "low cost colour printer for print shop",
+      "high speed Epson printer for business",
       "Epson EM-C8100 price India",
-      "best printer for xerox shop",
+      "digital printing machine for print business",
     ],
     eyebrow: "Epson WorkForce Pro",
     name: "Epson EM-C8100 A3 Multifunction Printer",
-    heroTitle: "A3 colour printing designed for growing print shops",
+    heroTitle: "Print buddy of every print shop",
     heroSubtitle:
-      "The Epson EM-C8100 helps print businesses take on letterheads, brochures, office documents and long-size jobs with better running economics and less interruption.",
-    campaignLine: "Print letterheads digitally with offset-friendly economics and expand into higher-margin A3 work.",
-    offerTitle: "Introductory print support",
-    offerBody: "Includes 1 lakh complimentary prints with machine purchase through Zestek.",
-    heroChips: ["Low print cost", "Low maintenance", "A3 plus long size output", "No AC or UPS required"],
+      "High-speed. Low cost. Built for print business growth. The Epson EM-C8100 is made for photocopy centres, print shops and high-volume counters that want dependable colour output without the heavy running cost of older laser-style setups.",
+    campaignLine: "Photo bhi, photocopy bhi. Print letterheads digitally at the cost of offset.",
+    offerTitle: "Launch benefit",
+    offerBody: "1 lakh prints free with machine purchase through Zestek",
+    offerNote: "*A4 size, colour and black-and-white mix, standard coverage.",
+    heroChips: [
+      "Ultra-low cost per print",
+      "Up to 25 pages per minute",
+      "Low maintenance",
+      "No AC or UPS required",
+      "A4, A3 plus and custom media",
+    ],
     productImage:
       "https://mediaserver.goepson.com/adaptivemedia/rendition?assetDescr=WorkForce_Pro_EM-C8100_SPT_C11CL31201_384x256&clid=SAPDAM&id=818b370842b00667e251fd5a0e34aa07daf5c4a6&prclid=banner&prid=1200Wx1200H&vid=818b370842b00667e251fd5a0e34aa07daf5c4a6",
     productImageAlt: "Epson EM-C8100 A3 multifunction printer",
     officialUrl:
       "https://www.epson.co.in/Business-Inkjet-Printers/WorkForce-Pro-EM-C8100-Multifunction-A3%2B-Color-Printer/p/C11CL31503",
-    introTitle: "A business-ready A3 printer for commercial print counters",
+    introTitle: "Why the C8100 is perfect for photocopy centres and print shops",
     introParagraphs: [
-      "If you are looking for a cost-conscious A3 printer for a print shop, copy centre or in-house print desk, the Epson EM-C8100 is built to improve output without pushing up running cost.",
-      "It gives you a practical route into high-volume A3 colour work while keeping maintenance demands low. That makes it a strong fit for shops that want faster turnaround, cleaner margins and more control over outsourced work.",
+      "The EM-C8100 is designed to help print businesses grow with faster output, better colour consistency and an operating model that protects margin on every page.",
+      "For photocopy centres and commercial counters, it brings together heavy-duty reliability, low maintenance demand, eco-friendly heat-free printing and flexible media support in one practical A3 platform.",
     ],
     quickFacts: [
-      { label: "Functions", value: "Print, scan and copy" },
-      { label: "Media range", value: "A3 plus and long size up to 13 x 47 inches" },
-      { label: "Best fit", value: "Print shops, copy centres and quick commercial jobs" },
-      { label: "Core strength", value: "Lower operating cost with reliable business output" },
+      { label: "Speed", value: "Up to 25 pages per minute" },
+      { label: "Media support", value: "A4, A3 plus, thick paper, photo paper, stickers, canvas and custom media" },
+      { label: "Best fit", value: "Photocopy centres, print shops and high-volume document counters" },
+      { label: "Launch support", value: "1 lakh complimentary prints with machine purchase*" },
     ],
     trustCards: [
       {
-        title: "Built for print volumes that matter",
-        body: "Take on recurring office work, colour document jobs and bulk walk-in demand without shifting every A3 order outside.",
+        title: "Lower cost on every page",
+        body: "Ultra-low print cost helps you maximize profit on repeat colour and mixed-output jobs.",
       },
       {
-        title: "Better economics on everyday jobs",
-        body: "Low running cost helps make digital letterheads, brochures and branded collateral more financially attractive.",
+        title: "Faster turnaround for rush work",
+        body: "High-speed output helps you handle urgent walk-ins and commercial jobs without delaying delivery.",
       },
       {
-        title: "Support from selection to service",
-        body: "Zestek helps with pricing, installation planning, service guidance and long-term consumable support.",
+        title: "Built for busy counters",
+        body: "Reliable heavy-duty performance and lower downtime keep the machine working when business is at peak demand.",
       },
     ],
-    featureTitle: "Designed to convert print demand into profit",
+    featureTitle: "Key features that support print business growth",
     featureCards: [
       {
+        title: "High-speed performance",
+        body: "Print up to 25 pages per minute so your team can finish more jobs in less time.",
+      },
+      {
         title: "Low running cost",
-        body: "Bring down cost per print and protect margins on repeat colour jobs.",
+        body: "PrecisionCore Heat-Free Technology keeps cost per page significantly lower than traditional laser machines.",
       },
       {
-        title: "High-volume readiness",
-        body: "Handle day-to-day production work without treating every order as a special case.",
+        title: "Consistent print quality",
+        body: "Sharp text and vibrant graphics make it a dependable choice for documents, forms and commercial prints.",
       },
       {
-        title: "Low maintenance profile",
-        body: "Reduce interruptions, service dependency and avoidable downtime on busy counters.",
+        title: "High duty cycle",
+        body: "Built to handle lakh-level monthly demand for shops that print continuously through the day.",
       },
       {
-        title: "Flexible installation",
-        body: "A practical fit for Indian shop conditions where operators want simpler power requirements.",
+        title: "Advanced paper handling",
+        body: "Supports A4, A3 plus, thick paper, photo paper, stickers, canvas and other custom media types.",
       },
       {
-        title: "Long-size print capability",
-        body: "Open up menus, inserts, signage strips and banner-style work up to 13 x 47 inches.",
-      },
-      {
-        title: "Print, scan and copy in one device",
-        body: "Cover daily document workflows without adding separate hardware for basic service needs.",
+        title: "Seamless connectivity",
+        body: "Integrates easily with network printing, USB workflows and mobile or cloud-led job submission.",
       },
     ],
-    applicationTitle: "Work that the EM-C8100 can unlock",
+    applicationTitle: "Photo bhi, photocopy bhi.",
     applicationIntro:
-      "This model is suited to shops that want to widen their service menu while keeping delivery times short and predictable.",
+      "Use the EM-C8100 for daily photocopy work, commercial colour output and offset-style stationery jobs without adding a complex production setup.",
     applicationCards: [
       {
-        title: "Letterheads and office stationery",
-        body: "Produce branded sheets, forms and internal office stock with lower per-job cost.",
+        title: "Photocopy and xerox centres",
+        body: "Serve day-to-day walk-in demand with fast, reliable output across mixed document jobs.",
       },
       {
-        title: "Flyers, brochures and pamphlets",
-        body: "Take on marketing work for local businesses without depending on outside vendors for every run.",
+        title: "Commercial print shops",
+        body: "Handle everyday commercial jobs with lower running cost and consistent quality.",
       },
       {
-        title: "Visiting cards and presentation sets",
-        body: "Support day-to-day commercial print requirements with stronger control over turnaround.",
+        title: "Corporate printing requirements",
+        body: "Produce office documents, forms, presentations and branded stationery from a single platform.",
       },
       {
-        title: "Photo and colour document work",
-        body: "Serve mixed print demand from customers who need both office and visual output.",
+        title: "Educational institutes",
+        body: "Support study material, notices, forms and campus document workflows with dependable speed.",
       },
       {
-        title: "Long-size output",
-        body: "Create menus, long-format promotional work and custom-sized print pieces from the same machine.",
+        title: "Bulk documentation and forms printing",
+        body: "Keep high-page-count jobs moving smoothly without stressing the machine during longer runs.",
       },
       {
-        title: "Copy and scan services",
-        body: "Keep essential walk-in service demand inside the same workflow instead of splitting counters.",
+        title: "Job work printing businesses",
+        body: "Take on outside job work with better control over margin, turnaround and output consistency.",
       },
     ],
     comparisonTitle: "How the EM-C8100 compares with a traditional laser setup",
     comparisonIntro:
-      "For print businesses evaluating long-term operating cost, this model is positioned as a more margin-friendly alternative to conventional laser hardware.",
+      "For shops comparing long-term business value, the EM-C8100 offers a more cost-aware and uptime-friendly path than a typical laser-based machine.",
     competitorLabel: "Traditional laser printer",
     comparisonRows: [
-      { label: "Print cost", productValue: "Low and margin-friendly", competitorValue: "Higher running cost" },
-      { label: "Maintenance", productValue: "Lower service burden", competitorValue: "More frequent upkeep" },
-      { label: "Power planning", productValue: "No AC or UPS dependency", competitorValue: "Often needs extra planning" },
-      { label: "Long-size printing", productValue: "Up to 13 x 47 inches", competitorValue: "Limited or unavailable" },
-      { label: "Profitability on repeat jobs", productValue: "Stronger per-print upside", competitorValue: "Moderate upside" },
+      { label: "Cost per print", productValue: "Ultra-low and margin-friendly", competitorValue: "Higher running cost" },
+      { label: "Power consumption", productValue: "Lower with heat-free printing", competitorValue: "Higher overall power draw" },
+      { label: "Maintenance downtime", productValue: "Lower interruption and less service pressure", competitorValue: "More maintenance attention" },
+      { label: "Heavy-duty usage", productValue: "Designed for continuous print business demand", competitorValue: "Can become costlier under long runs" },
+      { label: "Media flexibility", productValue: "A4, A3 plus, thick and custom media", competitorValue: "Often narrower media range" },
     ],
-    benefitsTitle: "A better business case for print shop owners",
+    benefitsTitle: "Advantages for your business",
     benefitBullets: [
-      "Improve profit margins on recurring A3 colour work",
-      "Reduce outsourcing for long-size and branded jobs",
-      "Move faster on urgent customer timelines",
-      "Take larger print volumes with less interruption",
-      "Expand service categories without building a new setup from scratch",
+      "Increase profit margins with lower ink cost",
+      "Reduce electricity bills with heat-free technology",
+      "Handle bulk jobs smoothly without machine stress",
+      "Improve customer satisfaction with faster delivery",
+      "Minimize service interruptions",
     ],
-    impactTitle: "More revenue with tighter control over cost",
+    impactTitle: "High-speed growth without laser-like overheads",
     impactBody:
-      "The EM-C8100 is best suited to print businesses that want to increase output, keep more work in-house and grow into higher-value commercial jobs without overcomplicating operations.",
-    offerBannerTitle: "Launch your next print service with 1 lakh complimentary prints",
+      "The EM-C8100 is built for shops that want more uptime, better colour-business margins and the flexibility to grow from routine photocopy work into higher-value print jobs.",
+    offerBannerTitle: "Start strong with 1 lakh complimentary prints",
     offerBannerBody:
-      "Use the introductory print support to start production faster, test new service lines and reduce the pressure of early operating cost.",
+      "Use the launch support to begin production quickly, test new paper applications and reduce the pressure of early consumable cost.",
     ctaTitle: "Talk to Zestek about pricing, demo and rollout",
     ctaBody:
-      "We can help you evaluate fit, compare running economics and plan the right setup for your print volume and service mix.",
+      "We can help you assess monthly volume, compare running economics and plan the right media mix for your photocopy or print business.",
+    showcase: {
+      eyebrow: "Bottom line",
+      title: "From visiting cards to envelopes, stickers and everyday job work.",
+      body:
+        "The EM-C8100 gives print businesses the flexibility to handle stationery, branded collateral, custom media and routine document printing from one dependable setup.",
+      tagline: "Print letterheads digitally at the cost of offset.",
+      chips: ["Visiting cards", "Envelopes", "Letterheads", "Stickers", "Photo papers", "Canvas", "Custom media"],
+      image: c8100CampaignPoster,
+      imageAlt: "Epson EM-C8100 campaign poster with visiting cards, envelopes, stickers and sample print applications",
+      note: "Reference campaign visual showing the kind of print jobs the machine can support.",
+    },
   },
   "am-m5500": {
     key: "am-m5500",

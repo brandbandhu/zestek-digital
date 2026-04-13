@@ -15,6 +15,7 @@ const categories = [
     link: "/epson-ecotank",
     imageUrl:
       "https://mediaserver.goepson.com/adaptivemedia/rendition?id=3679c7960a7a7a1feea5c47e1ee23470f69c52b0&vid=3679c7960a7a7a1feea5c47e1ee23470f69c52b0&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=L3250-%281%29",
+    imageClassName: "object-cover",
   },
   {
     icon: Building2,
@@ -24,14 +25,17 @@ const categories = [
     link: "/epson-workforce",
     imageUrl:
       "https://mediaserver.goepson.com/adaptivemedia/rendition?id=497de13b25347068dce62d42ce18bbe12579f0ea&vid=497de13b25347068dce62d42ce18bbe12579f0ea&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=C4000",
+    imageClassName: "object-cover",
   },
   {
     icon: Factory,
     tag: "Photocopy & Commercial",
     title: "Printers for Photocopy Centre & Commercial Segment",
     desc: "Compare Epson and Konica Minolta options for photocopy centres and commercial print businesses.",
-    link: "/photocopy-commercial",
-    imageUrl: "https://bt.konicaminolta.in/wp-content/themes/BIN/assets/images/Product_finder/AccurioPress-C14010S.jpg",
+    link: "/epson-em-c8100",
+    imageUrl:
+      "https://mediaserver.goepson.com/adaptivemedia/rendition?id=818b370842b00667e251fd5a0e34aa07daf5c4a6&vid=818b370842b00667e251fd5a0e34aa07daf5c4a6&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=WorkForce_Pro_EM-C8100_SPT_C11CL31201_384x256",
+    imageClassName: "object-contain bg-white p-3",
   },
   {
     icon: Settings,
@@ -40,6 +44,7 @@ const categories = [
     desc: "Managed print services and structured office printing plans for business control and efficiency.",
     link: "/corporate-solutions",
     imageUrl: corporateSolutionsImage,
+    imageClassName: "object-cover",
   },
   {
     icon: Wrench,
@@ -48,6 +53,7 @@ const categories = [
     desc: "Get service help, installation support, AMC guidance, and printer assistance from our team.",
     link: "/service",
     imageUrl: serviceSupportImage,
+    imageClassName: "object-cover",
   },
 ];
 
@@ -91,7 +97,7 @@ const ProductCategories = () => (
                 <img
                   src={category.imageUrl}
                   alt={`${category.title} category`}
-                  className="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-[1.04] sm:h-36 lg:h-40"
+                  className={`h-40 w-full transition-transform duration-500 group-hover:scale-[1.04] sm:h-36 lg:h-40 ${category.imageClassName}`}
                   loading="lazy"
                 />
               </div>

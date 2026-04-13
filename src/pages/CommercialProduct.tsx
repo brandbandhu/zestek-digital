@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { ArrowRight, Info, Wrench } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -28,6 +28,10 @@ const CommercialProduct = () => {
         <Footer />
       </div>
     );
+  }
+
+  if (product.detailPath) {
+    return <Navigate to={product.detailPath} replace />;
   }
 
   return (

@@ -7,6 +7,7 @@ export type CommercialProduct = {
   brand: "Konica Minolta" | "Epson";
   segment: "Photocopy Centre & Commercial Segment";
   outputMode: "Color" | "Monochrome";
+  detailPath?: string;
   heroTag: string;
   summary: string;
   highlights: string[];
@@ -201,6 +202,7 @@ export const commercialProducts: CommercialProduct[] = [
     brand: "Epson",
     segment: "Photocopy Centre & Commercial Segment",
     outputMode: "Color",
+    detailPath: "/epson-em-c8100",
     heroTag: "Epson color printer",
     summary:
       "Color printer option for commercial and photocopy use cases. Detailed information will be added soon.",
@@ -246,6 +248,7 @@ export const commercialProducts: CommercialProduct[] = [
     brand: "Epson",
     segment: "Photocopy Centre & Commercial Segment",
     outputMode: "Monochrome",
+    detailPath: "/epson-m5500",
     heroTag: "Epson monochrome printer",
     summary:
       "Monochrome printer option for commercial and photocopy use cases. Detailed information will be added soon.",
