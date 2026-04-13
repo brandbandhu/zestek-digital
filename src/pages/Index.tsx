@@ -7,6 +7,7 @@ import BrochureSection from "@/components/BrochureSection";
 import InsightsSection from "@/components/InsightsSection";
 import TrustSignals from "@/components/TrustSignals";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import WebsiteInquiryForm from "@/components/WebsiteInquiryForm";
 import Footer from "@/components/Footer";
 import PageMeta from "@/components/PageMeta";
 
@@ -89,6 +90,13 @@ const Index = () => (
     <TrustSignals />
     <InsightsSection />
     <TestimonialsSection />
+    <WebsiteInquiryForm
+      sectionId="home-contact"
+      formId="home-page-contact-form"
+      formName="Home Page Contact Form"
+      successMessage="Your request has been sent. Our team will contact you soon."
+      className="pt-0"
+    />
     <Footer />
   </div>
 );

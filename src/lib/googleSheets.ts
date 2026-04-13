@@ -1,5 +1,5 @@
 const DEFAULT_SPREADSHEET_ID = "1nLqPoigEEJp2C4oRX2xMCz9YMS0Ta9B6P06tOvLfY2c";
-const DEFAULT_SHEET_NAME = "Website Leads";
+const DEFAULT_SHEET_NAME = "Sheet1";
 const DEFAULT_WEB3FORMS_ACCESS_KEY = "bf152788-d2f6-42f1-a1a1-5ed0d8d24832";
 const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
 
