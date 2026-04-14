@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Building2, Factory, Printer, Settings, Wrench } from "lucide-react";
 import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
-import { commercialSegmentSelections } from "@/data/commercialProducts";
 
 const corporateSolutionsImage = new URL("../../assets/corporate solution.jpg", import.meta.url).href;
 const serviceSupportImage = new URL("../../assets/support.png", import.meta.url).href;
@@ -37,7 +36,6 @@ const categories = [
     imageUrl:
       "https://mediaserver.goepson.com/adaptivemedia/rendition?id=818b370842b00667e251fd5a0e34aa07daf5c4a6&vid=818b370842b00667e251fd5a0e34aa07daf5c4a6&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=WorkForce_Pro_EM-C8100_SPT_C11CL31201_384x256",
     imageClassName: "object-contain bg-white p-3",
-    selectionGroups: commercialSegmentSelections,
   },
   {
     icon: Settings,
@@ -106,27 +104,6 @@ const ProductCategories = () => (
               <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{category.tag}</span>
               <h3 className="mb-3 mt-2 font-display font-bold text-navy">{category.title}</h3>
               <p className="mb-4 text-sm text-muted-foreground md:min-h-[3rem]">{category.desc}</p>
-              {category.selectionGroups && (
-                <div className="mb-4 grid gap-3">
-                  {category.selectionGroups.map((brandGroup) => (
-                    <div key={brandGroup.brand} className="rounded-2xl border border-border bg-muted/35 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-widest text-highlight">{brandGroup.brand}</p>
-                      <div className="mt-3 grid gap-3">
-                        {brandGroup.outputModes.map((outputMode) => (
-                          <div key={`${brandGroup.brand}-${outputMode.label}`}>
-                            <p className="text-[10px] font-semibold uppercase tracking-widest text-navy/80">
-                              {outputMode.label}
-                            </p>
-                            <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                              {outputMode.models.map((model) => model.name).join(", ")}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
               <div className="mt-auto flex h-10 w-10 items-center justify-center rounded-lg bg-muted transition-colors group-hover:bg-highlight/10">
                 <category.icon className="h-5 w-5 text-navy transition-colors group-hover:text-highlight" />
               </div>
