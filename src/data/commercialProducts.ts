@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Droplets, Factory, Printer, ScanSearch } from "lucide-react";
+import { Factory, Printer, ScanSearch } from "lucide-react";
 
 export type CommercialProduct = {
   slug: string;
@@ -8,6 +8,7 @@ export type CommercialProduct = {
   segment: "Photocopy Centre & Commercial Segment";
   outputMode: "Color" | "Monochrome";
   detailPath?: string;
+  officialUrl?: string;
   heroTag: string;
   summary: string;
   highlights: string[];
@@ -15,6 +16,23 @@ export type CommercialProduct = {
   applications: string[];
   status: "complete" | "pending";
   icon: LucideIcon;
+};
+
+export type CommercialSelectionModel = {
+  name: string;
+  href?: string;
+  status: "available" | "coming-soon";
+};
+
+export type CommercialSelectionOutput = {
+  label: "Color" | "Monochrome";
+  models: CommercialSelectionModel[];
+};
+
+export type CommercialBrandSelection = {
+  brand: "Konica Minolta" | "Epson";
+  description: string;
+  outputModes: CommercialSelectionOutput[];
 };
 
 export const commercialProducts: CommercialProduct[] = [
@@ -27,15 +45,40 @@ export const commercialProducts: CommercialProduct[] = [
     heroTag: "Compact production press",
     summary:
       "A compact, affordable colour production press built for lower-volume commercial work with professional image quality and flexible media handling.",
-    highlights: ["66 ppm color / 81 ppm mono", "3600 x 2400 dpi equivalent", "62–360 gsm media support", "Auto-duplex up to 864 mm"],
+    highlights: ["66 ppm color / 81 ppm mono", "3600 x 2400 dpi equivalent", "62-360 gsm media support", "Auto-duplex up to 864 mm"],
     specs: [
       { label: "Speed", value: "Up to 66 ppm (A4 color) / 81 ppm (A4 mono)" },
       { label: "Resolution", value: "Equivalent 3600 x 2400 dpi" },
-      { label: "Media Weight", value: "62–360 gsm (auto-duplex 360 gsm)" },
+      { label: "Media Weight", value: "62-360 gsm (auto-duplex 360 gsm)" },
       { label: "Long Sheet", value: "Up to 864 mm (auto duplex)" },
       { label: "Peak Volume", value: "7,02,000 (monthly duty cycle)" },
     ],
     applications: ["Photocopy centers", "Short-run color jobs", "Marketing collateral", "Booklets and brochures"],
+    status: "complete",
+    icon: Factory,
+  },
+  {
+    slug: "konica-c4070",
+    name: "AccurioPress C4070",
+    brand: "Konica Minolta",
+    segment: "Photocopy Centre & Commercial Segment",
+    outputMode: "Color",
+    officialUrl: "https://bt.konicaminolta.in/products/production-printer/colour-production-print-systems/accuriopress-c4070/",
+    heroTag: "Flexible digital colour press",
+    summary:
+      "Production colour press built for commercial environments that need strong media flexibility, long-sheet capability, envelope printing, and dependable turn-around performance.",
+    highlights: ["71 ppm color / 81 ppm mono", "3600 x 2400 dpi equivalent", "62-360 gsm media support", "Long sheet up to 1300 mm simplex"],
+    specs: [
+      { label: "Speed", value: "Up to 71 ppm (A4 color) / 81 ppm (A4 mono)" },
+      { label: "Resolution", value: "Equivalent 3600 x 2400 dpi" },
+      { label: "Media Weight", value: "62-360 gsm (auto-duplex 360 gsm)" },
+      { label: "Long Sheet", value: "Up to 1300 mm simplex / 864 mm auto duplex" },
+      { label: "Paper Input", value: "Up to 15,390 sheets" },
+      { label: "Scan Speed", value: "Up to 280 ipm duplex" },
+      { label: "Duty Cycle", value: "7,58,000 (monthly duty cycle)" },
+      { label: "Average Monthly Volume", value: "32.5K-130K" },
+    ],
+    applications: ["Commercial print jobs", "Long-sheet banners", "Envelope printing", "Brochures and catalogues"],
     status: "complete",
     icon: Factory,
   },
@@ -45,16 +88,20 @@ export const commercialProducts: CommercialProduct[] = [
     brand: "Konica Minolta",
     segment: "Photocopy Centre & Commercial Segment",
     outputMode: "Color",
+    officialUrl: "https://bt.konicaminolta.in/products/production-printer/colour-production-print-systems/accuriopress-c4080/",
     heroTag: "All-in-one print powerhouse",
     summary:
       "High-speed colour press designed to streamline workflows with strong media flexibility, long-sheet printing, and consistent image quality.",
-    highlights: ["81 ppm color / 81 ppm mono", "3600 x 2400 dpi equivalent", "62–360 gsm media support", "Long sheet up to 1300 mm (simplex)"],
+    highlights: ["81 ppm color / 81 ppm mono", "3600 x 2400 dpi equivalent", "62-360 gsm media support", "Long sheet up to 1300 mm simplex"],
     specs: [
       { label: "Speed", value: "Up to 81 ppm (A4 color & mono)" },
       { label: "Resolution", value: "Equivalent 3600 x 2400 dpi" },
-      { label: "Media Weight", value: "62–360 gsm (auto-duplex 360 gsm)" },
+      { label: "Media Weight", value: "62-360 gsm (auto-duplex 360 gsm)" },
       { label: "Long Sheet", value: "1300 mm simplex / 864 mm auto duplex" },
+      { label: "Paper Input", value: "Up to 15,390 sheets" },
+      { label: "Scan Speed", value: "Up to 280 ipm duplex" },
       { label: "Peak Volume", value: "8,64,000 (monthly duty cycle)" },
+      { label: "Average Monthly Volume", value: "54K-150K" },
     ],
     applications: ["Commercial print jobs", "Long-sheet banners", "Marketing collateral", "Envelope printing"],
     status: "complete",
@@ -113,7 +160,7 @@ export const commercialProducts: CommercialProduct[] = [
     specs: [
       { label: "Speed", value: "Up to 120 ppm (A4)" },
       { label: "Resolution", value: "3,600 x 2,400 dpi equivalent" },
-      { label: "Media Weight", value: "52–450 gsm (simplex/duplex)" },
+      { label: "Media Weight", value: "52-450 gsm (simplex/duplex)" },
       { label: "Long Sheet", value: "Up to 1300 mm simplex / 900 mm duplex" },
     ],
     applications: ["Commercial print production", "Booklets and catalogues", "Marketing collateral", "High coverage jobs"],
@@ -133,7 +180,7 @@ export const commercialProducts: CommercialProduct[] = [
     specs: [
       { label: "Speed", value: "Up to 140 ppm (A4)" },
       { label: "Resolution", value: "3,600 x 2,400 dpi equivalent" },
-      { label: "Media Weight", value: "52–450 gsm (simplex/duplex)" },
+      { label: "Media Weight", value: "52-450 gsm (simplex/duplex)" },
       { label: "Long Sheet", value: "Up to 1300 mm simplex / 900 mm duplex" },
       { label: "Duty Cycle", value: "Up to 2.5 million images (monthly)" },
     ],
@@ -150,11 +197,11 @@ export const commercialProducts: CommercialProduct[] = [
     heroTag: "Monochrome production press",
     summary:
       "Mono digital press built for reliable high-speed output, large paper capacity, and advanced production workflows in compact spaces.",
-    highlights: ["100 ppm (A4)", "1,200 x 1,200 dpi", "40–300 gsm (350 gsm optional)", "Up to 9,000 sheet input"],
+    highlights: ["100 ppm (A4)", "1,200 x 1,200 dpi", "40-300 gsm (350 gsm optional)", "Up to 9,000 sheet input"],
     specs: [
       { label: "Speed", value: "100 ppm (A4), 56 ppm (A3), 53 ppm (SRA3)" },
       { label: "Resolution", value: "1,200 x 1,200 dpi" },
-      { label: "Media Weight", value: "40–300 gsm (350 gsm optional)" },
+      { label: "Media Weight", value: "40-300 gsm (350 gsm optional)" },
       { label: "Paper Capacity", value: "Up to 9,000 sheets" },
     ],
     applications: ["High-volume mono production", "Books and manuals", "Transactional print", "Photocopy centers"],
@@ -170,11 +217,11 @@ export const commercialProducts: CommercialProduct[] = [
     heroTag: "High-speed mono production",
     summary:
       "Monochrome production press focused on reliability, automation, and high-volume performance for demanding print operations.",
-    highlights: ["Up to 120 ppm (A4)", "1,200 x 1,200 dpi", "40–350 gsm media", "Duty cycle up to 2.5 million"],
+    highlights: ["Up to 120 ppm (A4)", "1,200 x 1,200 dpi", "40-350 gsm media", "Duty cycle up to 2.5 million"],
     specs: [
       { label: "Speed", value: "Up to 120 ppm (A4), 66 ppm (SRA3)" },
       { label: "Resolution", value: "1,200 x 1,200 dpi" },
-      { label: "Media Weight", value: "40–350 gsm" },
+      { label: "Media Weight", value: "40-350 gsm" },
       { label: "Duty Cycle", value: "Up to 2.5 million prints" },
     ],
     applications: ["High-volume mono printing", "Booklets and manuals", "Transaction-heavy jobs", "Copy centers"],
@@ -277,6 +324,62 @@ export const commercialProducts: CommercialProduct[] = [
 
 export const getCommercialProduct = (slug: string) =>
   commercialProducts.find((product) => product.slug === slug);
+
+const resolveCommercialSelectionPath = (slug: string) => {
+  const product = getCommercialProduct(slug);
+
+  if (!product) {
+    return undefined;
+  }
+
+  return product.detailPath ?? `/commercial/${product.slug}`;
+};
+
+export const commercialSegmentSelections: CommercialBrandSelection[] = [
+  {
+    brand: "Epson",
+    description:
+      "Choose Epson for business inkjet and WorkForce-led photocopy or commercial setups that need dependable color and monochrome output.",
+    outputModes: [
+      {
+        label: "Color",
+        models: [
+          { name: "L15180", href: resolveCommercialSelectionPath("epson-l15180"), status: "available" },
+          { name: "C8100", href: resolveCommercialSelectionPath("epson-c8100"), status: "available" },
+          { name: "C21000", href: resolveCommercialSelectionPath("epson-c21000"), status: "available" },
+        ],
+      },
+      {
+        label: "Monochrome",
+        models: [
+          { name: "M15180", href: resolveCommercialSelectionPath("epson-m15180"), status: "available" },
+          { name: "M5500", href: resolveCommercialSelectionPath("epson-m5500"), status: "available" },
+          { name: "M21000", href: resolveCommercialSelectionPath("epson-m21000"), status: "available" },
+        ],
+      },
+    ],
+  },
+  {
+    brand: "Konica Minolta",
+    description:
+      "Choose Konica Minolta for production-oriented photocopy and commercial environments that need broader media handling and scalable output.",
+    outputModes: [
+      {
+        label: "Color",
+        models: [
+          { name: "4065", href: resolveCommercialSelectionPath("konica-c4065"), status: "available" },
+          { name: "4070", href: resolveCommercialSelectionPath("konica-c4070"), status: "available" },
+          { name: "4080", href: resolveCommercialSelectionPath("konica-c4080"), status: "available" },
+          { name: "7090", href: resolveCommercialSelectionPath("konica-c7090"), status: "available" },
+        ],
+      },
+      {
+        label: "Monochrome",
+        models: [{ name: "AccurioPrint 2100", href: resolveCommercialSelectionPath("konica-2100"), status: "available" }],
+      },
+    ],
+  },
+];
 
 export const commercialProductGroups = {
   konicaColor: commercialProducts.filter(

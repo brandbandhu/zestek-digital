@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import PageMeta from "@/components/PageMeta";
 import { motion } from "framer-motion";
-import serviceHeroImage from "../../assets/service/service1.jpg";
+import serviceHeroImage from "../../assets/tour-consultancy-service.png";
 import { ClipboardCheck, Download, ExternalLink, Mail, Phone, ShieldCheck, Wrench } from "lucide-react";
 
 const officialSupportLinks = [
@@ -244,7 +244,7 @@ const Contact = () => (
                     <div className="w-full max-w-[380px] overflow-hidden rounded-[1.5rem] bg-white/85 shadow-[0_24px_32px_rgba(15,30,70,0.18)]">
                       <img
                         src={serviceHeroImage}
-                        alt="Support coordination and printer planning environment"
+                        alt="Customer support executive assisting service customers"
                         className="block h-auto w-full object-cover"
                       />
                     </div>
