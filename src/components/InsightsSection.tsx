@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import { insightArticles } from "@/data/insightsArticles";
 import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 
+const imageFitClass = (fit?: "cover" | "contain") =>
+  fit === "contain" ? "bg-white p-4 object-contain" : "object-cover";
+
 const InsightsSection = () => (
   <section id="blogs" className="section-padding bg-card">
     <div className="container mx-auto">
@@ -40,7 +43,9 @@ const InsightsSection = () => (
               <img
                 src={item.cardImageUrl ?? item.imageUrl}
                 alt={item.cardImageAlt ?? item.imageAlt}
-                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]"
+                className={`h-full w-full object-center transition-transform duration-500 group-hover:scale-[1.02] ${imageFitClass(
+                  item.cardImageFit ?? item.imageFit,
+                )}`}
                 loading="lazy"
               />
             </div>

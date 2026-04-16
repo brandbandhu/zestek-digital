@@ -1,6 +1,9 @@
 import banner2Image from "@/assets/banner/2.png";
 import banner3Image from "@/assets/banner/3.png";
 import banner4Image from "@/assets/banner/4.png";
+import mediaExpoMumbaiLogo from "@/assets/insights/media-expo-mumbai-logo.jpg";
+
+export type InsightImageFit = "cover" | "contain";
 
 export type InsightArticleSection = {
   heading: string;
@@ -12,6 +15,7 @@ export type InsightGalleryImage = {
   src: string;
   alt: string;
   caption: string;
+  fit?: InsightImageFit;
 };
 
 export type InsightArticle = {
@@ -22,16 +26,19 @@ export type InsightArticle = {
   cardDescription: string;
   cardImageUrl?: string;
   cardImageAlt?: string;
+  cardImageFit?: InsightImageFit;
   heroTitle: string;
   heroDescription: string;
   imageUrl: string;
   imageAlt: string;
+  imageFit?: InsightImageFit;
   metaTitle: string;
   metaDescription: string;
   metaKeywords: string[];
   readTime: string;
   publishedLabel: string;
   introParagraphs: string[];
+  galleryNote?: string;
   galleryImages: InsightGalleryImage[];
   sections: InsightArticleSection[];
   keyPointsTitle: string;
@@ -44,7 +51,159 @@ export type InsightArticle = {
   secondaryCtaHref: string;
 };
 
+const mediaExpoBlogFiles = import.meta.glob("../../assets/blog/*.{png,jpg,jpeg,webp,avif}", {
+  eager: true,
+  import: "default",
+}) as Record<string, string>;
+
+const mediaExpoBlogImages = Object.entries(mediaExpoBlogFiles)
+  .map(([path, src]) => ({
+    fileName: path.split("/").pop() ?? "media-expo-photo",
+    src,
+  }))
+  .sort((a, b) => a.fileName.localeCompare(b.fileName, undefined, { numeric: true, sensitivity: "base" }));
+
+const mediaExpoLeadPhoto =
+  mediaExpoBlogImages.find((image) => image.fileName === "WhatsApp Image 2026-04-16 at 9.36.59 AM (2).jpeg")?.src ??
+  mediaExpoMumbaiLogo;
+
 export const insightArticles: InsightArticle[] = [
+  {
+    slug: "zestek-digital-llp-at-media-expo-2026",
+    route: "/insights/zestek-digital-llp-at-media-expo-2026",
+    tag: "Event Update",
+    title: "Zestek Digital LLP at Media Expo 2026: A New Chapter, A Strong Impact",
+    cardDescription:
+      "Our Media Expo Mumbai 2026 participation marked the launch of Zestek Digital LLP with 300+ booth visitors and 50+ live product demonstrations.",
+    cardImageUrl: mediaExpoMumbaiLogo,
+    cardImageAlt: "Media Expo Mumbai official logo",
+    cardImageFit: "contain",
+    heroTitle:
+      "Media Expo Mumbai 2026 became the perfect platform to announce our transition from Zest Digital Solutions to Zestek Digital LLP.",
+    heroDescription:
+      "This participation was more than an exhibition appearance. It was the public beginning of our next growth phase, backed by stronger structure, deeper market ambition, and the same commitment to practical, profitable printing solutions.",
+    imageUrl: mediaExpoLeadPhoto,
+    imageAlt: "Zestek Digital LLP team at Media Expo Mumbai 2026",
+    metaTitle: "Zestek Digital LLP at Media Expo 2026 | Zestek Print Insights",
+    metaDescription:
+      "Read how Zestek Digital LLP made a strong impression at Media Expo Mumbai 2026 with 300+ booth visitors, 50+ live demos, and a renewed growth vision.",
+    metaKeywords: [
+      "Zestek Digital LLP",
+      "Media Expo Mumbai 2026",
+      "digital printing exhibition Mumbai",
+      "Konica Minolta and Epson solutions",
+      "print business solutions India",
+    ],
+    readTime: "5 min read",
+    publishedLabel: "Mumbai expo recap",
+    introParagraphs: [
+      "Media Expo Mumbai 2026 marked an important milestone for us, not only as an exhibitor but as a business stepping confidently into its next chapter. This year, we participated as Zestek Digital LLP, officially presenting our transition from Zest Digital Solutions to a more structured and growth-focused organization.",
+      "That transition reflects our larger vision: to scale responsibly, innovate faster, and create stronger long-term value for customers across the printing and imaging industry. While our name has evolved, our philosophy has not. We remain focused on reliable, profitable, and future-ready printing solutions.",
+      "The response we received at the show made one thing very clear. Businesses are actively looking for smarter print investments that improve productivity, lower operating pressure, and open fresh revenue opportunities. Media Expo gave us the right platform to demonstrate how we plan to support that demand.",
+    ],
+    galleryImages: [
+      {
+        src:
+          mediaExpoBlogImages.find((image) => image.fileName === "WhatsApp Image 2026-04-16 at 9.36.59 AM (1).jpeg")?.src ??
+          mediaExpoMumbaiLogo,
+        alt: "Visitors and team members at the Zestek booth during Media Expo Mumbai 2026",
+        caption: "Live booth interactions and team moments that made the exhibition memorable.",
+      },
+      {
+        src: mediaExpoBlogImages.find((image) => image.fileName === "WhatsApp Image 2026-04-16 at 9.36.59 AM.jpeg")?.src ?? mediaExpoMumbaiLogo,
+        alt: "Zestek Digital LLP team selfie and booth activity at Media Expo Mumbai 2026",
+        caption: "The booth stayed active with conversations, walkthroughs, and live engagement throughout the event.",
+      },
+      {
+        src: mediaExpoBlogImages.find((image) => image.fileName === "WhatsApp Image 2026-04-16 at 9.37.00 AM.jpeg")?.src ?? mediaExpoMumbaiLogo,
+        alt: "Business discussion with visitors during Media Expo Mumbai 2026",
+        caption: "Real conversations with visitors helped us understand current market needs and new print business opportunities.",
+      },
+    ],
+    sections: [
+      {
+        heading: "A new identity, the same commitment",
+        paragraphs: [
+          "Our move from Zest Digital Solutions to Zestek Digital LLP represents more than a name change. It signals a stronger operational foundation and a sharper long-term vision for growth in the printing and imaging market.",
+          "With this transition, we are focused on expanding our product portfolio, strengthening customer service, building deeper market presence, and creating long-term partnerships with print businesses that want dependable support as they scale.",
+        ],
+        bullets: [
+          "Stronger presence in the digital printing market",
+          "Broader product portfolio for evolving customer needs",
+          "Better customer service and technical support",
+          "Long-term partnerships built around business growth",
+        ],
+      },
+      {
+        heading: "Strong presence at Media Expo Mumbai 2026",
+        paragraphs: [
+          "Media Expo has always been an important platform for meaningful conversations, product showcases, and real market learning. This year, our participation was especially encouraging because it validated the demand for advanced and cost-efficient printing solutions.",
+          "The booth stayed active throughout the event, and the level of interest reaffirmed that print businesses are looking for practical technology decisions, not just product brochures. The energy around our demonstrations showed how closely the market is evaluating ROI, throughput, and service reliability before investing.",
+        ],
+        bullets: ["300+ visitors at our booth", "50+ live exclusive product demonstrations"],
+      },
+      {
+        heading: "Showcasing next-gen printing solutions",
+        paragraphs: [
+          "At the booth, our focus was simple: help businesses understand how the right machine choice can improve margin, increase productivity, and unlock new business opportunities. We demonstrated solutions designed for the realities of modern print operations rather than one-size-fits-all selling.",
+          "The product conversations centered around performance, output economics, and the operational fit required by photocopy centers, commercial printers, and growing print businesses looking for their next upgrade.",
+        ],
+        bullets: [
+          "High-performance digital production systems",
+          "Advanced multifunction devices for photocopy centers",
+          "Cost-effective options for print houses and commercial printers",
+          "Solutions built to improve productivity and business ROI",
+        ],
+      },
+      {
+        heading: "Real conversations, real opportunities",
+        paragraphs: [
+          "What made this edition especially meaningful was the quality of the interactions. We connected with business owners and decision-makers who were not just browsing, but actively evaluating expansion plans, replacement strategies, and fresh revenue models.",
+          "Those discussions gave us deeper clarity on market challenges and reinforced our commitment to practical, ROI-driven recommendations. It was encouraging to meet customers who value honest guidance, application-fit thinking, and support that continues after the machine is installed.",
+        ],
+        bullets: [
+          "Photocopy and print shop owners",
+          "Commercial printers",
+          "Signage and branding professionals",
+          "Entrepreneurs exploring new business opportunities",
+        ],
+      },
+      {
+        heading: "Team effort behind the success",
+        paragraphs: [
+          "A successful exhibition never happens through individual effort alone. This event came together through careful planning, strong coordination, and dedicated execution across booth design, visitor engagement, demonstrations, and marketing support.",
+          "We are sincerely grateful to our team and partners who helped make the experience smooth, professional, and impactful. Their contribution played a major role in making this milestone meaningful for the brand and valuable for every visitor who met us at the show.",
+        ],
+      },
+      {
+        heading: "Looking ahead and let's connect",
+        paragraphs: [
+          "Media Expo Mumbai 2026 was not only about displaying products. It was about announcing our evolution and showing the direction we are taking as Zestek Digital LLP. We are moving into the future with a stronger focus on growth, innovation, and customer relationships that last.",
+          "If you could not meet us during the expo, we would still love to continue the conversation and help you evaluate the right opportunity for your print business.",
+        ],
+        bullets: [
+          "For Konica Minolta products, DM \"KM\" on 9920909700",
+          "For Epson products, DM \"Epson\" on 9920909700",
+          "Website: www.zestek.in",
+          "Email: Connect@zestek.in",
+        ],
+      },
+    ],
+    keyPointsTitle: "Expo highlights",
+    keyPoints: [
+      "Media Expo Mumbai 2026 marked our public transition from Zest Digital Solutions to Zestek Digital LLP.",
+      "We welcomed 300+ booth visitors and hosted 50+ live exclusive product demonstrations.",
+      "The strongest interest came from businesses looking for ROI-driven print upgrades and dependable support.",
+      "Our focus remains the same: practical, profitable, and future-ready printing solutions.",
+    ],
+    ctaTitle: "Let's continue the conversation",
+    ctaBody:
+      "Whether you are evaluating Konica Minolta production systems, Epson solutions, or your next print business upgrade, our team is ready to help you choose a profitable path.",
+    primaryCtaLabel: "Contact Zestek",
+    primaryCtaHref: "/contact",
+    secondaryCtaLabel: "Explore print solutions",
+    secondaryCtaHref: "/photocopy-commercial",
+  },
   {
     slug: "say-goodbye-to-rc-machines",
     route: "/insights/say-goodbye-to-rc-machines",

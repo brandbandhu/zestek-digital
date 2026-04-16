@@ -5,6 +5,8 @@ import { getInsightArticleBySlug, insightArticles } from "@/data/insightsArticle
 import NotFound from "@/pages/NotFound";
 import { Link, useParams } from "react-router-dom";
 
+const imageFitClass = (fit?: "cover" | "contain") => (fit === "contain" ? "object-contain" : "object-cover");
+
 const InsightArticle = () => {
   const { slug } = useParams<{ slug: string }>();
   const article = getInsightArticleBySlug(slug ?? "");
@@ -63,7 +65,7 @@ const InsightArticle = () => {
               <img
                 src={article.imageUrl}
                 alt={article.imageAlt}
-                className="h-[280px] w-full rounded-[24px] object-cover md:h-[360px]"
+                className={`h-[280px] w-full rounded-[24px] ${imageFitClass(article.imageFit)} md:h-[360px]`}
               />
             </div>
           </div>
@@ -80,14 +82,26 @@ const InsightArticle = () => {
               ))}
             </div>
 
-            <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {article.galleryImages.map((image) => (
-                <figure key={image.src} className="overflow-hidden rounded-3xl border border-border bg-background">
-                  <img src={image.src} alt={image.alt} className="h-52 w-full object-cover" />
-                  <figcaption className="p-4 text-sm leading-6 text-muted-foreground">{image.caption}</figcaption>
-                </figure>
-              ))}
-            </div>
+            {article.galleryNote ? (
+              <div className="mt-8 rounded-3xl border border-dashed border-border bg-background px-5 py-4 text-sm leading-6 text-muted-foreground">
+                {article.galleryNote}
+              </div>
+            ) : null}
+
+            {article.galleryImages.length > 0 ? (
+              <div className="mt-10 grid gap-5 md:grid-cols-3">
+                {article.galleryImages.map((image) => (
+                  <figure key={image.src} className="overflow-hidden rounded-3xl border border-border bg-background">
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      className={`h-52 w-full ${image.fit === "contain" ? "bg-white p-4 object-contain" : "object-cover"}`}
+                    />
+                    <figcaption className="p-4 text-sm leading-6 text-muted-foreground">{image.caption}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            ) : null}
 
             <div className="mt-10 space-y-8">
               {article.sections.map((section) => (
@@ -183,7 +197,11 @@ const InsightArticle = () => {
           <div className="grid gap-6 md:grid-cols-3">
             {relatedArticles.map((item) => (
               <article key={item.slug} className="overflow-hidden rounded-2xl border border-border bg-card">
-                <img src={item.imageUrl} alt={item.imageAlt} className="h-44 w-full object-cover" />
+                <img
+                  src={item.cardImageUrl ?? item.imageUrl}
+                  alt={item.cardImageAlt ?? item.imageAlt}
+                  className={`h-44 w-full ${item.cardImageFit === "contain" || (!item.cardImageFit && item.imageFit === "contain") ? "bg-white p-4 object-contain" : "object-cover"}`}
+                />
                 <div className="p-6">
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">{item.tag}</p>
                   <h3 className="mt-2 text-xl font-bold text-navy">{item.title}</h3>
