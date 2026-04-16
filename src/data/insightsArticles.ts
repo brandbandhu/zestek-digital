@@ -182,10 +182,10 @@ export const insightArticles: InsightArticle[] = [
           "If you could not meet us during the expo, we would still love to continue the conversation and help you evaluate the right opportunity for your print business.",
         ],
         bullets: [
-          "For Konica Minolta products, DM \"KM\" on 9920909700",
-          "For Epson products, DM \"Epson\" on 9920909700",
+          "For Konica Minolta products, DM \"Konica Minolta\" on 9920909700",
+          "For Epson products, call or WhatsApp us at 9920909700",
           "Website: www.zestek.in",
-          "Email: Connect@zestek.in",
+          "Email: connect@zestek.in",
         ],
       },
     ],
