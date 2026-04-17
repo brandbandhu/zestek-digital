@@ -14,8 +14,8 @@ import PageMeta from "@/components/PageMeta";
 const Index = () => (
   <div className="min-h-screen">
     <PageMeta
-      title="Zestek Printer Solutions | Official Zestek Digital LLP Website"
-      description="Official Zestek Digital LLP website for Zestek printer solutions, Epson EcoTank, Epson WorkForce, Konica Minolta production printers, managed print services, and print ROI planning in Mumbai."
+      title="Zestek Digital LLP | Epson, Konica Minolta Printers, Software & MPS Solutions"
+      description="Zestek Digital LLP provides Epson and Konica Minolta printers, print software, and managed print services (MPS) for business and production needs in Mumbai."
       keywords={[
         "Zestek",
         "zestek printer",
@@ -25,8 +25,10 @@ const Index = () => (
         "Zestek Digital Solutions",
         "zestek.in",
         "Epson printers Mumbai",
-        "Konica Minolta production printers India",
+        "Konica Minolta printers India",
+        "print software solutions",
         "Managed print services Mumbai",
+        "MPS solutions",
         "business printer solutions",
         "printer ROI calculator",
       ]}
