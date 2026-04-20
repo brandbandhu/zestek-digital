@@ -59,7 +59,7 @@ const PhotocopyCommercial = () => (
             the right model shortlist for photocopier and commercial print requirements.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link to="/contact" className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-navy">
+            <Link to="/contact#sales-inquiry" className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-navy">
               Talk to Our Team
             </Link>
             <Link
@@ -163,7 +163,7 @@ const PhotocopyCommercial = () => (
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link to="/contact" className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground">
+          <Link to="/contact#sales-inquiry" className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground">
             Share Requirement
           </Link>
           <Link

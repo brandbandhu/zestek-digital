@@ -6,6 +6,7 @@ import {
   type EpsonWorkforceSpotlightKey,
 } from "@/data/epsonWorkforceSpotlights";
 import { Link } from "react-router-dom";
+import { ArrowRight, BadgeCheck, Coins, Gauge, Layers3, ShieldCheck, Sparkles } from "lucide-react";
 
 type EpsonWorkforceSpotlightProps = {
   productKey: EpsonWorkforceSpotlightKey;
@@ -17,6 +18,7 @@ const salesEmail = "connect@zestek.in";
 
 const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) => {
   const page = epsonWorkforceSpotlights[productKey];
+  const heroMetrics = page.quickFacts.slice(0, 4);
   const overviewSignals = [
     {
       label: "Profit edge",
@@ -54,6 +56,29 @@ const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) =
     { label: impactSignals[1].label, summary: "Lower overhead" },
     { label: impactSignals[2].label, summary: "Fewer interruptions" },
   ];
+  const conversionSignals = [
+    {
+      title: "Lower cost per print",
+      body: page.benefitBullets[0] ?? page.heroChips[0] ?? "Protect print-shop margin on every job.",
+      icon: Coins,
+    },
+    {
+      title: "Faster output under pressure",
+      body: page.quickFacts[0]?.value ?? page.heroChips[1] ?? "Finish rush jobs with stronger turnaround confidence.",
+      icon: Gauge,
+    },
+    {
+      title: "Flexible business applications",
+      body: page.quickFacts[1]?.value ?? page.heroChips[4] ?? "Run broader media and more profitable daily jobs.",
+      icon: Layers3,
+    },
+    {
+      title: "Dependable daily uptime",
+      body: page.benefitBullets[4] ?? page.heroChips[2] ?? "Reduce interruptions during high-volume operating hours.",
+      icon: ShieldCheck,
+    },
+  ];
+  const comparisonHighlights = page.comparisonRows.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-background">
@@ -67,19 +92,20 @@ const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) =
 
       <Header />
 
-      <section className="relative overflow-hidden -mt-16 bg-[linear-gradient(135deg,#0f2042_0%,#1a3b73_52%,#eef4fb_100%)]">
+      <section className="relative overflow-hidden -mt-16 bg-[linear-gradient(135deg,#08172f_0%,#133c76_50%,#eef4fb_100%)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,213,138,0.18),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.12),transparent_32%)]" />
         <div className="container mx-auto section-padding pt-16 md:pt-20">
-          <div className="grid items-center gap-10 lg:grid-cols-[1.08fr_0.92fr]">
+          <div className="grid items-center gap-10 lg:grid-cols-[1.02fr_0.98fr]">
             <div className="text-primary-foreground">
-              <p className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1 text-[11px] font-semibold uppercase tracking-widest">
+              <p className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.24em]">
                 {page.eyebrow}
               </p>
-              <h1 className="mt-5 max-w-3xl text-3xl font-extrabold md:text-4xl lg:text-5xl">{page.name}</h1>
-              <p className="mt-4 max-w-3xl text-lg text-primary-foreground/85">{page.heroTitle}</p>
+              <h1 className="mt-5 max-w-4xl text-3xl font-extrabold leading-tight md:text-4xl lg:text-5xl">{page.heroTitle}</h1>
+              <p className="mt-4 max-w-3xl text-lg font-semibold text-[#ffd58a] md:text-xl">{page.name}</p>
               <p className="mt-4 max-w-3xl text-sm leading-7 text-primary-foreground/78 md:text-base">
                 {page.heroSubtitle}
               </p>
-              <p className="mt-5 max-w-3xl text-base font-semibold text-[#ffd58a] md:text-lg">{page.campaignLine}</p>
+              <p className="mt-5 max-w-3xl text-base font-semibold text-primary-foreground md:text-lg">{page.campaignLine}</p>
 
               <div className="mt-7 flex flex-wrap gap-2">
                 {page.heroChips.map((chip) => (
@@ -92,27 +118,44 @@ const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) =
                 ))}
               </div>
 
-              <div className="mt-8 rounded-[28px] border border-white/15 bg-white/10 p-5 backdrop-blur">
-                <p className="text-[11px] font-semibold uppercase tracking-widest text-[#ffd58a]">{page.offerTitle}</p>
-                <p className="mt-2 text-xl font-bold text-primary-foreground">{page.offerBody}</p>
-                {page.offerNote ? <p className="mt-2 text-xs text-primary-foreground/72">{page.offerNote}</p> : null}
+              <div className="mt-8 overflow-hidden rounded-[28px] border border-[#ffd58a]/30 bg-[linear-gradient(135deg,rgba(255,205,94,0.98)_0%,rgba(255,177,0,0.88)_100%)] p-5 text-[#11284f] shadow-[0_24px_70px_rgba(8,23,47,0.22)]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#11284f]/70">{page.offerTitle}</p>
+                <p className="mt-2 text-2xl font-extrabold leading-tight">{page.offerBody}</p>
+                {page.offerNote ? <p className="mt-2 text-xs font-semibold text-[#11284f]/72">{page.offerNote}</p> : null}
+              </div>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {conversionSignals.slice(0, 3).map((signal) => (
+                  <div key={signal.title} className="rounded-2xl border border-white/12 bg-white/8 px-4 py-4 backdrop-blur">
+                    <signal.icon className="h-5 w-5 text-[#ffd58a]" />
+                    <p className="mt-3 text-sm font-bold text-primary-foreground">{signal.title}</p>
+                    <p className="mt-2 text-xs leading-6 text-primary-foreground/72">{signal.body}</p>
+                  </div>
+                ))}
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link to="/contact" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-navy">
+                <Link to="/contact#sales-inquiry" className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-navy shadow-lg">
                   Get best deal
                 </Link>
                 <a
                   href={salesPhoneHref}
-                  className="rounded-full border border-white/30 px-5 py-3 text-sm font-semibold text-primary-foreground"
+                  className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-primary-foreground"
                 >
                   Call {salesPhoneDisplay}
                 </a>
+                <Link
+                  to="/contact#sales-inquiry"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-primary-foreground"
+                >
+                  Book free demo
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
                 <a
                   href={page.officialUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-primary-foreground"
+                  className="rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-primary-foreground"
                 >
                   View official specifications
                 </a>
@@ -120,19 +163,21 @@ const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) =
             </div>
 
             <div className="relative">
-              <div className="rounded-[32px] border border-white/20 bg-white p-6 shadow-2xl">
-                <div className="rounded-[24px] border border-border bg-muted/50 p-6">
-                  <img src={page.productImage} alt={page.productImageAlt} className="mx-auto h-72 w-full object-contain" />
+              <div className="absolute -left-4 top-6 hidden rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/80 shadow-lg backdrop-blur md:inline-flex">
+                <Sparkles className="mr-2 h-4 w-4 text-[#ffd58a]" />
+                Campaign-grade product pitch
+              </div>
+              <div className="rounded-[34px] border border-white/20 bg-white/95 p-6 shadow-[0_30px_90px_rgba(8,23,47,0.3)]">
+                <div className="rounded-[26px] border border-border bg-[linear-gradient(180deg,#ffffff_0%,#eef5ff_100%)] p-6">
+                  <img src={page.productImage} alt={page.productImageAlt} className="mx-auto h-80 w-full object-contain" />
                 </div>
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-border bg-background px-4 py-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-widest text-highlight">Applications</p>
-                    <p className="mt-2 text-sm font-semibold text-navy">{page.applicationCards[0].title}</p>
-                  </div>
-                  <div className="rounded-2xl border border-border bg-background px-4 py-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-widest text-highlight">Business fit</p>
-                    <p className="mt-2 text-sm font-semibold text-navy">{page.quickFacts[2].value}</p>
-                  </div>
+                  {heroMetrics.map((fact) => (
+                    <div key={fact.label} className="rounded-2xl border border-border bg-background px-4 py-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-widest text-highlight">{fact.label}</p>
+                      <p className="mt-2 text-sm font-semibold leading-6 text-navy">{fact.value}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -141,16 +186,150 @@ const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) =
       </section>
 
       <section className="section-padding pt-0">
-        <div className="container mx-auto grid gap-6 md:grid-cols-3">
-          {page.trustCards.map((card) => (
-            <div key={card.title} className="rounded-3xl border border-border bg-card p-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Why it matters</p>
-              <h2 className="mt-3 text-xl font-bold text-navy">{card.title}</h2>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">{card.body}</p>
+        <div className="container mx-auto rounded-[34px] border border-border bg-card p-6 md:p-8">
+          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Old problem vs smart upgrade</p>
+              <h2 className="mt-3 text-2xl font-bold text-navy md:text-3xl">A page that sells the machine should show the shift clearly</h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base">
+                These machines are strongest when the page immediately frames what businesses want to escape and what the upgrade gives them back:
+                cost control, speed, uptime and room to grow.
+              </p>
+              <div className="mt-6 grid gap-4 md:grid-cols-2">
+                <div className="rounded-[28px] border border-[#f1c5c5] bg-[linear-gradient(180deg,#fff7f7_0%,#fff0f0_100%)] p-5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#c64d4d]">Old problems</p>
+                  <div className="mt-4 space-y-3">
+                    {comparisonHighlights.map((item) => (
+                      <div key={item.label} className="rounded-2xl border border-[#f1d7d7] bg-white px-4 py-4">
+                        <p className="text-sm font-bold text-navy">{item.label}</p>
+                        <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.competitorValue}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="rounded-[28px] border border-[#cde9d6] bg-[linear-gradient(180deg,#f4fff7_0%,#ecfff3_100%)] p-5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#1d8f4f]">Smart solution</p>
+                  <div className="mt-4 space-y-3">
+                    {comparisonHighlights.map((item) => (
+                      <div key={item.label} className="rounded-2xl border border-[#d6efde] bg-white px-4 py-4">
+                        <p className="text-sm font-bold text-navy">{item.label}</p>
+                        <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.productValue}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-          ))}
+
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1">
+              {page.trustCards.map((card) => (
+                <div key={card.title} className="rounded-[28px] border border-border bg-[linear-gradient(135deg,#0f2042_0%,#1f4f92_100%)] p-6 text-primary-foreground">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-[#ffd58a]">Why it matters</p>
+                  <h2 className="mt-3 text-xl font-bold">{card.title}</h2>
+                  <p className="mt-3 text-sm leading-7 text-primary-foreground/78">{card.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
+
+      <section className="section-padding pt-0">
+        <div className="container mx-auto rounded-[34px] border border-border bg-[linear-gradient(135deg,#fff7eb_0%,#f8fbff_55%,#eef4ff_100%)] p-6 md:p-8">
+          <div className="mb-6">
+            <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Conversion-led feature story</p>
+            <h2 className="mt-3 text-2xl font-bold text-navy md:text-3xl">{page.featureTitle}</h2>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {page.featureCards.map((feature, index) => (
+              <div key={feature.title} className="rounded-[28px] border border-white/80 bg-white/92 p-6 shadow-sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-navy text-sm font-bold text-primary-foreground">
+                  {index + 1}
+                </div>
+                <h3 className="mt-4 text-lg font-bold text-navy">{feature.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-muted-foreground">{feature.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-padding pt-0">
+        <div className="container mx-auto overflow-hidden rounded-[34px] border border-border bg-[linear-gradient(135deg,#0a1d3c_0%,#14478a_56%,#f4f7ff_100%)]">
+          <div className="grid gap-8 p-6 md:p-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
+            <div className="text-primary-foreground">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[#ffd58a]">{page.poster.eyebrow}</p>
+              <h2 className="mt-3 max-w-3xl text-2xl font-extrabold leading-tight md:text-4xl">{page.poster.headline}</h2>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-primary-foreground/82 md:text-base">{page.poster.subheadline}</p>
+              {page.poster.bilingualLine ? (
+                <p className="mt-5 inline-flex rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-semibold text-[#ffd58a]">
+                  {page.poster.bilingualLine}
+                </p>
+              ) : null}
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {page.poster.persuasiveBullets.map((item) => (
+                  <div key={item} className="rounded-2xl border border-white/12 bg-white/10 px-4 py-4 backdrop-blur">
+                    <BadgeCheck className="h-5 w-5 text-[#ffd58a]" />
+                    <p className="mt-3 text-sm font-semibold leading-6 text-primary-foreground">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-[30px] border border-white/16 bg-white/95 p-6 shadow-[0_24px_70px_rgba(15,32,66,0.18)]">
+              <p className="text-xs font-semibold uppercase tracking-widest text-highlight">{page.poster.audienceTitle}</p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                {page.poster.audienceBadges.map((badge) => (
+                  <span key={badge} className="rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold uppercase tracking-wide text-navy">
+                    {badge}
+                  </span>
+                ))}
+              </div>
+              <div className="mt-6 rounded-[28px] border border-border bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_100%)] p-5">
+                <p className="text-[11px] font-semibold uppercase tracking-widest text-highlight">Why this converts</p>
+                <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                  The page now talks like a campaign: it shows the business pain, the margin upside and the kind of customers this model helps you win.
+                </p>
+                <Link
+                  to="/contact#sales-inquiry"
+                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-primary-foreground"
+                >
+                  Talk to sales
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {page.showcase ? (
+        <section className="section-padding pt-0">
+          <div className="container mx-auto">
+            <div className="overflow-hidden rounded-[34px] border border-border bg-card">
+              <div className="grid gap-8 p-6 md:p-8 lg:grid-cols-[minmax(0,1fr)_460px] lg:items-center">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-highlight">{page.showcase.eyebrow}</p>
+                  <h2 className="mt-3 text-2xl font-bold text-navy md:text-3xl">{page.showcase.title}</h2>
+                  {page.showcase.tagline ? <p className="mt-4 text-lg font-semibold text-navy">{page.showcase.tagline}</p> : null}
+                  <p className="mt-4 max-w-3xl text-sm leading-7 text-muted-foreground md:text-base">{page.showcase.body}</p>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    {page.showcase.chips.map((chip) => (
+                      <span key={chip} className="rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold uppercase tracking-wide text-navy">
+                        {chip}
+                      </span>
+                    ))}
+                  </div>
+                  {page.showcase.note ? <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-navy/65">{page.showcase.note}</p> : null}
+                </div>
+                <div className="rounded-[30px] border border-border bg-[linear-gradient(180deg,#ffffff_0%,#f4f8ff_100%)] p-4 shadow-[0_24px_70px_rgba(15,32,66,0.12)]">
+                  <img src={page.showcase.image} alt={page.showcase.imageAlt} className="mx-auto max-h-[560px] w-full rounded-[22px] object-cover object-top" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section-padding pt-0">
         <div className="container mx-auto grid items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_360px]">
@@ -235,23 +414,6 @@ const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) =
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-padding pt-0">
-        <div className="container mx-auto">
-          <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Features</p>
-            <h2 className="mt-3 text-2xl font-bold text-navy md:text-3xl">{page.featureTitle}</h2>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {page.featureCards.map((feature) => (
-              <div key={feature.title} className="rounded-3xl border border-border bg-card p-6">
-                <h3 className="text-lg font-bold text-navy">{feature.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">{feature.body}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -388,50 +550,6 @@ const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) =
         </div>
       </section>
 
-      {page.showcase ? (
-        <section className="section-padding pt-0">
-          <div className="container mx-auto">
-            <div className="overflow-hidden rounded-[32px] border border-border bg-[linear-gradient(135deg,#fff7eb_0%,#f7fbff_52%,#eef4ff_100%)]">
-              <div className="grid gap-8 p-6 md:p-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-highlight">{page.showcase.eyebrow}</p>
-                  <h2 className="mt-3 text-2xl font-bold text-navy md:text-3xl">{page.showcase.title}</h2>
-                  {page.showcase.tagline ? (
-                    <p className="mt-4 text-lg font-semibold text-navy md:text-xl">{page.showcase.tagline}</p>
-                  ) : null}
-                  <p className="mt-4 max-w-3xl text-sm leading-7 text-muted-foreground md:text-base">{page.showcase.body}</p>
-
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    {page.showcase.chips.map((chip) => (
-                      <span
-                        key={chip}
-                        className="rounded-full border border-navy/10 bg-white/85 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-navy shadow-sm"
-                      >
-                        {chip}
-                      </span>
-                    ))}
-                  </div>
-
-                  {page.showcase.note ? (
-                    <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-navy/70">{page.showcase.note}</p>
-                  ) : null}
-                </div>
-
-                <div className="relative">
-                  <div className="rounded-[28px] border border-white/70 bg-white/80 p-4 shadow-[0_24px_80px_rgba(15,32,66,0.12)] backdrop-blur">
-                    <img
-                      src={page.showcase.image}
-                      alt={page.showcase.imageAlt}
-                      className="mx-auto max-h-[560px] w-full rounded-[20px] object-cover object-top"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
       <section className="section-padding pt-0">
         <div className="container mx-auto">
           <div className="rounded-[32px] bg-[linear-gradient(135deg,#0f2042_0%,#1f4f92_100%)] p-6 text-primary-foreground md:p-8">
@@ -467,7 +585,7 @@ const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) =
               </div>
 
               <div className="grid gap-3">
-                <Link to="/contact" className="rounded-full bg-navy px-5 py-3 text-center text-sm font-semibold text-primary-foreground">
+                <Link to="/contact#sales-inquiry" className="rounded-full bg-navy px-5 py-3 text-center text-sm font-semibold text-primary-foreground">
                   Book free demo
                 </Link>
                 <a

@@ -136,7 +136,7 @@ const salesPhoneHref = "tel:+919920909700";
 const salesPhoneNumber = "9920909700";
 const salesWhatsAppHref =
   "https://wa.me/919920909700?text=Hi%20Zestek%2C%20I%20need%20details%20for%20Epson%20WorkForce%20printers.";
-const serviceSupportContactUrl = "/contact#service-amc";
+const serviceSupportContactUrl = "/service#service-amc";
 
 const createEmptyWorkforceFilters = (): WorkforceFilterState => ({
   paperSizes: [],

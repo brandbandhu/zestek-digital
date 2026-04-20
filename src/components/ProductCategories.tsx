@@ -35,7 +35,9 @@ const categories = [
     link: "/photocopy-commercial",
     imageUrl:
       "https://mediaserver.goepson.com/adaptivemedia/rendition?id=818b370842b00667e251fd5a0e34aa07daf5c4a6&vid=818b370842b00667e251fd5a0e34aa07daf5c4a6&prid=515Wx515H&clid=SAPDAM&prclid=productpictures&assetDescr=WorkForce_Pro_EM-C8100_SPT_C11CL31201_384x256",
-    imageClassName: "object-contain bg-white p-3",
+    secondaryImageUrl:
+      "https://bt.konicaminolta.in/wp-content/themes/BIN/assets/images/Product_finder/C4065.jpg",
+    imageClassName: "object-contain",
   },
   {
     icon: Settings,
@@ -94,12 +96,33 @@ const ProductCategories = () => (
               className="hover-lift surface-glow group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all hover:border-highlight hover:shadow-md md:p-6"
             >
               <div className="mb-4 overflow-hidden rounded-xl border border-border bg-muted/60">
-                <img
-                  src={category.imageUrl}
-                  alt={`${category.title} category`}
-                  className={`h-40 w-full transition-transform duration-500 group-hover:scale-[1.04] sm:h-36 lg:h-40 ${category.imageClassName}`}
-                  loading="lazy"
-                />
+                {"secondaryImageUrl" in category ? (
+                  <div className="grid h-40 grid-cols-2 gap-2 bg-[linear-gradient(135deg,#ffffff_0%,#f6f9ff_100%)] p-3 transition-transform duration-500 group-hover:scale-[1.04] sm:h-36 lg:h-40">
+                    <div className="flex items-center justify-center rounded-lg border border-border/70 bg-white shadow-sm">
+                      <img
+                        src={category.imageUrl}
+                        alt="Epson commercial printer"
+                        className={`h-full w-full p-2 ${category.imageClassName}`}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="flex items-center justify-center rounded-lg border border-border/70 bg-white shadow-sm">
+                      <img
+                        src={category.secondaryImageUrl}
+                        alt="Konica Minolta commercial printer"
+                        className={`h-full w-full p-2 ${category.imageClassName}`}
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <img
+                    src={category.imageUrl}
+                    alt={`${category.title} category`}
+                    className={`h-40 w-full transition-transform duration-500 group-hover:scale-[1.04] sm:h-36 lg:h-40 ${category.imageClassName}`}
+                    loading="lazy"
+                  />
+                )}
               </div>
               <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{category.tag}</span>
               <h3 className="mb-3 mt-2 font-display font-bold text-navy">{category.title}</h3>

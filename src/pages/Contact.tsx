@@ -264,7 +264,7 @@ const Contact = () => (
       </div>
     </section>
 
-    <section id="service-amc" className="section-padding bg-card">
+    <section id="service-amc" className="section-padding scroll-mt-24 bg-card">
       <div className="container mx-auto">
         <div className="max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-highlight">Zestek Support</p>

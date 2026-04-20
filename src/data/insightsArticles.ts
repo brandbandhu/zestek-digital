@@ -200,7 +200,7 @@ export const insightArticles: InsightArticle[] = [
     ctaBody:
       "Whether you are evaluating Konica Minolta production systems, Epson solutions, or your next print business upgrade, our team is ready to help you choose a profitable path.",
     primaryCtaLabel: "Contact Zestek",
-    primaryCtaHref: "/contact",
+    primaryCtaHref: "/contact#sales-inquiry",
     secondaryCtaLabel: "Explore print solutions",
     secondaryCtaHref: "/photocopy-commercial",
   },
@@ -308,7 +308,7 @@ export const insightArticles: InsightArticle[] = [
     primaryCtaLabel: "View Epson M5500",
     primaryCtaHref: "/epson-m5500",
     secondaryCtaLabel: "Talk to Zestek",
-    secondaryCtaHref: "/contact",
+    secondaryCtaHref: "/contact#sales-inquiry",
   },
   {
     slug: "upgrade-your-print-business",
@@ -518,7 +518,7 @@ export const insightArticles: InsightArticle[] = [
     primaryCtaLabel: "Explore Corporate Solutions",
     primaryCtaHref: "/corporate-solutions",
     secondaryCtaLabel: "Contact Support Team",
-    secondaryCtaHref: "/contact",
+    secondaryCtaHref: "/service#service-amc",
   },
 ];
 

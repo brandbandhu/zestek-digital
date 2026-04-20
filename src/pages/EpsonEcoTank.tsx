@@ -270,7 +270,7 @@ const productCards: EcoTankProduct[] = [
   },
 ];
 
-const serviceSupportContactUrl = "/contact#service-amc";
+const serviceSupportContactUrl = "/service#service-amc";
 const salesPhoneNumber = "9920909700";
 const salesPhoneHref = "tel:+919920909700";
 
@@ -485,7 +485,7 @@ const EpsonEcoTank = () => {
             Digital LLP.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="/contact" className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground">
+            <a href="/contact#sales-inquiry" className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground">
               Request a Quote
             </a>
             <a href="/" className="rounded-full border border-navy/30 px-5 py-2 text-xs font-semibold text-navy">

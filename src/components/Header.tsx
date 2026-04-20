@@ -20,10 +20,6 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const isActiveLink = (path: string) => {
-    if (path === "/service") {
-      return location.pathname === "/service" || location.pathname === "/contact";
-    }
-
     return location.pathname === path;
   };
 

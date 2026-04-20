@@ -14,6 +14,7 @@ import PhotocopyCommercial from "./pages/PhotocopyCommercial.tsx";
 import CommercialProduct from "./pages/CommercialProduct.tsx";
 import RoiCalculator from "./pages/RoiCalculator.tsx";
 import Contact from "./pages/Contact.tsx";
+import Sales from "./pages/Sales.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import EpsonWorkforceSpotlight from "./pages/EpsonWorkforceSpotlight.tsx";
 import InsightArticle from "./pages/InsightArticle.tsx";
@@ -21,11 +22,25 @@ import InsightArticle from "./pages/InsightArticle.tsx";
 const queryClient = new QueryClient();
 
 const ScrollToTop = () => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [pathname]);
+    const frame = window.requestAnimationFrame(() => {
+      if (hash) {
+        const targetId = decodeURIComponent(hash.replace(/^#/, ""));
+        const element = document.getElementById(targetId);
+
+        if (element) {
+          element.scrollIntoView({ block: "start", behavior: "auto" });
+          return;
+        }
+      }
+
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [pathname, hash]);
 
   return null;
 };
@@ -62,7 +77,8 @@ const App = () => (
           <Route path="/roi-calculator" element={<RoiCalculator />} />
           <Route path="/roi-calculator.html" element={<RoiCalculator />} />
           <Route path="/service" element={<Contact />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/contact" element={<Sales />} />
+          <Route path="/contact.html" element={<Sales />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

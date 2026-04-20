@@ -32,6 +32,16 @@ type SpotlightShowcase = {
   note?: string;
 };
 
+type SpotlightPoster = {
+  eyebrow: string;
+  headline: string;
+  subheadline: string;
+  bilingualLine?: string;
+  audienceTitle: string;
+  audienceBadges: string[];
+  persuasiveBullets: string[];
+};
+
 export type EpsonWorkforceSpotlight = {
   key: EpsonWorkforceSpotlightKey;
   route: string;
@@ -71,6 +81,7 @@ export type EpsonWorkforceSpotlight = {
   offerBannerBody: string;
   ctaTitle: string;
   ctaBody: string;
+  poster: SpotlightPoster;
   showcase?: SpotlightShowcase;
 };
 
@@ -220,6 +231,21 @@ export const epsonWorkforceSpotlights: Record<EpsonWorkforceSpotlightKey, EpsonW
     ctaTitle: "Talk to Zestek about pricing, demo and rollout",
     ctaBody:
       "We can help you assess monthly volume, compare running economics and plan the right media mix for your photocopy or print business.",
+    poster: {
+      eyebrow: "Campaign angle",
+      headline: "Print smart. Save big. Grow faster.",
+      subheadline:
+        "A stronger sales story for shops that want one machine to handle colour jobs, photocopy work and higher-margin stationery output.",
+      bilingualLine: "Photo bhi, photocopy bhi. Margin bhi.",
+      audienceTitle: "Best for",
+      audienceBadges: ["Photocopy shops", "Commercial print counters", "Stationery printers", "Corporate job work"],
+      persuasiveBullets: [
+        "Sell the low print cost before you sell the machine",
+        "Position it as a print-business growth engine, not just another A3 MFP",
+        "Show media variety to unlock higher-value jobs",
+        "Use the 1 lakh print offer as the conversion trigger",
+      ],
+    },
     showcase: {
       eyebrow: "Bottom line",
       title: "From visiting cards to envelopes, stickers and everyday job work.",
@@ -370,5 +396,20 @@ export const epsonWorkforceSpotlights: Record<EpsonWorkforceSpotlightKey, EpsonW
     ctaTitle: "Plan your RC replacement with Zestek",
     ctaBody:
       "We can help you compare total running cost, shortlist the right mono setup and arrange demo or commercial details for your shop.",
+    poster: {
+      eyebrow: "Campaign angle",
+      headline: "Say goodbye to RC machine headaches.",
+      subheadline:
+        "A mono-led landing page should make the old pain obvious: service pressure, higher running cost and profit leakage on everyday document jobs.",
+      bilingualLine: "RC se bahar niklo. Profit ke saath print karo.",
+      audienceTitle: "Best for",
+      audienceBadges: ["Xerox shops", "Tender file counters", "Education notes", "Bulk mono printing"],
+      persuasiveBullets: [
+        "Lead with lower mono print cost and lower service burden",
+        "Frame it as a cleaner replacement path for ageing copier fleets",
+        "Show mono-heavy business use cases instead of generic office copy",
+        "Use the 3 lakh print support to remove first-purchase hesitation",
+      ],
+    },
   },
 };

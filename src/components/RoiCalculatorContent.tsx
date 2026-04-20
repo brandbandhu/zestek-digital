@@ -14,6 +14,7 @@ type ModelKey =
   | "m3170"
   | "em_c8100"
   | "am_m5500"
+  | "konica_2100"
   | "wf_m21000"
   | "wf_c21000"
   | "konica_c4065"
@@ -41,6 +42,17 @@ type ModelProfile = {
   colorCpp: number;
   includedMonoPrints: number;
   includedColorPrints: number;
+};
+
+type DirectRoiProfile = {
+  status: "ready" | "pending";
+  summary: string;
+  priceLabel: string;
+  freePrintsLabel: string;
+  notes: string[];
+  volumeOptions?: number[];
+  defaultVolume?: number;
+  metrics: (volume: number) => Array<{ label: string; value: string; highlight?: boolean }>;
 };
 
 const businessTypeOptions: Array<{ value: BusinessType; label: string }> = [
@@ -210,6 +222,16 @@ const modelProfiles: Record<ModelKey, ModelProfile> = {
     includedMonoPrints: 200000,
     includedColorPrints: 0,
   },
+  konica_2100: {
+    name: "Konica Minolta AccurioPrint 2100",
+    oneLineReason: "Monochrome production option for bulk print environments.",
+    bestFor: "Booklets, manuals, transactional print, and mono-heavy print rooms.",
+    capex: 0,
+    monoCpp: 0,
+    colorCpp: 0,
+    includedMonoPrints: 0,
+    includedColorPrints: 0,
+  },
   wf_m21000: {
     name: "Epson WorkForce Enterprise WF-M21000",
     oneLineReason: "Enterprise mono productivity for large-volume print environments.",
@@ -252,12 +274,121 @@ const modelProfiles: Record<ModelKey, ModelProfile> = {
   },
 };
 
+const directRoiModelOptions: Array<{ value: ModelKey; label: string }> = [
+  { value: "em_c8100", label: "C8100" },
+  { value: "am_m5500", label: "M5500" },
+  { value: "konica_c4065", label: "C4065" },
+  { value: "konica_c4080", label: "C4080" },
+  { value: "konica_2100", label: "M2100" },
+  { value: "wf_m21000", label: "M21000" },
+  { value: "wf_c21000", label: "C21000" },
+];
+
+const directRoiProfiles: Partial<Record<ModelKey, DirectRoiProfile>> = {
+  am_m5500: {
+    status: "ready",
+    summary: "Built from your shared M5500 print-shop economics with free-print recovery first, then steady monthly profit after the included volume is consumed.",
+    priceLabel: "Rs 3,50,000",
+    freePrintsLabel: "2,00,000 free mono prints",
+    notes: [
+      "Cost per page after free prints: Rs 0.15",
+      "Selling price: Rs 2.00 per page",
+      "Paper cost: Rs 0.38 and miscellaneous cost: Rs 0.05 per page",
+      "This snapshot uses 2,000 prints per day and 25 working days per month",
+    ],
+    metrics: () => [
+      { label: "Profit per page", value: "Rs 1.42", highlight: true },
+      { label: "Margin with free prints", value: "Rs 2,84,000", highlight: true },
+      { label: "Daily margin after free prints", value: "Rs 2,840" },
+      { label: "Monthly profit after free prints", value: "Rs 71,000+" , highlight: true},
+    ],
+  },
+  em_c8100: {
+    status: "ready",
+    summary: "This version follows your launch-offer economics for separate mono and colour free-print buckets, with the page focused on showing immediate return on machine investment.",
+    priceLabel: "Rs 1,60,000 plus tax",
+    freePrintsLabel: "65,000 B/W + 35,000 color free prints",
+    notes: [
+      "Selling price: B/W Rs 2 and color Rs 7 minimum",
+      "Shared net profit assumption: B/W Rs 1.40 per page and color Rs 6.00 per page",
+      "The calculator highlights the free-print return first because that is the strongest campaign lever for this model",
+    ],
+    metrics: () => [
+      { label: "B/W profit on free prints", value: "Rs 91,000" },
+      { label: "Color profit on free prints", value: "Rs 2,10,000", highlight: true },
+      { label: "Total profit on included prints", value: "Rs 3,01,000", highlight: true },
+      { label: "Return message", value: "Minimum 2x returns", highlight: true },
+    ],
+  },
+  konica_c4065: {
+    status: "ready",
+    summary: "This model uses your EMI-led commercial print logic, so the calculator shows how volume changes gross monthly margin and payback period.",
+    priceLabel: "Rs 12,50,000 plus tax",
+    freePrintsLabel: "10,000 free 12x18 prints",
+    volumeOptions: [10000, 15000, 20000, 25000],
+    defaultVolume: 15000,
+    notes: [
+      "Tentative EMI: Rs 35,000 per month for 4 years",
+      "EMI-free months: 2",
+      "Minimum selling cost: Rs 13, paper cost: Rs 3, FSMA: Rs 3.75",
+      "Average margin used for drawdown: Rs 6 per 12x18 print with Rs 5,000 miscellaneous monthly cost",
+      "FSMA duration: 60 months, extendable up to 84 months",
+    ],
+    metrics: (volume) => {
+      const monthlyMargin = volume * 6;
+      const grossMargin = monthlyMargin - 35000 - 5000;
+      const roiMonths = grossMargin > 0 ? 1250000 / grossMargin : null;
+
+      return [
+        { label: "Free-print profit", value: "Rs 70,000", highlight: true },
+        { label: "Selected monthly volume", value: `${volume.toLocaleString("en-IN")} prints` },
+        { label: "Monthly margin before EMI", value: `Rs ${monthlyMargin.toLocaleString("en-IN")}` },
+        { label: "Gross monthly margin", value: `Rs ${grossMargin.toLocaleString("en-IN")}`, highlight: true },
+        { label: "ROI period", value: roiMonths ? `${roiMonths.toFixed(1)} months` : "Not available", highlight: true },
+      ];
+    },
+  },
+  konica_c4080: {
+    status: "pending",
+    summary: "C4080 is listed and ready for the next set of commercial ROI assumptions.",
+    priceLabel: "Awaiting price details",
+    freePrintsLabel: "Awaiting free-print details",
+    notes: ["Share price, free prints, margin logic, and target monthly volume to activate this model."],
+    metrics: () => [],
+  },
+  konica_2100: {
+    status: "pending",
+    summary: "M2100 is listed and ready for mono production ROI inputs.",
+    priceLabel: "Awaiting price details",
+    freePrintsLabel: "Awaiting free-print details",
+    notes: ["Share machine price, print cost, selling price, and target monthly output to activate this model."],
+    metrics: () => [],
+  },
+  wf_m21000: {
+    status: "pending",
+    summary: "M21000 is listed and ready for enterprise mono ROI assumptions.",
+    priceLabel: "Awaiting price details",
+    freePrintsLabel: "Awaiting free-print details",
+    notes: ["Share machine price, free prints, mono margin, and target monthly volume to activate this model."],
+    metrics: () => [],
+  },
+  wf_c21000: {
+    status: "pending",
+    summary: "C21000 is listed and ready for enterprise color ROI assumptions.",
+    priceLabel: "Awaiting price details",
+    freePrintsLabel: "Awaiting free-print details",
+    notes: ["Share machine price, mono/color free prints, and commercial margin assumptions to activate this model."],
+    metrics: () => [],
+  },
+};
+
 const formatInr = (value: number) => {
   if (!Number.isFinite(value)) return "INR 0";
   return `INR ${Math.round(value).toLocaleString("en-IN")}`;
 };
 
 const formatInrSigned = (value: number) => `${value >= 0 ? "+" : "-"} ${formatInr(Math.abs(value))}`;
+const formatRupees = (value: number) => `Rs ${Math.round(value).toLocaleString("en-IN")}`;
 
 const parseOptionalNumber = (value: string) => {
   if (value.trim().length === 0) return null;
@@ -279,6 +410,8 @@ const RoiCalculatorContent = () => {
   const [currentColorCost, setCurrentColorCost] = useState("");
   const [monoSellPrice, setMonoSellPrice] = useState(businessDefaults.small_office.monoSellPrice);
   const [colorSellPrice, setColorSellPrice] = useState(businessDefaults.small_office.colorSellPrice);
+  const [selectedDirectModel, setSelectedDirectModel] = useState<ModelKey>("am_m5500");
+  const [selectedC4065Volume, setSelectedC4065Volume] = useState(15000);
 
   useEffect(() => {
     const defaults = businessDefaults[businessType];
@@ -481,6 +614,8 @@ const RoiCalculatorContent = () => {
   }, [businessType, metrics]);
 
   const isRcSavingsCalloutVisible = businessType === "print_shop" || usesRcMachine || currentMachine === "rc_machine";
+  const directRoiProfile = directRoiProfiles[selectedDirectModel];
+  const directRoiMetrics = directRoiProfile ? directRoiProfile.metrics(selectedC4065Volume) : [];
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -519,6 +654,45 @@ const RoiCalculatorContent = () => {
               <h2 className="text-2xl md:text-3xl font-display font-bold text-navy">ROI Calculator</h2>
               <p className="mt-2 text-sm text-muted-foreground">
                 Final flow: select business type, enter monthly volume, choose paper setup, then calculate.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-highlight/20 bg-[#fff8eb] p-4 space-y-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Commercial model ROI</p>
+                <label className="mt-2 block text-sm font-semibold text-navy">Select a direct model calculator</label>
+                <select
+                  value={selectedDirectModel}
+                  onChange={(event) => setSelectedDirectModel(event.target.value as ModelKey)}
+                  className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                >
+                  {directRoiModelOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {selectedDirectModel === "konica_c4065" && directRoiProfile?.volumeOptions ? (
+                <div>
+                  <label className="block text-sm font-semibold text-navy">Monthly volume drawdown</label>
+                  <select
+                    value={selectedC4065Volume}
+                    onChange={(event) => setSelectedC4065Volume(Number(event.target.value))}
+                    className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  >
+                    {directRoiProfile.volumeOptions.map((volume) => (
+                      <option key={volume} value={volume}>
+                        {volume.toLocaleString("en-IN")} prints / month
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
+
+              <p className="text-xs text-muted-foreground">
+                This section uses your shared commercial assumptions model by model and will keep expanding as you send more numbers.
               </p>
             </div>
 
@@ -708,6 +882,48 @@ const RoiCalculatorContent = () => {
             </div>
 
             <>
+                {directRoiProfile ? (
+                  <div className={`rounded-2xl border p-4 ${directRoiProfile.status === "ready" ? "border-highlight/20 bg-[#fff8eb]" : "border-border bg-muted/40"}`}>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Direct model ROI</p>
+                    <h3 className="mt-2 text-xl font-display font-bold text-navy">{modelProfiles[selectedDirectModel].name}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{directRoiProfile.summary}</p>
+
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-2xl border border-border bg-background px-4 py-4">
+                        <p className="text-[11px] font-semibold uppercase tracking-widest text-highlight">Printer price</p>
+                        <p className="mt-2 text-sm font-semibold text-navy">{directRoiProfile.priceLabel}</p>
+                      </div>
+                      <div className="rounded-2xl border border-border bg-background px-4 py-4">
+                        <p className="text-[11px] font-semibold uppercase tracking-widest text-highlight">Free prints</p>
+                        <p className="mt-2 text-sm font-semibold text-navy">{directRoiProfile.freePrintsLabel}</p>
+                      </div>
+                    </div>
+
+                    {directRoiMetrics.length > 0 ? (
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                        {directRoiMetrics.map((item) => (
+                          <div
+                            key={item.label}
+                            className={`rounded-2xl border px-4 py-4 ${item.highlight ? "border-highlight/25 bg-white" : "border-border bg-background"}`}
+                          >
+                            <p className="text-[11px] font-semibold uppercase tracking-widest text-highlight">{item.label}</p>
+                            <p className="mt-2 text-sm font-semibold text-navy">{item.value}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    <div className="mt-4 rounded-2xl border border-border bg-background p-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-widest text-highlight">Notes</p>
+                      <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                        {directRoiProfile.notes.map((note) => (
+                          <li key={note}>{note}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ) : null}
+
                 <div className="rounded-2xl border border-highlight/20 bg-[#fff8eb] p-4">
                   <p className="text-xs font-semibold uppercase tracking-widest text-highlight">Best fit for your business</p>
                   <h3 className="mt-2 text-xl font-display font-bold text-navy">{recommendation.primary.name}</h3>
@@ -797,6 +1013,14 @@ const RoiCalculatorContent = () => {
                 {isRcSavingsCalloutVisible ? (
                   <div className="rounded-2xl border border-highlight/30 bg-[#fff8eb] p-4 text-sm text-navy">
                     Most print shops using RC machines save 30-50% after switching.
+                  </div>
+                ) : null}
+
+                {selectedDirectModel === "konica_c4065" && directRoiProfile?.status === "ready" ? (
+                  <div className="rounded-2xl border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+                    At {selectedC4065Volume.toLocaleString("en-IN")} prints per month, gross margin is{" "}
+                    <span className="font-semibold text-navy">{formatRupees(selectedC4065Volume * 6 - 35000 - 5000)}</span>{" "}
+                    after EMI and miscellaneous cost.
                   </div>
                 ) : null}
 
