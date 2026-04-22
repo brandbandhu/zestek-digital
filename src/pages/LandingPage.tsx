@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Globe, PhoneCall } from "lucide-react";
 import printerImage from "@/assets/landing-page/epson-m5500-printer.jpg";
 import zestekLogo from "@/assets/landing-page/zestek-logo.png";
 import "./LandingPage.css";
@@ -38,6 +39,24 @@ const offers = [
   "Free Installation",
   "Best Price Guarantee",
   "Service Support",
+];
+
+const statHighlights = [
+  {
+    value: "2L",
+    label: "prints free",
+    className: "lp-stat-sunrise",
+  },
+  {
+    value: "Low",
+    label: "running cost",
+    className: "lp-stat-emerald",
+  },
+  {
+    value: "Fast",
+    label: "service",
+    className: "lp-stat-electric",
+  },
 ];
 
 const comparison = [
@@ -119,24 +138,16 @@ const LandingPage = () => {
               className="relative w-full animate-soft-bob rounded-lg border border-primary-glow/25 shadow-glow"
             />
             <div className="absolute -bottom-6 left-4 right-4 grid grid-cols-3 gap-3 sm:left-8 sm:right-8">
-              <div className="stat-tile bg-ink/85">
-                <p className="font-display text-3xl tracking-normal text-accent drop-shadow">2L</p>
-                <p className="mt-1 text-xs font-bold uppercase tracking-wide text-primary-foreground">
-                  prints free
-                </p>
-              </div>
-              <div className="stat-tile bg-ink/85">
-                <p className="font-display text-3xl tracking-normal text-accent drop-shadow">Low</p>
-                <p className="mt-1 text-xs font-bold uppercase tracking-wide text-primary-foreground">
-                  running cost
-                </p>
-              </div>
-              <div className="stat-tile bg-ink/85">
-                <p className="font-display text-3xl tracking-normal text-accent drop-shadow">Fast</p>
-                <p className="mt-1 text-xs font-bold uppercase tracking-wide text-primary-foreground">
-                  service
-                </p>
-              </div>
+              {statHighlights.map((item) => (
+                <div key={item.label} className={`stat-tile ${item.className}`}>
+                  <p className="relative z-10 font-display text-3xl tracking-normal text-white drop-shadow-md sm:text-4xl">
+                    {item.value}
+                  </p>
+                  <p className="relative z-10 mt-1 text-xs font-extrabold uppercase tracking-[0.2em] text-white/90">
+                    {item.label}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -177,7 +188,7 @@ const LandingPage = () => {
             <div className="zestek-panel impact-card flex h-full flex-col justify-between overflow-hidden lp-bg-hero p-8 text-primary-foreground sm:p-10">
               <div>
                 <p className="font-bold text-primary-glow">Perfect for serious print businesses</p>
-                <h2 className="mt-2 font-display text-4xl leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl">
+                <h2 className="mt-2 font-display text-4xl leading-[1.05] tracking-normal text-white sm:text-5xl lg:text-6xl">
                   Built for Heavy Xerox Work
                 </h2>
                 <p className="mt-5 text-lg font-semibold text-primary-foreground/85">
@@ -187,16 +198,16 @@ const LandingPage = () => {
               </div>
               <div className="mt-8 grid grid-cols-3 gap-3">
                 <div className="rounded-lg border border-primary-glow/30 bg-surface/10 p-4 backdrop-blur">
-                  <p className="font-display text-3xl">2L</p>
-                  <p className="text-xs font-bold text-primary-foreground/75">prints free</p>
+                  <p className="font-display text-3xl text-white">2L</p>
+                  <p className="text-xs font-bold text-white/85">prints free</p>
                 </div>
                 <div className="rounded-lg border border-primary-glow/30 bg-surface/10 p-4 backdrop-blur">
-                  <p className="font-display text-3xl">100+</p>
-                  <p className="text-xs font-bold text-primary-foreground/75">businesses</p>
+                  <p className="font-display text-3xl text-white">100+</p>
+                  <p className="text-xs font-bold text-white/85">businesses</p>
                 </div>
                 <div className="rounded-lg border border-primary-glow/30 bg-surface/10 p-4 backdrop-blur">
-                  <p className="font-display text-3xl">24x7</p>
-                  <p className="text-xs font-bold text-primary-foreground/75">support</p>
+                  <p className="font-display text-3xl text-white">24x7</p>
+                  <p className="text-xs font-bold text-white/85">support</p>
                 </div>
               </div>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -285,10 +296,42 @@ const LandingPage = () => {
               <p>Expert Guidance</p>
               <p>Best Deals</p>
             </div>
-            <div className="mt-8 grid gap-3 font-display text-2xl tracking-normal">
-              <a href={`tel:${phonePrimary}`}>{phonePrimary}</a>
-              <a href={`tel:${phoneSecondary}`}>{phoneSecondary}</a>
-              <a href="https://www.zestek.in">www.zestek.in</a>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <a href={`tel:${phonePrimary}`} className="lp-contact-card">
+                <span className="lp-contact-icon">
+                  <PhoneCall className="h-4 w-4" />
+                </span>
+                <div>
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-primary/70">
+                    Sales Hotline
+                  </p>
+                  <p className="mt-1 font-display text-2xl tracking-normal text-foreground">{phonePrimary}</p>
+                </div>
+              </a>
+
+              <a href={`tel:${phoneSecondary}`} className="lp-contact-card">
+                <span className="lp-contact-icon">
+                  <PhoneCall className="h-4 w-4" />
+                </span>
+                <div>
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-primary/70">
+                    Support Line
+                  </p>
+                  <p className="mt-1 font-display text-2xl tracking-normal text-foreground">{phoneSecondary}</p>
+                </div>
+              </a>
+
+              <a href="https://www.zestek.in" className="lp-contact-card sm:col-span-2">
+                <span className="lp-contact-icon">
+                  <Globe className="h-4 w-4" />
+                </span>
+                <div>
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-primary/70">
+                    Official Website
+                  </p>
+                  <p className="mt-1 font-display text-2xl tracking-normal text-foreground">www.zestek.in</p>
+                </div>
+              </a>
             </div>
           </div>
         </div>

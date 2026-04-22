@@ -71,7 +71,38 @@
 }
 
 .landing-page-react .stat-tile {
-  @apply rounded-lg border border-primary-glow/25 bg-surface/10 p-5 text-primary-foreground backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-surface/15;
+  @apply relative overflow-hidden rounded-2xl border border-white/15 p-5 text-white shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-glow;
+}
+
+.landing-page-react .stat-tile::before {
+  content: "";
+  @apply absolute inset-x-0 top-0 h-1/2 bg-white/20;
+  clip-path: ellipse(78% 100% at 50% 0%);
+}
+
+.landing-page-react .stat-tile::after {
+  content: "";
+  @apply absolute -right-6 top-3 h-16 w-16 rounded-full bg-white/15 blur-2xl;
+}
+
+.landing-page-react .lp-stat-sunrise {
+  background-image: linear-gradient(135deg, hsl(45 98% 56%) 0%, hsl(18 90% 58%) 100%);
+}
+
+.landing-page-react .lp-stat-emerald {
+  background-image: linear-gradient(135deg, hsl(154 75% 42%) 0%, hsl(186 88% 41%) 100%);
+}
+
+.landing-page-react .lp-stat-electric {
+  background-image: linear-gradient(135deg, hsl(214 91% 55%) 0%, hsl(276 81% 62%) 100%);
+}
+
+.landing-page-react .lp-contact-card {
+  @apply flex items-center gap-4 rounded-2xl border border-primary/10 bg-muted p-4 transition duration-300 hover:-translate-y-1 hover:border-primary/20 hover:bg-surface hover:shadow-card;
+}
+
+.landing-page-react .lp-contact-icon {
+  @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_16px_34px_-22px_rgba(18,102,234,0.85)];
 }
 
 @media (prefers-reduced-motion: reduce) {
