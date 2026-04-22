@@ -18,6 +18,7 @@ import Sales from "./pages/Sales.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import EpsonWorkforceSpotlight from "./pages/EpsonWorkforceSpotlight.tsx";
 import InsightArticle from "./pages/InsightArticle.tsx";
+import LandingPage from "./pages/LandingPage.tsx";
 
 const queryClient = new QueryClient();
 const Router = import.meta.env.VITE_EMBEDDED_LANDING_PAGE === "true" ? HashRouter : BrowserRouter;
@@ -55,6 +56,7 @@ const App = () => (
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/landing-page/*" element={<LandingPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/paper.html" element={<About />} />
           <Route path="/products" element={<Navigate to="/epson-ecotank" replace />} />
