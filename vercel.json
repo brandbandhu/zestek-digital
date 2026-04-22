@@ -6,14 +6,6 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/landing-page",
-      "destination": "/landing-page-bundle/index.html"
-    },
-    {
-      "source": "/landing-page/",
-      "destination": "/landing-page-bundle/index.html"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
