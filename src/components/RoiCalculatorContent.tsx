@@ -106,6 +106,33 @@ const RoiCalculatorContent = () => {
       ? ((summary.yearlySavings * 3 - summary.recommendation.capex) / summary.recommendation.capex) * 100
       : 0;
 
+  const summaryKpiCards = [
+    {
+      label: "Estimated Monthly Savings",
+      topLine: "INR",
+      bottomLine: new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(Math.round(summary.monthlySavings)),
+      accent: true,
+    },
+    {
+      label: "Estimated Annual Savings",
+      topLine: "INR",
+      bottomLine: new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(Math.round(summary.yearlySavings)),
+      accent: false,
+    },
+    {
+      label: "Payback Period",
+      topLine: summary.roiMonths ? summary.roiMonths.toFixed(1) : "Not achievable",
+      bottomLine: summary.roiMonths ? "months" : "",
+      accent: false,
+    },
+    {
+      label: "ROI (3 Years)",
+      topLine: formatPercent(roi3Year),
+      bottomLine: "",
+      accent: false,
+    },
+  ];
+
   const breakdownRows = [
     {
       label: "Mono cost per page",
@@ -225,36 +252,35 @@ const RoiCalculatorContent = () => {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#0d223f] via-[#15395f] to-[#218257]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.18),transparent_35%)]" />
-        <div className="container relative grid gap-8 px-4 py-16 md:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:py-24">
-          <div className="max-w-2xl">
-            <span className="inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-white/90">
-              ROI Planning Tool
-            </span>
-            <h1 className="mt-5 text-4xl font-display font-bold leading-tight text-white md:text-5xl">
-              Print ROI page structure, rebuilt cleanly inside React
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-white/80 md:text-lg">
-              This page keeps your React header, footer, routing, and styling system intact. Only the ROI content
-              section is reshaped into the same kind of two-column calculator and results layout you shared.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3 text-sm text-white/80">
-              <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2">React component only</span>
-              <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2">No full-site HTML rewrite</span>
-              <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2">Ready for PDF/CRM next</span>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="absolute -inset-6 rounded-[2rem] bg-white/10 blur-3xl" />
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur">
-              <img
-                src={roiBreadcrumbImage}
-                alt="ROI calculator visual"
-                className="h-full w-full rounded-[1.5rem] object-cover"
-              />
-            </div>
+      <section
+        className="relative overflow-hidden min-h-[360px] md:min-h-[420px] -mt-16"
+        style={{
+          backgroundImage: `url('${roiBreadcrumbImage}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="container mx-auto section-padding pt-16 md:pt-20">
+          <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-navy/80">
+            Home / ROI Calculator
+          </p>
+          <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-navy">
+            Printer ROI Calculator
+          </h1>
+          <p className="mt-3 max-w-3xl text-sm text-navy/80 md:text-base">
+            Estimate monthly print cost, projected savings, payback period, and recommended printer fit with a
+            guided ROI view built for real business print volumes.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href="/contact#sales-inquiry"
+              className="rounded-full bg-navy px-5 py-2 text-xs font-semibold text-primary-foreground"
+            >
+              Request a Quote
+            </a>
+            <a href="/" className="rounded-full border border-navy/30 px-5 py-2 text-xs font-semibold text-navy">
+              Back to Home
+            </a>
           </div>
         </div>
       </section>
@@ -562,24 +588,26 @@ const RoiCalculatorContent = () => {
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                <article className="rounded-[1.5rem] border border-highlight/20 bg-[#fff8eb] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">Estimated Monthly Savings</p>
-                  <p className="mt-3 text-2xl font-display font-bold text-navy">{formatInr(summary.monthlySavings)}</p>
-                </article>
-                <article className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">Estimated Annual Savings</p>
-                  <p className="mt-3 text-2xl font-display font-bold text-navy">{formatInr(summary.yearlySavings)}</p>
-                </article>
-                <article className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">Payback Period</p>
-                  <p className="mt-3 text-2xl font-display font-bold text-navy">
-                    {summary.roiMonths ? `${summary.roiMonths.toFixed(1)} months` : "Not achievable"}
-                  </p>
-                </article>
-                <article className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">ROI (3 Years)</p>
-                  <p className="mt-3 text-2xl font-display font-bold text-navy">{formatPercent(roi3Year)}</p>
-                </article>
+                {summaryKpiCards.map((card) => (
+                  <article
+                    key={card.label}
+                    className={
+                      card.accent
+                        ? "flex h-full flex-col rounded-[1.5rem] border border-highlight/20 bg-[#fff8eb] p-4"
+                        : "flex h-full flex-col rounded-[1.5rem] border border-border bg-muted/40 p-4"
+                    }
+                  >
+                    <div className="min-h-[3.5rem]">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">{card.label}</p>
+                    </div>
+                    <div className="mt-3 min-h-[4.75rem]">
+                      <p className="text-base font-display font-bold uppercase leading-none text-navy">{card.topLine}</p>
+                      {card.bottomLine ? (
+                        <p className="mt-2 text-2xl font-display font-bold leading-tight text-navy">{card.bottomLine}</p>
+                      ) : null}
+                    </div>
+                  </article>
+                ))}
               </div>
 
               <div className="rounded-[1.5rem] border border-highlight/20 bg-[#fff8eb] p-4">
