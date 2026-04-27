@@ -1,6 +1,8 @@
 import banner2Image from "@/assets/banner/2.png";
 import banner3Image from "@/assets/banner/3.png";
 import banner4Image from "@/assets/banner/4.png";
+import epsonWorkforcePaperTypesImage from "@/assets/insights/epson-workforce-paper-types.jpg";
+import inkjetCoatedMediaImage from "@/assets/insights/inkjet-coated-media-samples.jpg";
 import mediaExpoMumbaiLogo from "@/assets/insights/media-expo-mumbai-logo.jpg";
 
 export type InsightImageFit = "cover" | "contain";
@@ -68,6 +70,151 @@ const mediaExpoLeadPhoto =
   mediaExpoMumbaiLogo;
 
 export const insightArticles: InsightArticle[] = [
+  {
+    slug: "types-of-papers-compatible-with-epson-workforce-printers",
+    route: "/insights/types-of-papers-compatible-with-epson-workforce-printers",
+    tag: "Paper Guide",
+    title: "Types of Papers Compatible with Epson WorkForce Printers",
+    cardDescription:
+      "A point-wise guide to choosing plain paper, inkjet coated media, and papers to avoid for Epson WorkForce printers.",
+    cardImageUrl: epsonWorkforcePaperTypesImage,
+    cardImageAlt: "Epson WorkForce printer with plain paper and coated media samples",
+    heroTitle: "Choose the right paper for sharper output, better durability, and smoother Epson WorkForce printing.",
+    heroDescription:
+      "Printer technology matters, but paper choice has a direct effect on ink drying, colour accuracy, smudging, and long-term output quality. Epson WorkForce printers are built for plain uncoated paper and inkjet-compatible coated media.",
+    imageUrl: epsonWorkforcePaperTypesImage,
+    imageAlt: "Epson WorkForce printer with compatible paper media arranged on a print studio table",
+    metaTitle: "Paper Types for Epson WorkForce Printers | Zestek",
+    metaDescription:
+      "Learn which papers are compatible with Epson WorkForce printers, including plain paper, inkjet coated media, and why wax or laser coated papers should be avoided.",
+    metaKeywords: [
+      "Epson WorkForce paper types",
+      "inkjet coated paper Epson",
+      "plain paper for Epson printer",
+      "wax coated paper inkjet printer",
+      "Epson printer media compatibility",
+    ],
+    readTime: "5 min read",
+    publishedLabel: "Paper compatibility guide",
+    introParagraphs: [
+      "In today's business printing environment, the right balance between quality, cost, and durability is essential. While the printer plays a major role, the paper you choose directly affects the final output.",
+      "Broadly, printing papers can be grouped into plain or uncoated papers, inkjet coated papers, and wax coated papers. Each category is designed for a different printing technology and a different use case.",
+      "For Epson WorkForce printers, the safest and most effective approach is simple: use paper that can absorb liquid ink properly and avoid non-absorbent coated surfaces meant for other technologies.",
+    ],
+    galleryImages: [
+      {
+        src: epsonWorkforcePaperTypesImage,
+        alt: "Epson WorkForce printer with compatible plain and coated paper samples",
+        caption: "Epson WorkForce printers work best with media that absorbs liquid ink cleanly and evenly.",
+      },
+      {
+        src: inkjetCoatedMediaImage,
+        alt: "Inkjet coated photo paper, sticker sheet, canvas media, and backlit film samples",
+        caption: "Inkjet coated media helps control ink spread for sharper detail, richer colour, and premium output.",
+      },
+      {
+        src: "https://mediaserver.goepson.com/adaptivemedia/rendition?assetDescr=WorkForce_Pro_EM-C8100_SPT_C11CL31201_384x256&clid=SAPDAM&id=818b370842b00667e251fd5a0e34aa07daf5c4a6&prclid=banner&prid=1200Wx1200H&vid=818b370842b00667e251fd5a0e34aa07daf5c4a6",
+        alt: "Epson WorkForce Pro business printer",
+        caption: "Before starting bulk jobs, match the paper finish and coating to inkjet printing requirements.",
+        fit: "contain",
+      },
+    ],
+    sections: [
+      {
+        heading: "What Epson WorkForce printers support",
+        paragraphs: [
+          "Epson WorkForce printers use advanced inkjet technology. That means the paper surface must accept liquid ink, allow proper drying, and hold detail without excessive spreading.",
+        ],
+        bullets: [
+          "Supported: plain or uncoated papers",
+          "Supported: inkjet coated papers",
+          "Not supported: wax coated papers",
+          "Avoid: coated papers made only for laser or toner-based printers",
+        ],
+      },
+      {
+        heading: "1. Plain / uncoated papers",
+        paragraphs: [
+          "Plain paper is the most common and economical choice for everyday business printing. It is ideal when volume and cost control matter more than premium finish.",
+        ],
+        bullets: [
+          "Standard 70-100 GSM office paper",
+          "Quick ink absorption for fast printing",
+          "Sharp text and decent graphics",
+          "Easily available and cost-effective",
+          "Best for invoices, reports, bills, and bulk document printing",
+          "Not water-resistant, with short to medium output life",
+        ],
+      },
+      {
+        heading: "2. Inkjet coated papers",
+        paragraphs: [
+          "Inkjet coated papers are specially designed to manage liquid ink. The coating controls ink spread, improves surface sharpness, and helps colours look more vibrant.",
+          "This is the better choice for professional output, customer-facing material, and jobs where finish and durability matter.",
+        ],
+        bullets: [
+          "Media options include matte and glossy photo paper",
+          "Sticker paper works well when it is clearly marked inkjet-compatible",
+          "Canvas media supports premium branding and decorative output",
+          "NT sheets and backlit films can be used when designed for inkjet printing",
+          "Produces richer colours, deeper contrast, and finer detail",
+          "Water resistance and fade resistance depend on the coating and original ink quality",
+        ],
+      },
+      {
+        heading: "3. Wax coated papers are not supported",
+        paragraphs: [
+          "Wax coated papers are made for specialized packaging and industrial applications. Their surface is intentionally non-absorbent, which makes them unsuitable for inkjet printing.",
+        ],
+        bullets: [
+          "The wax layer prevents proper ink absorption",
+          "Ink may stay wet on the surface instead of drying correctly",
+          "Smudging, poor detail, and transfer marks can occur",
+          "These papers should not be used with Epson WorkForce printers",
+        ],
+      },
+      {
+        heading: "Important note on laser coated papers",
+        paragraphs: [
+          "Not all coated papers are the same. Many coated sheets sold in the market are meant for laser printers, where toner is fused onto the paper surface using heat.",
+          "That technology is different from inkjet printing. A laser-coated sheet may look premium, but it may not absorb liquid ink correctly.",
+        ],
+        bullets: [
+          "Laser coated papers are made for toner-based printing",
+          "They use heat-fusing behaviour instead of liquid ink absorption",
+          "Using them in inkjet printers can lead to poor output",
+          "Always check that the paper is labelled inkjet-compatible before purchase",
+        ],
+      },
+      {
+        heading: "Final paper selection guide",
+        paragraphs: [
+          "Choosing the right paper helps maximize printer performance, output life, and business efficiency. For routine office volume, plain paper is the practical choice. For premium jobs, inkjet coated media gives the best result.",
+        ],
+        bullets: [
+          "Use plain paper for cost-effective high-volume documents",
+          "Use inkjet coated media for photos, signage, labels, and marketing material",
+          "Avoid wax coated media on Epson WorkForce printers",
+          "Avoid laser-only coated papers for inkjet output",
+          "Use original inks for stronger consistency and longer-lasting prints",
+        ],
+      },
+    ],
+    keyPointsTitle: "Compatibility checklist",
+    keyPoints: [
+      "Epson WorkForce printers support plain uncoated paper and inkjet-compatible coated paper.",
+      "Plain paper is best for everyday invoices, reports, bills, and routine bulk printing.",
+      "Inkjet coated media is better for premium colour, labels, photos, signage, and branding output.",
+      "Wax coated and laser-only coated papers should be avoided because they do not absorb liquid ink properly.",
+    ],
+    ctaTitle: "Choose the right Epson media setup",
+    ctaBody:
+      "If you are planning daily office printing, print-shop output, labels, or premium coated media jobs, our team can help you match the right Epson WorkForce model with the right paper type.",
+    primaryCtaLabel: "Explore Epson WorkForce",
+    primaryCtaHref: "/epson-workforce",
+    secondaryCtaLabel: "Talk to Zestek",
+    secondaryCtaHref: "/contact#sales-inquiry",
+  },
   {
     slug: "zestek-digital-llp-at-media-expo-2026",
     route: "/insights/zestek-digital-llp-at-media-expo-2026",
