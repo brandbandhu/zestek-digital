@@ -1,0 +1,339 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Print ROI Calculator | Zest Digital Solutions</title>
+  <meta name="description" content="Low-effort B2B print ROI calculator with market-benchmarked assumptions. Generate a detailed PDF report instantly before requesting a quote.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/main.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js" defer></script>
+  <script src="assets/js/roi-calculator.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand" aria-label="Zest Home">
+        <span class="brand-mark">ZD</span>
+        <span>Zest Digital Solutions</span>
+      </a>
+      <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Toggle Menu">Menu</button>
+      <nav class="main-nav" data-main-nav>
+        <a href="index.html">Home</a>
+        <a href="products/epson-m5500.html">Corporate Printers</a>
+        <a href="products/konica-c4065.html">Commercial Presses</a>
+        <a href="industries/healthcare-hospitals.html">Industry Solutions</a>
+        <a href="roi-calculator.html">ROI Calculator</a>
+        <a href="about-support.html">About & Support</a>
+        <a href="index.html#quote-form" class="btn btn-primary header-cta">Request a Quote</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero roi-hero">
+      <div class="container" data-reveal>
+        <span class="badge">Market-Benchmarked Self-Serve Tool</span>
+        <h1>Low-Effort Print ROI Calculator</h1>
+        <p>You only enter a few details. Market cost parameters are fixed from current Mumbai/MMR B2B benchmarks, so buyers can quickly get a decision-ready ROI report and PDF.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container roi-layout">
+        <form id="roi-form" class="roi-form" data-reveal>
+          <h2>Generate ROI in 60 Seconds</h2>
+          <p class="form-note">Minimal buyer effort. Benchmarked costs and CAPEX assumptions are auto-applied. Printer is auto-recommended from your profile.</p>
+
+          <div class="form-grid two">
+            <div>
+              <label for="decision-maker">Decision Maker Name</label>
+              <input id="decision-maker" name="decision_maker" type="text" placeholder="Example: Head of IT">
+            </div>
+            <div>
+              <label for="company-name">Company Name</label>
+              <input id="company-name" name="company_name" type="text" required>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div>
+              <label for="industry">Industry</label>
+              <select id="industry" name="industry" required>
+                <option value="healthcare">Healthcare & Hospitals</option>
+                <option value="commercial">Commercial Print & Packaging</option>
+                <option value="education">Education & Universities</option>
+                <option value="corporate">Corporate Shared Services</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid is-hidden" id="commercial-pricing-wrap">
+            <div>
+              <label for="commercial-pricing">Commercial Selling Mode</label>
+              <select id="commercial-pricing" name="commercial_pricing">
+                <option value="b2c" selected>End Customer (B2C Retail)</option>
+                <option value="b2b">Reseller (B2B Trade)</option>
+              </select>
+              <p class="form-note">Used only for Commercial Print and Packaging P&L projection.</p>
+            </div>
+          </div>
+
+          <div class="form-grid two">
+            <div>
+              <label for="mono-pages">Monochrome Pages / Month</label>
+              <input id="mono-pages" name="mono_pages" type="number" min="0" step="100" value="60000" required>
+            </div>
+            <div>
+              <label for="color-pages">Color Pages / Month</label>
+              <input id="color-pages" name="color_pages" type="number" min="0" step="100" value="10000" required>
+            </div>
+          </div>
+
+          <div class="recommendation-guide" id="recommendation-guide">
+            <h3>Printer Recommendation Guide</h3>
+            <p class="form-note">Based on sector, monthly volume, and color share, the calculator auto-selects a best-fit model before ROI is calculated.</p>
+            <div class="recommendation-card">
+              <span>Recommended Model</span>
+              <strong id="recommended-model-name">-</strong>
+              <small id="recommended-model-range">CAPEX benchmark: -</small>
+              <p id="recommended-model-reason">-</p>
+            </div>
+            <input id="model" name="model" type="hidden" value="epson_m5500">
+          </div>
+
+          <div class="form-grid two">
+            <div>
+              <label for="fleet-age">Current Printer Fleet Age</label>
+              <select id="fleet-age" name="fleet_age" required>
+                <option value="new">0 - 2 years</option>
+                <option value="mid" selected>3 - 5 years</option>
+                <option value="old">5+ years</option>
+              </select>
+            </div>
+            <div>
+              <label for="downtime-criticality">Downtime Criticality</label>
+              <select id="downtime-criticality" name="downtime_criticality" required>
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="roi-actions">
+            <button type="submit" class="btn btn-primary">Generate ROI Report + Download PDF</button>
+            <p class="form-note">PDF download starts automatically when report is generated.</p>
+          </div>
+
+          <p class="form-message" id="roi-message" aria-live="polite"></p>
+        </form>
+
+        <section class="roi-results" id="roi-results" data-reveal>
+          <h2>Your ROI Snapshot</h2>
+          <p class="form-note">Calculated from your inputs plus fixed market benchmark assumptions.</p>
+
+          <div class="roi-kpis">
+            <article class="roi-kpi roi-kpi-hero">
+              <span id="kpi-primary-label">Estimated Monthly Savings</span>
+              <strong id="kpi-monthly-savings">INR 0</strong>
+            </article>
+            <article class="roi-kpi">
+              <span id="kpi-secondary-label">Estimated Annual Savings</span>
+              <strong id="kpi-annual-savings">INR 0</strong>
+            </article>
+            <article class="roi-kpi">
+              <span id="kpi-tertiary-label">Payback Period</span>
+              <strong id="kpi-payback">-</strong>
+            </article>
+            <article class="roi-kpi">
+              <span id="kpi-quaternary-label">ROI (3 Years)</span>
+              <strong id="kpi-roi">0%</strong>
+            </article>
+          </div>
+
+          <div class="finance-banner is-hidden" id="finance-banner">
+            <strong id="finance-banner-text">Own this machine for just INR 32,000/month. 100% Funding Available (Subject to GST).</strong>
+          </div>
+
+          <div class="promo-callout is-hidden" id="promo-callout">
+            <strong id="promo-callout-text">Includes 10,000 Free 12x18 Sheets! Estimated Retail Value: INR 2,25,000 (Effectively covers your first 7 months of EMI).</strong>
+          </div>
+
+          <h3>Cost of Recommended Printer</h3>
+          <div class="pricing-grid">
+            <article class="pricing-card">
+              <span>CapEx (Standard MRP)</span>
+              <strong id="pricing-capex">INR 0</strong>
+              <small>One-time capital purchase benchmark</small>
+            </article>
+            <article class="pricing-card">
+              <span>OpEx Lease Option</span>
+              <strong id="pricing-lease">INR 0 / month</strong>
+              <small id="pricing-lease-note">Or lease for INR 0/month (36 months)</small>
+            </article>
+          </div>
+
+          <h3>Fixed Market Assumptions Applied</h3>
+          <div class="assumption-grid">
+            <article class="assumption-card">
+              <span>Current CPP (Mono / Color)</span>
+              <strong id="assumption-cpp">INR 0 / INR 0</strong>
+            </article>
+            <article class="assumption-card">
+              <span>Maintenance Benchmark</span>
+              <strong id="assumption-maint">INR 0</strong>
+            </article>
+            <article class="assumption-card">
+              <span>Energy Benchmark</span>
+              <strong id="assumption-energy">INR 0</strong>
+            </article>
+            <article class="assumption-card">
+              <span>Downtime Benchmark</span>
+              <strong id="assumption-downtime">0 hrs x INR 0</strong>
+            </article>
+            <article class="assumption-card">
+              <span>Model CAPEX Benchmark (Reference)</span>
+              <strong id="assumption-capex">INR 0</strong>
+            </article>
+            <article class="assumption-card">
+              <span>ROI Horizon</span>
+              <strong id="assumption-horizon">3 years</strong>
+            </article>
+          </div>
+
+          <h3>Estimated Ink / Toner Required</h3>
+          <div class="consumable-grid">
+            <article class="consumable-card">
+              <span>Black Consumable Requirement</span>
+              <strong id="consumable-black">0 / month</strong>
+            </article>
+            <article class="consumable-card">
+              <span>Color Consumable Requirement</span>
+              <strong id="consumable-color">0 / month</strong>
+            </article>
+            <article class="consumable-card">
+              <span>Estimated Consumables Budget (Monthly)</span>
+              <strong id="consumable-budget-monthly">INR 0</strong>
+            </article>
+            <article class="consumable-card">
+              <span>Estimated Consumables Budget (Annual)</span>
+              <strong id="consumable-budget-annual">INR 0</strong>
+            </article>
+          </div>
+          <p class="consumable-note" id="consumable-note">-</p>
+
+          <div class="roi-summary-table-wrap">
+            <table class="roi-summary-table">
+              <thead>
+                <tr>
+                  <th>Cost Component (Monthly)</th>
+                  <th>Current</th>
+                  <th>Projected</th>
+                  <th>Impact</th>
+                </tr>
+              </thead>
+              <tbody id="roi-breakdown-body"></tbody>
+            </table>
+          </div>
+
+          <div class="commercial-pnl is-hidden" id="commercial-pnl">
+            <h3>Your Projected Monthly P&amp;L</h3>
+            <div class="roi-summary-table-wrap">
+              <table class="roi-summary-table">
+                <thead>
+                  <tr>
+                    <th>P&amp;L Item</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Selling model</td>
+                    <td id="pnl-selling-model">-</td>
+                  </tr>
+                  <tr>
+                    <td>Monthly print volume</td>
+                    <td id="pnl-volume">-</td>
+                  </tr>
+                  <tr>
+                    <td>Sell price per print</td>
+                    <td id="pnl-sell-price">-</td>
+                  </tr>
+                  <tr>
+                    <td>Total revenue</td>
+                    <td id="pnl-revenue">-</td>
+                  </tr>
+                  <tr>
+                    <td>Consumables cost (FSMA + paper)</td>
+                    <td id="pnl-consumables-cost">-</td>
+                  </tr>
+                  <tr>
+                    <td>Monthly EMI</td>
+                    <td id="pnl-emi">-</td>
+                  </tr>
+                  <tr>
+                    <td>Net take-home profit (cash flow)</td>
+                    <td id="pnl-net-cashflow">-</td>
+                  </tr>
+                  <tr>
+                    <td>Gross profit per print (B2B / B2C)</td>
+                    <td id="pnl-gpp-range">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="roi-note" id="roi-recommendation"></div>
+
+          <div class="poc-upload">
+            <h3>Request Physical Print Demo (POC)</h3>
+            <p class="form-note">Upload your test artwork file. Accepted formats: PDF, JPG, TIFF. Max size: 50 MB. This will be tagged as "POC Requested" in CRM.</p>
+            <div class="form-grid">
+              <div>
+                <label for="poc-file">Demo File Upload</label>
+                <input id="poc-file" name="poc_file" type="file" accept=".pdf,.jpg,.jpeg,.tiff,.tif,application/pdf,image/jpeg,image/tiff">
+              </div>
+            </div>
+            <div class="roi-actions">
+              <button type="button" class="btn btn-outline" id="poc-upload-btn">Upload File for POC</button>
+              <p class="form-note">Generate ROI report first so this file maps to your report ID.</p>
+            </div>
+            <p class="form-message" id="poc-upload-message" aria-live="polite"></p>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h3 style="color:#fff;">Zest Digital Solutions</h3>
+        <p class="text-white">Data-backed print CAPEX planning for B2B buyers in Mumbai and MMR.</p>
+        <small>(c) <span data-current-year></span> Zest Digital Solutions.</small>
+      </div>
+      <div>
+        <h4 style="color:#fff;">Products</h4>
+        <p><a href="products/epson-m5500.html">Epson M5500</a></p>
+        <p><a href="products/epson-c8100.html">Epson C8100</a></p>
+        <p><a href="products/konica-c4065.html">Konica C4065</a></p>
+      </div>
+      <div>
+        <h4 style="color:#fff;">Need Validation?</h4>
+        <p><a href="index.html#quote-form">Request a Quote</a></p>
+        <p><a href="tel:+919876543210">+91 98765 43210</a></p>
+        <p><a href="mailto:sales@zestdigital.in">sales@zestdigital.in</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <a class="whatsapp-float" data-whatsapp-link href="#" target="_blank" rel="noopener">WhatsApp Quote</a>
+</body>
+</html>

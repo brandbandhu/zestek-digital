@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import roiBreadcrumbImage from "../../assets/breadcrub/roi.png";
 import {
   buildRoiSummary,
@@ -14,6 +14,7 @@ import {
   type PaperType,
   type UsageType,
 } from "@/lib/roiCalculator";
+import { exportRoiPdf } from "@/lib/roiPdf";
 
 type StatusMessage = {
   type: "success" | "error";
@@ -46,8 +47,16 @@ const formatPaperSize = (paperSize: PaperSize) => {
   return paperSize.toUpperCase();
 };
 
+const waitForNextPaint = () =>
+  new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => resolve());
+    });
+  });
+
 const RoiCalculatorContent = () => {
   const defaultProfile = getBusinessDefaults("small_office");
+  const snapshotRef = useRef<HTMLDivElement | null>(null);
 
   const [decisionMaker, setDecisionMaker] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -67,6 +76,7 @@ const RoiCalculatorContent = () => {
   const [formMessage, setFormMessage] = useState<StatusMessage | null>(null);
   const [pocMessage, setPocMessage] = useState<StatusMessage | null>(null);
   const [hasGenerated, setHasGenerated] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   useEffect(() => {
     const defaults = getBusinessDefaults(businessType);
@@ -109,26 +119,26 @@ const RoiCalculatorContent = () => {
   const summaryKpiCards = [
     {
       label: "Estimated Monthly Savings",
-      topLine: "INR",
-      bottomLine: new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(Math.round(summary.monthlySavings)),
+      value: formatInr(summary.monthlySavings),
+      note: "Projected blended monthly benefit",
       accent: true,
     },
     {
       label: "Estimated Annual Savings",
-      topLine: "INR",
-      bottomLine: new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(Math.round(summary.yearlySavings)),
+      value: formatInr(summary.yearlySavings),
+      note: "12-month savings view",
       accent: false,
     },
     {
       label: "Payback Period",
-      topLine: summary.roiMonths ? summary.roiMonths.toFixed(1) : "Not achievable",
-      bottomLine: summary.roiMonths ? "months" : "",
+      value: summary.roiMonths ? `${summary.roiMonths.toFixed(1)} months` : "Not achievable",
+      note: "Investment recovery estimate",
       accent: false,
     },
     {
       label: "ROI (3 Years)",
-      topLine: formatPercent(roi3Year),
-      bottomLine: "",
+      value: formatPercent(roi3Year),
+      note: "Net return on benchmark CAPEX",
       accent: false,
     },
   ];
@@ -216,8 +226,11 @@ const RoiCalculatorContent = () => {
         ];
 
   const businessLabel = businessTypeOptions.find((option) => option.id === businessType)?.label ?? businessType;
+  const usageLabel = findLabel(usageTypeOptions, usageType);
+  const currentMachineLabel = `${findLabel(currentMachineOptions, currentMachine)}${usesRcMachine ? " | RC workflow" : ""}`;
+  const paperSetup = `${formatPaperSize(paperSize)} | ${findLabel(paperTypeOptions, paperType)}`;
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!companyName.trim()) {
@@ -228,11 +241,34 @@ const RoiCalculatorContent = () => {
       return;
     }
 
-    setHasGenerated(true);
-    setFormMessage({
-      type: "success",
-      text: "ROI snapshot updated below. PDF and CRM wiring can be connected next without changing this page structure.",
-    });
+    try {
+      setHasGenerated(true);
+      setIsGeneratingPdf(true);
+      setFormMessage({
+        type: "success",
+        text: "Preparing the ROI snapshot PDF...",
+      });
+
+      await waitForNextPaint();
+
+      await exportRoiPdf({
+        companyName: companyName.trim(),
+        snapshotElement: snapshotRef.current,
+      });
+
+      setFormMessage({
+        type: "success",
+        text: "ROI snapshot PDF ready. Download started.",
+      });
+    } catch (error) {
+      console.error("Unable to export ROI PDF", error);
+      setFormMessage({
+        type: "error",
+        text: "Unable to generate the ROI PDF right now. Please try again.",
+      });
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   const handlePocUpload = () => {
@@ -287,7 +323,7 @@ const RoiCalculatorContent = () => {
 
       <section className="bg-background py-16">
         <div className="container px-4 md:px-6">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.95fr)] lg:items-start">
+          <div className="mx-auto max-w-5xl">
             <form
               id="roi-form"
               onSubmit={handleSubmit}
@@ -552,11 +588,12 @@ const RoiCalculatorContent = () => {
               <div className="flex flex-wrap items-center gap-4">
                 <button
                   type="submit"
-                  className="inline-flex h-14 items-center justify-center rounded-full bg-[#1d7f3f] px-8 text-sm font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-[#176735]"
+                  disabled={isGeneratingPdf}
+                  className="inline-flex h-14 items-center justify-center rounded-full bg-[#1d7f3f] px-8 text-sm font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-[#176735] disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  Generate ROI Snapshot
+                  {isGeneratingPdf ? "Generating PDF..." : "Generate ROI Snapshot"}
                 </button>
-                <p className="text-sm text-muted-foreground">PDF export and CRM submission can plug into this layout next.</p>
+                <p className="text-sm text-muted-foreground">PDF download starts automatically after the report is generated.</p>
               </div>
 
               {formMessage ? (
@@ -569,201 +606,142 @@ const RoiCalculatorContent = () => {
                 </p>
               ) : null}
             </form>
-
-            <section className="space-y-6 rounded-[2rem] border border-border bg-card p-5 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8 lg:sticky lg:top-24">
-              <div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-3xl font-display font-bold text-navy">Your ROI Snapshot</h2>
-                  {hasGenerated ? (
-                    <span className="rounded-full bg-[#e7f5eb] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#1d7f3f]">
-                      Ready
-                    </span>
-                  ) : null}
-                </div>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  {hasGenerated
-                    ? `Prepared for ${companyName}${decisionMaker ? ` | ${decisionMaker}` : ""}.`
-                    : "Live preview of the ROI page structure using the values on the left."}
-                </p>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                {summaryKpiCards.map((card) => (
-                  <article
-                    key={card.label}
-                    className={
-                      card.accent
-                        ? "flex h-full flex-col rounded-[1.5rem] border border-highlight/20 bg-[#fff8eb] p-4"
-                        : "flex h-full flex-col rounded-[1.5rem] border border-border bg-muted/40 p-4"
-                    }
-                  >
-                    <div className="min-h-[3.5rem]">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">{card.label}</p>
-                    </div>
-                    <div className="mt-3 min-h-[4.75rem]">
-                      <p className="text-base font-display font-bold uppercase leading-none text-navy">{card.topLine}</p>
-                      {card.bottomLine ? (
-                        <p className="mt-2 text-2xl font-display font-bold leading-tight text-navy">{card.bottomLine}</p>
-                      ) : null}
-                    </div>
-                  </article>
-                ))}
-              </div>
-
-              <div className="rounded-[1.5rem] border border-highlight/20 bg-[#fff8eb] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">Recommended Printer</p>
-                <h3 className="mt-2 text-2xl font-display font-bold text-navy">{summary.recommendation.name}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{summary.recommendation.bestFor}</p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-display font-bold text-navy">Cost of Recommended Printer</h3>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  <article className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">CapEx (Standard MRP)</p>
-                    <p className="mt-3 text-xl font-display font-bold text-navy">{formatInr(summary.recommendation.capex)}</p>
-                    <p className="mt-2 text-sm text-muted-foreground">One-time ownership benchmark for the recommended model.</p>
-                  </article>
-                  <article className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">Projected Monthly Spend</p>
-                    <p className="mt-3 text-xl font-display font-bold text-navy">{formatInr(summary.suggestedMonthlySpend)}</p>
-                    <p className="mt-2 text-sm text-muted-foreground">This replaces the lease card while keeping the same layout rhythm.</p>
-                  </article>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-display font-bold text-navy">Configured ROI Assumptions</h3>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {assumptionCards.map((card) => (
-                    <article key={card.label} className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">{card.label}</p>
-                      <p className="mt-3 text-sm font-semibold leading-6 text-navy">{card.value}</p>
-                    </article>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-display font-bold text-navy">Volume &amp; Impact Snapshot</h3>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  {impactCards.map((card) => (
-                    <article key={card.label} className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">{card.label}</p>
-                      <p className="mt-3 text-lg font-display font-bold text-navy">{card.value}</p>
-                    </article>
-                  ))}
-                </div>
-              </div>
-
-              <div className="overflow-hidden rounded-[1.5rem] border border-border">
-                <div className="border-b border-border bg-muted/40 px-5 py-4">
-                  <h3 className="text-xl font-display font-bold text-navy">Monthly ROI Breakdown</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Business type: {businessLabel} | Total monthly pages: {totalPages.toLocaleString("en-IN")}
-                  </p>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full text-sm">
-                    <thead className="bg-background">
-                      <tr className="border-b border-border text-left text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                        <th className="px-5 py-4">Cost Component</th>
-                        <th className="px-5 py-4">Current</th>
-                        <th className="px-5 py-4">Projected</th>
-                        <th className="px-5 py-4">Impact</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {breakdownRows.map((row) => (
-                        <tr key={row.label} className="border-b border-border last:border-b-0">
-                          <td className="px-5 py-4 font-medium text-navy">{row.label}</td>
-                          <td className="px-5 py-4 text-muted-foreground">{row.current}</td>
-                          <td className="px-5 py-4 text-muted-foreground">{row.projected}</td>
-                          <td className="px-5 py-4 font-semibold text-[#1d7f3f]">{row.impact}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div className="rounded-[1.5rem] border border-highlight/20 bg-[#fff8eb] p-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">Interpretation</p>
-                <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                  <span className="font-semibold text-navy">Why this model:</span> {summary.whyRecommended}
-                </p>
-                <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                  <span className="font-semibold text-navy">{summary.industryHeading}:</span> {summary.industryBody}
-                </p>
-                {summary.rcSwitchMessage ? (
-                  <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                    <span className="font-semibold text-navy">RC insight:</span> {summary.rcSwitchMessage}
-                  </p>
-                ) : null}
-              </div>
-
-              <div className="rounded-[1.5rem] border border-border bg-muted/40 p-5">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">Request Physical Demo (POC)</p>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                      The structure is in place here too. Once you share the endpoint, this block can upload artwork and tag the lead without changing the layout again.
-                    </p>
-                  </div>
-                  <div className="w-full max-w-sm">
-                    <input
-                      type="file"
-                      accept=".pdf,.jpg,.jpeg,.tiff,.tif,application/pdf,image/jpeg,image/tiff"
-                      onChange={(event) => setPocFileName(event.target.files?.[0]?.name ?? "")}
-                      className="w-full rounded-2xl border border-input bg-background px-4 py-3 text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-4 flex flex-wrap items-center gap-4">
-                  <button
-                    type="button"
-                    onClick={handlePocUpload}
-                    className="inline-flex h-12 items-center justify-center rounded-full border border-navy/20 px-6 text-xs font-semibold uppercase tracking-[0.2em] text-navy transition hover:border-navy/40"
-                  >
-                    Upload File for POC
-                  </button>
-                  {pocFileName ? <span className="text-sm text-muted-foreground">{pocFileName}</span> : null}
-                </div>
-
-                {pocMessage ? (
-                  <p className={`mt-4 text-sm ${pocMessage.type === "success" ? "text-[#1d7f3f]" : "text-red-600"}`}>
-                    {pocMessage.text}
-                  </p>
-                ) : null}
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-3">
-                <a
-                  href="tel:+919920909700"
-                  className="inline-flex h-12 items-center justify-center rounded-full bg-navy px-4 text-xs font-semibold uppercase tracking-[0.2em] text-primary-foreground"
-                >
-                  Get Best Price
-                </a>
-                <a
-                  href="https://wa.me/919920909700?text=Hi%20Zestek%2C%20I%20need%20ROI%20guidance%20for%20a%20printer."
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-12 items-center justify-center rounded-full border border-navy/20 px-4 text-xs font-semibold uppercase tracking-[0.2em] text-navy"
-                >
-                  WhatsApp Expert
-                </a>
-                <a
-                  href="/contact#sales-inquiry"
-                  className="inline-flex h-12 items-center justify-center rounded-full border border-border px-4 text-xs font-semibold uppercase tracking-[0.2em] text-navy"
-                >
-                  Book Demo
-                </a>
-              </div>
-            </section>
           </div>
         </div>
       </section>
+
+      <div className="pointer-events-none fixed left-[-20000px] top-0 w-[1100px] bg-white p-8" aria-hidden="true">
+        <section
+          id="roi-snapshot"
+          ref={snapshotRef}
+          className="space-y-6 rounded-[2rem] border border-border bg-card p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)]"
+        >
+          <div>
+            <div className="flex flex-wrap items-center gap-3">
+              <h2 className="text-3xl font-display font-bold text-navy">Your ROI Snapshot</h2>
+              {hasGenerated ? (
+                <span className="rounded-full bg-[#e7f5eb] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#1d7f3f]">
+                  Ready
+                </span>
+              ) : null}
+            </div>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              {hasGenerated
+                ? `Prepared for ${companyName}${decisionMaker ? ` | ${decisionMaker}` : ""}.`
+                : "Live preview of the ROI snapshot using the values on the left."}
+            </p>
+          </div>
+
+          <div className="grid gap-4 grid-cols-4">
+            {summaryKpiCards.map((card) => (
+              <article
+                key={card.label}
+                className={
+                  card.accent
+                    ? "flex h-full flex-col rounded-[1.5rem] border border-highlight/20 bg-[#fff8eb] p-4"
+                    : "flex h-full flex-col rounded-[1.5rem] border border-border bg-muted/40 p-4"
+                }
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">{card.label}</p>
+                <p className="mt-4 text-2xl font-display font-bold leading-tight text-navy">{card.value}</p>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{card.note}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="rounded-[1.5rem] border border-highlight/20 bg-[#fff8eb] p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">Recommended Printer</p>
+            <h3 className="mt-2 text-2xl font-display font-bold text-navy">{summary.recommendation.name}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{summary.recommendation.bestFor}</p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-display font-bold text-navy">Cost of Recommended Printer</h3>
+            <div className="mt-4 grid gap-4 grid-cols-2">
+              <article className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">CapEx (Standard MRP)</p>
+                <p className="mt-3 text-xl font-display font-bold text-navy">{formatInr(summary.recommendation.capex)}</p>
+                <p className="mt-2 text-sm text-muted-foreground">One-time ownership benchmark for the recommended model.</p>
+              </article>
+              <article className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">Projected Monthly Spend</p>
+                <p className="mt-3 text-xl font-display font-bold text-navy">{formatInr(summary.suggestedMonthlySpend)}</p>
+                <p className="mt-2 text-sm text-muted-foreground">Calculated from your current inputs and recommendation formula.</p>
+              </article>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-display font-bold text-navy">Configured ROI Assumptions</h3>
+            <div className="mt-4 grid gap-4 grid-cols-3">
+              {assumptionCards.map((card) => (
+                <article key={card.label} className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">{card.label}</p>
+                  <p className="mt-3 text-sm font-semibold leading-6 text-navy">{card.value}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-display font-bold text-navy">Volume &amp; Impact Snapshot</h3>
+            <div className="mt-4 grid gap-4 grid-cols-2">
+              {impactCards.map((card) => (
+                <article key={card.label} className="rounded-[1.5rem] border border-border bg-muted/40 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">{card.label}</p>
+                  <p className="mt-3 text-lg font-display font-bold text-navy">{card.value}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-[1.5rem] border border-border">
+            <div className="border-b border-border bg-muted/40 px-5 py-4">
+              <h3 className="text-xl font-display font-bold text-navy">Monthly ROI Breakdown</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Business type: {businessLabel} | Total monthly pages: {totalPages.toLocaleString("en-IN")}
+              </p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead className="bg-background">
+                  <tr className="border-b border-border text-left text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    <th className="px-5 py-4">Cost Component</th>
+                    <th className="px-5 py-4">Current</th>
+                    <th className="px-5 py-4">Projected</th>
+                    <th className="px-5 py-4">Impact</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {breakdownRows.map((row) => (
+                    <tr key={row.label} className="border-b border-border last:border-b-0">
+                      <td className="px-5 py-4 font-medium text-navy">{row.label}</td>
+                      <td className="px-5 py-4 text-muted-foreground">{row.current}</td>
+                      <td className="px-5 py-4 text-muted-foreground">{row.projected}</td>
+                      <td className="px-5 py-4 font-semibold text-[#1d7f3f]">{row.impact}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="rounded-[1.5rem] border border-highlight/20 bg-[#fff8eb] p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">Interpretation</p>
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">
+              <span className="font-semibold text-navy">Why this model:</span> {summary.whyRecommended}
+            </p>
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">
+              <span className="font-semibold text-navy">{summary.industryHeading}:</span> {summary.industryBody}
+            </p>
+            {summary.rcSwitchMessage ? (
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                <span className="font-semibold text-navy">RC insight:</span> {summary.rcSwitchMessage}
+              </p>
+            ) : null}
+          </div>
+        </section>
+      </div>
     </>
   );
 };

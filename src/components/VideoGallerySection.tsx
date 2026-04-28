@@ -18,7 +18,7 @@ const videos = Object.entries(videoFiles)
     fileName: path.split("/").pop() ?? "video",
     src,
   }))
-  .sort((a, b) => a.fileName.localeCompare(b.fileName, undefined, { numeric: true, sensitivity: "base" }));
+  .sort((a, b) => b.fileName.localeCompare(a.fileName, undefined, { numeric: true, sensitivity: "base" }));
 
 const VideoGallerySection = () => (
   <section id="videos" className="section-padding">
