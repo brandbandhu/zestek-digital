@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" role="img" aria-labelledby="title desc">
+  <title id="title">Myth vs Truth modern printing poster</title>
+  <desc id="desc">Promotional poster for Zestek and Epson about modern printing myths and truths.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f7fbff" />
+      <stop offset="100%" stop-color="#e6eefb" />
+    </linearGradient>
+    <linearGradient id="blueBand" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0d3ba8" />
+      <stop offset="100%" stop-color="#1a5ed6" />
+    </linearGradient>
+    <linearGradient id="footer" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f2357" />
+      <stop offset="100%" stop-color="#154cb1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#163c89" flood-opacity="0.18" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="1600" fill="url(#bg)" />
+  <circle cx="1020" cy="180" r="470" fill="none" stroke="#cfdcf6" stroke-width="58" />
+  <circle cx="1020" cy="180" r="380" fill="none" stroke="#dfe8fa" stroke-width="32" />
+  <circle cx="180" cy="1440" r="340" fill="none" stroke="#e7eefb" stroke-width="42" />
+
+  <g transform="translate(62 56)">
+    <rect width="396" height="132" rx="26" fill="url(#blueBand)" filter="url(#shadow)" />
+    <text x="198" y="62" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="800" text-anchor="middle">zestek</text>
+    <text x="198" y="100" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" text-anchor="middle">Print. Digital. Future</text>
+  </g>
+
+  <g transform="translate(500 76)">
+    <line x1="0" y1="0" x2="0" y2="110" stroke="#0f2357" stroke-width="3" />
+    <text x="46" y="44" fill="#183eaa" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="800">EPSON</text>
+    <rect x="46" y="60" width="212" height="40" fill="#183eaa" />
+    <text x="152" y="88" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" text-anchor="middle">ACCREDITED PARTNER</text>
+  </g>
+
+  <g transform="translate(58 230)">
+    <text x="0" y="170" fill="#cf1015" font-family="Arial, Helvetica, sans-serif" font-size="170" font-weight="900">MYTH</text>
+    <circle cx="520" cy="104" r="92" fill="#12378f" />
+    <text x="520" y="126" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="800" text-anchor="middle">Vs</text>
+    <text x="648" y="170" fill="#183eaa" font-family="Arial, Helvetica, sans-serif" font-size="170" font-weight="900">TRUTH</text>
+  </g>
+
+  <g transform="translate(70 448)" filter="url(#shadow)">
+    <rect width="440" height="548" rx="24" fill="#fff7f7" stroke="#e26d6f" stroke-width="2" />
+    <circle cx="220" cy="0" r="40" fill="#d9151b" />
+    <line x1="198" y1="-22" x2="242" y2="22" stroke="#ffffff" stroke-width="12" stroke-linecap="round" />
+    <line x1="242" y1="-22" x2="198" y2="22" stroke="#ffffff" stroke-width="12" stroke-linecap="round" />
+    <text x="220" y="112" fill="#cf1015" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="800" text-anchor="middle">MYTH:</text>
+    <line x1="60" y1="148" x2="380" y2="148" stroke="#cf1015" stroke-width="3" />
+    <circle cx="220" cy="148" r="8" fill="#cf1015" />
+    <text x="220" y="218" fill="#151515" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" text-anchor="middle">
+      <tspan x="220" dy="0">Inkjet printers</tspan>
+      <tspan x="220" dy="58">are slow</tspan>
+    </text>
+    <path d="M110 434 A130 130 0 0 1 330 434" fill="none" stroke="#ffd8d8" stroke-width="22" />
+    <path d="M110 434 A130 130 0 0 1 330 434" fill="none" stroke="#d9151b" stroke-width="22" stroke-dasharray="140 260" />
+    <circle cx="220" cy="434" r="20" fill="#ffffff" stroke="#d9151b" stroke-width="10" />
+    <line x1="220" y1="434" x2="310" y2="356" stroke="#d9151b" stroke-width="12" stroke-linecap="round" />
+    <line x1="220" y1="434" x2="220" y2="330" stroke="#f2a2a3" stroke-width="4" stroke-linecap="round" />
+  </g>
+
+  <g transform="translate(616 448)" filter="url(#shadow)">
+    <rect width="514" height="548" rx="24" fill="#f8fff8" stroke="#5f9f6c" stroke-width="2" />
+    <circle cx="257" cy="0" r="40" fill="#158c2f" />
+    <polyline points="236,-2 252,16 282,-18" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+    <text x="257" y="112" fill="#158c2f" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="800" text-anchor="middle">TRUTH:</text>
+    <line x1="74" y1="148" x2="440" y2="148" stroke="#1f7f3b" stroke-width="3" />
+    <circle cx="257" cy="148" r="8" fill="#1f7f3b" />
+    <text x="257" y="214" fill="#183eaa" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="800" text-anchor="middle">
+      <tspan x="257" dy="0">Built for</tspan>
+      <tspan x="257" dy="48">enterprise speed</tspan>
+    </text>
+    <text x="257" y="330" fill="#222222" font-family="Arial, Helvetica, sans-serif" font-size="26" text-anchor="middle">
+      <tspan x="257" dy="0">Modern Epson WorkForce Enterprise</tspan>
+      <tspan x="257" dy="38">printers deliver consistent high-speed</tspan>
+      <tspan x="257" dy="38">performance for business environments.</tspan>
+    </text>
+
+    <g transform="translate(314 372)">
+      <rect x="0" y="54" width="156" height="126" rx="10" fill="#fcfcfd" stroke="#132c71" stroke-width="4" />
+      <rect x="34" y="22" width="80" height="64" rx="8" fill="#232323" />
+      <rect x="16" y="0" width="92" height="42" rx="8" fill="#f5f5f5" stroke="#132c71" stroke-width="3" />
+      <rect x="52" y="12" width="42" height="10" rx="5" fill="#153f97" />
+      <rect x="24" y="108" width="48" height="14" rx="7" fill="#1f1f1f" />
+    </g>
+  </g>
+
+  <g transform="translate(66 1058)">
+    <text x="0" y="0" fill="#101010" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="700">Epson</text>
+    <text x="0" y="64" fill="#183eaa" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="800">WorkForce</text>
+    <text x="0" y="132" fill="#183eaa" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="800">Enterprise Series</text>
+    <line x1="0" y1="158" x2="70" y2="158" stroke="#183eaa" stroke-width="4" />
+    <text x="0" y="214" fill="#171717" font-family="Arial, Helvetica, sans-serif" font-size="34">High performance. Low cost.</text>
+    <text x="0" y="262" fill="#171717" font-family="Arial, Helvetica, sans-serif" font-size="34">Smarter choice.</text>
+  </g>
+
+  <g transform="translate(50 1324)">
+    <g transform="translate(0 0)">
+      <circle cx="52" cy="52" r="38" fill="none" stroke="#183eaa" stroke-width="4" />
+      <path d="M38 60 L52 42 L68 56" fill="none" stroke="#183eaa" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <line x1="52" y1="52" x2="74" y2="30" stroke="#183eaa" stroke-width="5" stroke-linecap="round" />
+      <text x="0" y="116" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">High-Speed</text>
+      <text x="0" y="148" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Performance</text>
+    </g>
+    <g transform="translate(198 0)">
+      <circle cx="52" cy="52" r="38" fill="none" stroke="#183eaa" stroke-width="4" />
+      <circle cx="40" cy="58" r="12" fill="#183eaa" opacity="0.15" />
+      <circle cx="58" cy="50" r="12" fill="#183eaa" opacity="0.35" />
+      <circle cx="74" cy="62" r="12" fill="#183eaa" opacity="0.55" />
+      <text x="0" y="116" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Lower Cost</text>
+      <text x="0" y="148" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">per Print</text>
+    </g>
+    <g transform="translate(396 0)">
+      <circle cx="52" cy="52" r="38" fill="none" stroke="#183eaa" stroke-width="4" />
+      <path d="M52 28 L74 38 L68 74 L36 74 L30 38 Z" fill="none" stroke="#183eaa" stroke-width="4" />
+      <text x="0" y="116" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Reliable</text>
+      <text x="0" y="148" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">&amp; Durable</text>
+    </g>
+    <g transform="translate(594 0)">
+      <circle cx="52" cy="52" r="38" fill="none" stroke="#183eaa" stroke-width="4" />
+      <path d="M54 22 C34 48 28 74 48 82 C72 76 80 54 72 28 C66 24 60 22 54 22 Z" fill="#183eaa" opacity="0.12" stroke="#183eaa" stroke-width="4" />
+      <text x="0" y="116" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Low Power</text>
+      <text x="0" y="148" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Consumption</text>
+    </g>
+  </g>
+
+  <g transform="translate(0 1440)">
+    <rect width="1200" height="110" fill="url(#footer)" />
+    <g transform="translate(54 22)">
+      <circle cx="36" cy="34" r="28" fill="none" stroke="#ffffff" stroke-width="3" />
+      <path d="M20 38 C24 20 48 20 52 38" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+      <rect x="28" y="36" width="16" height="20" rx="5" fill="#ffffff" />
+      <text x="88" y="26" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Best After</text>
+      <text x="88" y="58" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Sales Support</text>
+    </g>
+    <line x1="354" y1="20" x2="354" y2="90" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+    <g transform="translate(404 22)">
+      <circle cx="36" cy="34" r="28" fill="none" stroke="#ffffff" stroke-width="3" />
+      <path d="M36 14 L54 24 L48 52 L24 52 L18 24 Z" fill="none" stroke="#ffffff" stroke-width="3" />
+      <text x="88" y="26" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Warranty</text>
+      <text x="88" y="58" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">by Epson</text>
+    </g>
+    <line x1="716" y1="20" x2="716" y2="90" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+    <g transform="translate(760 22)">
+      <circle cx="36" cy="34" r="28" fill="none" stroke="#ffffff" stroke-width="3" />
+      <circle cx="26" cy="34" r="4" fill="#ffffff" />
+      <circle cx="36" cy="34" r="4" fill="#ffffff" />
+      <circle cx="46" cy="34" r="4" fill="#ffffff" />
+      <text x="88" y="24" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="22">To know more</text>
+      <text x="88" y="56" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800">Message "EPSON"</text>
+      <text x="88" y="88" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800">on 9920909700</text>
+    </g>
+  </g>
+
+  <g transform="translate(0 1550)">
+    <rect width="1200" height="50" fill="#ffffff" />
+    <g transform="translate(118 14)">
+      <circle cx="12" cy="12" r="12" fill="#183eaa" />
+      <path d="M8 10 C8 6 16 6 16 10 L16 14 C16 18 8 18 8 14 Z" fill="#ffffff" />
+      <text x="40" y="18" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="18">9920909700</text>
+    </g>
+    <line x1="386" y1="10" x2="386" y2="40" stroke="#1a1a1a" stroke-opacity="0.2" />
+    <g transform="translate(444 14)">
+      <rect x="0" y="2" width="24" height="20" rx="3" fill="#183eaa" />
+      <path d="M2 4 L12 13 L22 4" fill="none" stroke="#ffffff" stroke-width="2" />
+      <text x="40" y="18" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="18">connect@zestek.in</text>
+    </g>
+    <line x1="816" y1="10" x2="816" y2="40" stroke="#1a1a1a" stroke-opacity="0.2" />
+    <g transform="translate(872 14)">
+      <circle cx="12" cy="12" r="12" fill="#183eaa" />
+      <path d="M5 12 H19 M12 5 V19" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+      <text x="40" y="18" fill="#161616" font-family="Arial, Helvetica, sans-serif" font-size="18">www.zestek.in</text>
+    </g>
+  </g>
+</svg>

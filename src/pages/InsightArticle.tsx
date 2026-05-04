@@ -6,6 +6,8 @@ import NotFound from "@/pages/NotFound";
 import { Link, useParams } from "react-router-dom";
 
 const imageFitClass = (fit?: "cover" | "contain") => (fit === "contain" ? "object-contain" : "object-cover");
+const cardFrameClass = (frame?: "landscape" | "tall") =>
+  frame === "tall" ? "aspect-[4/3]" : "aspect-[16/9]";
 
 const InsightArticle = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -197,11 +199,13 @@ const InsightArticle = () => {
           <div className="grid gap-6 md:grid-cols-3">
             {relatedArticles.map((item) => (
               <article key={item.slug} className="overflow-hidden rounded-2xl border border-border bg-card">
-                <img
-                  src={item.cardImageUrl ?? item.imageUrl}
-                  alt={item.cardImageAlt ?? item.imageAlt}
-                  className={`h-44 w-full ${item.cardImageFit === "contain" || (!item.cardImageFit && item.imageFit === "contain") ? "bg-white p-4 object-contain" : "object-cover"}`}
-                />
+                <div className={`${cardFrameClass(item.cardImageFrame)} w-full overflow-hidden bg-slate-50`}>
+                  <img
+                    src={item.cardImageUrl ?? item.imageUrl}
+                    alt={item.cardImageAlt ?? item.imageAlt}
+                    className={`h-full w-full ${item.cardImageFit === "contain" || (!item.cardImageFit && item.imageFit === "contain") ? "bg-white p-4 object-contain" : "object-cover"}`}
+                  />
+                </div>
                 <div className="p-6">
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">{item.tag}</p>
                   <h3 className="mt-2 text-xl font-bold text-navy">{item.title}</h3>

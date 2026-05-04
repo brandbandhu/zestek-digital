@@ -4,8 +4,10 @@ import banner4Image from "@/assets/banner/4.png";
 import epsonWorkforcePaperTypesImage from "@/assets/insights/epson-workforce-paper-types.jpg";
 import inkjetCoatedMediaImage from "@/assets/insights/inkjet-coated-media-samples.jpg";
 import mediaExpoMumbaiLogo from "@/assets/insights/media-expo-mumbai-logo.jpg";
+import mythVsTruthModernPrintingImage from "@/assets/insights/myth-vs-truth-modern-printing.svg";
 
 export type InsightImageFit = "cover" | "contain";
+export type InsightCardFrame = "landscape" | "tall";
 
 export type InsightArticleSection = {
   heading: string;
@@ -29,6 +31,7 @@ export type InsightArticle = {
   cardImageUrl?: string;
   cardImageAlt?: string;
   cardImageFit?: InsightImageFit;
+  cardImageFrame?: InsightCardFrame;
   heroTitle: string;
   heroDescription: string;
   imageUrl: string;
@@ -70,6 +73,211 @@ const mediaExpoLeadPhoto =
   mediaExpoMumbaiLogo;
 
 export const insightArticles: InsightArticle[] = [
+  {
+    slug: "myth-vs-truth-modern-printing-misconceptions",
+    route: "/insights/myth-vs-truth-modern-printing-misconceptions",
+    tag: "Epson Guide",
+    title: "Myth vs Truth: What Businesses Get Wrong About Modern Printing",
+    cardDescription:
+      "A practical myth-vs-truth guide covering speed, power use, maintenance, reliability, media support, and total cost in modern business inkjet printing.",
+    cardImageUrl: mythVsTruthModernPrintingImage,
+    cardImageAlt: "Myth vs Truth poster for modern business printing by Zestek and Epson",
+    cardImageFit: "contain",
+    cardImageFrame: "tall",
+    heroTitle:
+      "Many printer buying decisions are still shaped by outdated assumptions. Modern business inkjet has changed the conversation.",
+    heroDescription:
+      "At Zestek, we regularly meet businesses that still compare today's Epson WorkForce platforms against old perceptions of inkjet speed, durability, cost, and maintenance. This guide breaks down the most common myths and explains what modern printing buyers should evaluate instead.",
+    imageUrl: mythVsTruthModernPrintingImage,
+    imageAlt: "Poster explaining myths and truths about modern Epson business printing",
+    imageFit: "contain",
+    metaTitle: "Myth vs Truth: Modern Printing Misconceptions | Zestek",
+    metaDescription:
+      "See what businesses often get wrong about modern printing, from speed and power usage to maintenance, media support, and long-term cost.",
+    metaKeywords: [
+      "modern printing myths",
+      "inkjet vs laser for business",
+      "Epson WorkForce Enterprise",
+      "business printer total cost of ownership",
+      "PrecisionCore printing technology",
+    ],
+    readTime: "6 min read",
+    publishedLabel: "Myth vs truth guide",
+    introParagraphs: [
+      "In today's fast-paced business environment, choosing the right printing solution is more important than ever. Yet many buying decisions are still based on assumptions that no longer match how modern business inkjet technology performs.",
+      "At Zestek, one pattern shows up again and again: businesses are often comparing current Epson WorkForce platforms with ideas formed years ago around older printer categories. That creates confusion around speed, power use, reliability, and long-term running cost.",
+      "The better approach is simple. Judge printing solutions by present-day workload fit, operating economics, media flexibility, and actual uptime. Here is a myth-vs-truth breakdown of what businesses most often get wrong.",
+    ],
+    galleryNote:
+      "The poster below highlights the same myth-vs-truth message we use when helping businesses compare modern Epson printing options with older assumptions.",
+    galleryImages: [
+      {
+        src: mythVsTruthModernPrintingImage,
+        alt: "Myth vs Truth modern printing poster",
+        caption: "A quick visual summary of the outdated myths that still affect printer buying decisions.",
+        fit: "contain",
+      },
+      {
+        src: epsonWorkforcePaperTypesImage,
+        alt: "Epson WorkForce printer with media samples",
+        caption: "Modern business inkjet is not limited to plain office use. Media flexibility is part of its commercial value.",
+      },
+      {
+        src: inkjetCoatedMediaImage,
+        alt: "Inkjet-compatible coated media and specialty paper samples",
+        caption: "Specialty inkjet-compatible media supports sharper output, better durability, and wider business applications.",
+      },
+    ],
+    sections: [
+      {
+        heading: "Myth 1: Inkjet printers are slow",
+        paragraphs: [
+          "That belief usually comes from older consumer devices, not current enterprise platforms. Modern Epson WorkForce Enterprise systems are built for business environments that need consistent throughput, so speed is no longer a valid reason to dismiss inkjet for serious office workloads.",
+        ],
+        bullets: [
+          "Truth: Built for enterprise speed",
+          "Designed for high-speed business environments",
+          "Consistent performance without sacrificing productivity",
+        ],
+      },
+      {
+        heading: "Myth 2: High-speed printing consumes more power",
+        paragraphs: [
+          "Businesses often assume faster output must automatically mean higher energy bills. Modern business inkjet changes that equation by delivering strong performance with significantly lower power demand than heat-based printing systems.",
+        ],
+        bullets: [
+          "Truth: High performance with low power usage",
+          "Lower energy demand supports operating savings",
+          "Speed and efficiency can coexist in the same platform",
+        ],
+      },
+      {
+        heading: "Myth 3: Inkjet is only for small offices",
+        paragraphs: [
+          "Inkjet is no longer a small-office-only category. Today's portfolio includes models suited for startups, growing teams, branch offices, central print rooms, and larger enterprise deployments with heavier page volumes.",
+        ],
+        bullets: [
+          "Truth: Scalable for every business size",
+          "Solutions available for light, medium, and heavy workloads",
+          "Fit should be based on usage, not outdated category labels",
+        ],
+      },
+      {
+        heading: "Myth 4: Inkjet is not suitable for heavy-duty usage",
+        paragraphs: [
+          "Modern business inkjet platforms are built to manage sustained volume and predictable daily demand. When matched to the right workload, they handle repeat business printing without the myth of being limited to occasional jobs.",
+        ],
+        bullets: [
+          "Truth: Designed for different workloads",
+          "High-volume output is possible with the right model choice",
+          "Reliability improves when the device matches the business workload",
+        ],
+      },
+      {
+        heading: "Myth 5: Inkjet printing is expensive",
+        paragraphs: [
+          "Purchase price alone does not reveal print economics. In real business use, lower energy consumption and fewer consumable-related pressures can make modern inkjet a stronger cost-per-print option than many buyers expect.",
+        ],
+        bullets: [
+          "Truth: Lower cost per print",
+          "Running cost should be reviewed over time, not only at purchase",
+          "Energy and consumable savings influence overall print economics",
+        ],
+      },
+      {
+        heading: "Myth 6: Laser printers are more reliable",
+        paragraphs: [
+          "Reliability is often assumed to favor laser because it has been the default office reference point for years. But modern inkjet systems use fewer moving parts and avoid a heat-based process, which can reduce wear, breakdown risk, and service dependency.",
+        ],
+        bullets: [
+          "Truth: Fewer parts can mean fewer breakdowns",
+          "Less wear and tear on core components",
+          "Lower downtime and maintenance pressure in day-to-day use",
+        ],
+      },
+      {
+        heading: "Myth 7: Inkjet prints fade quickly",
+        paragraphs: [
+          "Older perceptions around fading ignore how much ink and media technology has improved. With advanced inks and compatible media, modern inkjet output can deliver sharp, smudge-resistant, and fade-resistant results for business use.",
+        ],
+        bullets: [
+          "Truth: Durable, long-lasting prints",
+          "Sharp output with strong text and graphic clarity",
+          "Better resistance to smudging and fading with the right media setup",
+        ],
+      },
+      {
+        heading: "Myth 8: Inkjet printers need frequent maintenance",
+        paragraphs: [
+          "Maintenance assumptions usually come from treating all inkjet devices as if they work like older small-format machines. In business-class systems, fewer components and no heat-based process help reduce servicing needs and improve uptime.",
+        ],
+        bullets: [
+          "Truth: Minimal maintenance, maximum uptime",
+          "No heat-based printing process",
+          "Simpler servicing profile for many business environments",
+        ],
+      },
+      {
+        heading: "Myth 9: Inkjet is outdated technology",
+        paragraphs: [
+          "This myth ignores how far modern print engineering has moved. Epson PrecisionCore technology represents a next-generation approach designed to deliver speed, quality, and efficiency in a platform suited for current business expectations.",
+        ],
+        bullets: [
+          "Truth: Powered by next-gen PrecisionCore",
+          "High speed with strong print quality",
+          "Built around efficiency rather than old device assumptions",
+        ],
+      },
+      {
+        heading: "Myth 10: Inkjet supports only plain and photo paper",
+        paragraphs: [
+          "Media capability is one of the most misunderstood parts of modern inkjet. With the right inkjet-compatible stocks, businesses can use a much wider range of media for labels, promotional material, office output, and specialty applications.",
+        ],
+        bullets: [
+          "Truth: Wide variety of media supported",
+          "Can support envelopes, stickers, NT sheets, canvas, and ivory cards",
+          "Ideal for businesses with diverse application needs",
+        ],
+      },
+      {
+        heading: "Myth 11: Laser printers are always cheaper",
+        paragraphs: [
+          "A cheaper-looking option at purchase does not always stay cheaper over time. Once power usage, maintenance, downtime, and consumables are included in the comparison, modern inkjet often shows a better total cost of ownership than expected.",
+        ],
+        bullets: [
+          "Truth: Lower total cost of ownership can favor inkjet",
+          "Review energy, maintenance, and consumables together",
+          "Long-term savings matter more than legacy assumptions",
+        ],
+      },
+      {
+        heading: "What this means for your business",
+        paragraphs: [
+          "The printing industry has evolved, but many perceptions have not. When businesses rely on outdated assumptions, they often end up overspending, over-maintaining, or choosing a system that does not truly match their workload and growth plans.",
+          "A better buying decision starts with the right questions: What is the real monthly volume? What media needs matter? What level of uptime is required? And what total operating cost will the business carry over time? Those are the answers that matter more than old myths.",
+        ],
+        bullets: [
+          "Old assumptions can lead to overspending",
+          "Maintenance burden is a business decision, not just a machine issue",
+          "Workload fit and total cost matter more than category bias",
+        ],
+      },
+    ],
+    keyPointsTitle: "What businesses often miss",
+    keyPoints: [
+      "Modern business inkjet is no longer defined by low speed or light-duty office use.",
+      "Energy consumption, maintenance demand, and running cost often compare better than businesses expect.",
+      "PrecisionCore-based platforms support strong print quality, durable output, and broader media flexibility.",
+      "The best printer decision comes from workload fit and total cost of ownership, not old laser-versus-inkjet myths.",
+    ],
+    ctaTitle: "Upgrade your printing decision with facts, not myths",
+    ctaBody:
+      "If you are comparing Epson WorkForce options for office, commercial, or high-volume business printing, we can help you evaluate speed, media support, uptime, and long-term cost based on your real requirements. Call or WhatsApp 9920909700, or email connect@zestek.in.",
+    primaryCtaLabel: "Explore Epson WorkForce",
+    primaryCtaHref: "/epson-workforce",
+    secondaryCtaLabel: "Talk to Zestek",
+    secondaryCtaHref: "/contact#sales-inquiry",
+  },
   {
     slug: "types-of-papers-compatible-with-epson-workforce-printers",
     route: "/insights/types-of-papers-compatible-with-epson-workforce-printers",
