@@ -6,6 +6,9 @@ import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 const imageFitClass = (fit?: "cover" | "contain") =>
   fit === "contain" ? "bg-white p-4 object-contain" : "object-cover";
 
+const cardFrameClass = (frame?: "landscape" | "tall") =>
+  frame === "tall" ? "aspect-[4/3]" : "aspect-[16/9]";
+
 const InsightsSection = () => (
   <section id="blogs" className="section-padding bg-card">
     <div className="container mx-auto">
@@ -39,7 +42,7 @@ const InsightsSection = () => (
             transition={{ duration: 0.55, delay: index * 0.08 }}
             className="group surface-glow hover-lift flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background"
           >
-            <div className="aspect-[16/9] w-full overflow-hidden bg-slate-50">
+            <div className={`${cardFrameClass(item.cardImageFrame)} w-full overflow-hidden bg-slate-50`}>
               <img
                 src={item.cardImageUrl ?? item.imageUrl}
                 alt={item.cardImageAlt ?? item.imageAlt}
