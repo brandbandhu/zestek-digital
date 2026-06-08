@@ -2,12 +2,26 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import PageMeta from "@/components/PageMeta";
 import { getInsightArticleBySlug, insightArticles } from "@/data/insightsArticles";
+import { buildArticleSchema } from "@/lib/seo";
 import NotFound from "@/pages/NotFound";
 import { Link, useParams } from "react-router-dom";
 
 const imageFitClass = (fit?: "cover" | "contain") => (fit === "contain" ? "object-contain" : "object-cover");
-const cardFrameClass = (frame?: "landscape" | "tall") =>
-  frame === "tall" ? "aspect-[4/3]" : "aspect-[16/9]";
+const cardFrameClass = () => "aspect-[16/9]";
+
+const cardTitleClampStyle = {
+  display: "-webkit-box",
+  WebkitBoxOrient: "vertical" as const,
+  WebkitLineClamp: 2,
+  overflow: "hidden",
+};
+
+const cardDescriptionClampStyle = {
+  display: "-webkit-box",
+  WebkitBoxOrient: "vertical" as const,
+  WebkitLineClamp: 3,
+  overflow: "hidden",
+};
 
 const InsightArticle = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -18,6 +32,14 @@ const InsightArticle = () => {
   }
 
   const relatedArticles = insightArticles.filter((item) => item.slug !== article.slug);
+  const heroGridClass =
+    article.cardImageFrame === "poster"
+      ? "grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_420px]"
+      : "grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_460px]";
+  const heroImageClass =
+    article.cardImageFrame === "poster"
+      ? `w-full rounded-[24px] ${imageFitClass(article.imageFit)} h-[420px] md:h-[560px]`
+      : `h-[280px] w-full rounded-[24px] ${imageFitClass(article.imageFit)} md:h-[360px]`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,15 +48,27 @@ const InsightArticle = () => {
         description={article.metaDescription}
         keywords={article.metaKeywords}
         image={article.imageUrl}
+        imageAlt={article.imageAlt}
         canonicalPath={article.route}
+        breadcrumbLabel={article.title}
         ogType="article"
+        section={article.tag}
+        authors={["Zestek Digital LLP"]}
+        structuredData={buildArticleSchema({
+          headline: article.title,
+          description: article.metaDescription,
+          canonicalPath: article.route,
+          image: article.imageUrl,
+          keywords: article.metaKeywords,
+          section: article.tag,
+        })}
       />
 
       <Header />
 
       <section className="relative overflow-hidden -mt-16 bg-[linear-gradient(135deg,#0f2042_0%,#1b4783_55%,#eef4fb_100%)]">
         <div className="container mx-auto section-padding pt-16 md:pt-20">
-          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_460px]">
+          <div className={heroGridClass}>
             <div className="text-primary-foreground">
               <p className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1 text-[11px] font-semibold uppercase tracking-widest">
                 {article.tag}
@@ -64,11 +98,7 @@ const InsightArticle = () => {
             </div>
 
             <div className="rounded-[32px] border border-white/20 bg-white p-4 shadow-2xl">
-              <img
-                src={article.imageUrl}
-                alt={article.imageAlt}
-                className={`h-[280px] w-full rounded-[24px] ${imageFitClass(article.imageFit)} md:h-[360px]`}
-              />
+              <img src={article.imageUrl} alt={article.imageAlt} className={heroImageClass} />
             </div>
           </div>
         </div>
@@ -199,7 +229,7 @@ const InsightArticle = () => {
           <div className="grid gap-6 md:grid-cols-3">
             {relatedArticles.map((item) => (
               <article key={item.slug} className="overflow-hidden rounded-2xl border border-border bg-card">
-                <div className={`${cardFrameClass(item.cardImageFrame)} w-full overflow-hidden bg-slate-50`}>
+                <div className={`${cardFrameClass()} w-full overflow-hidden bg-slate-50`}>
                   <img
                     src={item.cardImageUrl ?? item.imageUrl}
                     alt={item.cardImageAlt ?? item.imageAlt}
@@ -208,8 +238,12 @@ const InsightArticle = () => {
                 </div>
                 <div className="p-6">
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">{item.tag}</p>
-                  <h3 className="mt-2 text-xl font-bold text-navy">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.cardDescription}</p>
+                  <h3 className="mt-2 min-h-[3.75rem] text-xl font-bold leading-snug text-navy" style={cardTitleClampStyle}>
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 min-h-[4.75rem] text-sm leading-6 text-muted-foreground" style={cardDescriptionClampStyle}>
+                    {item.cardDescription}
+                  </p>
                   <Link to={item.route} className="mt-4 inline-flex text-sm font-semibold text-navy hover:text-highlight">
                     Read more
                   </Link>

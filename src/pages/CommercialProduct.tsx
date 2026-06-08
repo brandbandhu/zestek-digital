@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageMeta from "@/components/PageMeta";
 import { commercialProducts, getCommercialProduct, type CommercialProduct as CommercialProductRecord } from "@/data/commercialProducts";
+import { buildProductSchema } from "@/lib/seo";
 
 type CampaignOverride = Partial<CommercialProductRecord> & {
   productImage?: string;
@@ -257,6 +258,21 @@ const CommercialProduct = () => {
         keywords={[displayProduct.name, displayProduct.brand, "commercial printers", "photocopy centre printers"]}
         canonicalPath={`/commercial/${displayProduct.slug}`}
         image="/zestek-logo.png"
+        breadcrumbLabel={displayProduct.name}
+        noIndex={displayProduct.status === "pending"}
+        structuredData={
+          displayProduct.status === "complete"
+            ? buildProductSchema({
+                name: displayProduct.name,
+                description: displayProduct.summary,
+                canonicalPath: `/commercial/${displayProduct.slug}`,
+                image: campaignImage ?? "/zestek-logo.png",
+                brand: displayProduct.brand,
+                category: displayProduct.segment,
+                officialUrl: displayProduct.officialUrl,
+              })
+            : undefined
+        }
       />
       <Header />
 

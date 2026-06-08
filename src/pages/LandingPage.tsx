@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { Globe, PhoneCall } from "lucide-react";
+import PageMeta from "@/components/PageMeta";
 import printerImage from "@/assets/landing-page/epson-m5500-printer.jpg";
 import zestekLogo from "@/assets/landing-page/zestek-logo.png";
 import "./LandingPage.css";
@@ -73,12 +73,15 @@ const whatsappText = encodeURIComponent(
 );
 
 const LandingPage = () => {
-  useEffect(() => {
-    document.title = "Landing Page | Zestek Digital";
-  }, []);
-
   return (
     <main className="landing-page-react min-h-screen overflow-hidden bg-background text-foreground">
+      <PageMeta
+        title="Epson M5500 Landing Page | Zestek Digital"
+        description="Campaign landing page for Epson M5500 print-business promotion by Zestek Digital."
+        canonicalPath="/landing-page"
+        image="/zestek-logo.png"
+        noIndex
+      />
       <section className="relative lp-bg-hero text-primary-foreground">
         <div className="absolute inset-0 animate-grid-drift opacity-20 [background-image:linear-gradient(hsl(var(--primary-glow)/.35)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary-glow)/.35)_1px,transparent_1px)] [background-size:48px_48px]" />
         <div className="pointer-events-none absolute right-[8%] top-24 hidden h-32 w-24 rounded-sm bg-surface/80 shadow-glow animate-float-print md:block" />

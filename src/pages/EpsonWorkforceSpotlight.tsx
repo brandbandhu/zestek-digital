@@ -5,6 +5,7 @@ import {
   epsonWorkforceSpotlights,
   type EpsonWorkforceSpotlightKey,
 } from "@/data/epsonWorkforceSpotlights";
+import { buildProductSchema } from "@/lib/seo";
 import { Link } from "react-router-dom";
 import { ArrowRight, BadgeCheck, Coins, Gauge, Layers3, ShieldCheck, Sparkles } from "lucide-react";
 
@@ -87,7 +88,18 @@ const EpsonWorkforceSpotlight = ({ productKey }: EpsonWorkforceSpotlightProps) =
         description={page.metaDescription}
         keywords={page.metaKeywords}
         image={page.showcase?.image ?? page.productImage}
+        imageAlt={page.showcase?.imageAlt ?? page.productImageAlt}
         canonicalPath={page.route}
+        breadcrumbLabel={page.name}
+        structuredData={buildProductSchema({
+          name: page.name,
+          description: page.metaDescription,
+          canonicalPath: page.route,
+          image: page.showcase?.image ?? page.productImage,
+          brand: "Epson",
+          category: "Business and commercial printers",
+          officialUrl: page.officialUrl,
+        })}
       />
 
       <Header />

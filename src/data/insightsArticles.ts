@@ -3,11 +3,12 @@ import banner3Image from "@/assets/banner/3.png";
 import banner4Image from "@/assets/banner/4.png";
 import epsonWorkforcePaperTypesImage from "@/assets/insights/epson-workforce-paper-types.jpg";
 import inkjetCoatedMediaImage from "@/assets/insights/inkjet-coated-media-samples.jpg";
+import konicaAwardWest2026Poster from "@/assets/insights/konica-award-west-2026.svg";
 import mediaExpoMumbaiLogo from "@/assets/insights/media-expo-mumbai-logo.jpg";
 import mythVsTruthModernPrintingImage from "@/assets/insights/myth-vs-truth-modern-printing.svg";
 
 export type InsightImageFit = "cover" | "contain";
-export type InsightCardFrame = "landscape" | "tall";
+export type InsightCardFrame = "landscape" | "tall" | "poster";
 
 export type InsightArticleSection = {
   heading: string;
@@ -72,7 +73,138 @@ const mediaExpoLeadPhoto =
   mediaExpoBlogImages.find((image) => image.fileName === "WhatsApp Image 2026-04-16 at 9.36.59 AM (2).jpeg")?.src ??
   mediaExpoMumbaiLogo;
 
+const achievementFiles = import.meta.glob("../../assets/achievements/*.{png,jpg,jpeg,webp,avif}", {
+  eager: true,
+  import: "default",
+}) as Record<string, string>;
+
+const achievementImages = Object.entries(achievementFiles)
+  .map(([path, src]) => ({
+    fileName: path.split("/").pop() ?? "achievement-photo",
+    src,
+  }))
+  .sort((a, b) => a.fileName.localeCompare(b.fileName, undefined, { numeric: true, sensitivity: "base" }));
+
+const konicaAwardStagePhoto =
+  achievementImages.find((image) => image.fileName === "WhatsApp Image 2026-04-07 at 11.42.11 PM (1).jpeg")?.src ??
+  banner3Image;
+
+const konicaAwardBackdropPhoto =
+  achievementImages.find((image) => image.fileName === "WhatsApp Image 2026-04-07 at 11.41.39 PM.jpeg")?.src ??
+  konicaAwardStagePhoto;
+
+const konicaAwardCelebrationPhoto =
+  achievementImages.find((image) => image.fileName === "WhatsApp Image 2026-04-07 at 11.43.10 PM.jpeg")?.src ??
+  konicaAwardStagePhoto;
+
 export const insightArticles: InsightArticle[] = [
+  {
+    slug: "zest-digital-solutions-wins-most-valuable-reseller-west-2026",
+    route: "/insights/zest-digital-solutions-wins-most-valuable-reseller-west-2026",
+    tag: "Awards",
+    title: "Zest Digital Solutions Wins “Most Valuable Reseller – West” for the Second Consecutive Year",
+    cardDescription:
+      "Honoured at Konica Minolta's Annual Strategic Partner Conference 2026 in Goa, Zest Digital Solutions celebrates a second straight regional reseller recognition.",
+    cardImageUrl: konicaAwardWest2026Poster,
+    cardImageAlt: "Most Valuable Reseller – West award poster for Zest Digital Solutions and Konica Minolta",
+    cardImageFit: "contain",
+    cardImageFrame: "poster",
+    heroTitle:
+      "Honoured again in Goa, Zest Digital Solutions celebrates a proud milestone built on trust, partnership, and consistent customer value.",
+    heroDescription:
+      "Zest Digital Solutions is proud to announce that it has been honoured with the prestigious “Most Valuable Reseller – West” award at the Konica Minolta Annual Strategic Partner Conference 2026, held in Goa. Receiving this recognition for the second consecutive year reflects the trust of our customers, the strength of our partnership with Konica Minolta, and the dedication of our team.",
+    imageUrl: konicaAwardWest2026Poster,
+    imageAlt: "Most Valuable Reseller – West 2026 recognition poster for Zest Digital Solutions",
+    imageFit: "contain",
+    metaTitle: "Zest Digital Solutions Wins Most Valuable Reseller – West 2026 | Zestek",
+    metaDescription:
+      "Zest Digital Solutions receives the Most Valuable Reseller – West award for the second consecutive year at the Konica Minolta Annual Strategic Partner Conference 2026 in Goa.",
+    metaKeywords: [
+      "Zest Digital Solutions award 2026",
+      "Most Valuable Reseller West",
+      "Konica Minolta Goa 2026",
+      "Zestek awards",
+      "Konica Minolta partner conference",
+    ],
+    readTime: "3 min read",
+    publishedLabel: "Goa 2026 award",
+    introParagraphs: [
+      "Goa, 2026 – Zest Digital Solutions is proud to share that it has been honoured with the prestigious “Most Valuable Reseller – West” award at the Konica Minolta Annual Strategic Partner Conference 2026, held in Goa.",
+      "Receiving this recognition for the second consecutive year is a meaningful milestone for our team. It reflects the continued confidence of our customers, the strength of our partnership with Konica Minolta, and the shared commitment that drives our work every day.",
+      "For us, this award is not only a moment of celebration. It is also a reminder to keep delivering innovative printing solutions, dependable service, and long-term value to businesses across the region.",
+    ],
+    galleryNote:
+      "A few moments from our Konica Minolta partner journey that reflect the people, trust, and momentum behind this recognition.",
+    galleryImages: [
+      {
+        src: konicaAwardStagePhoto,
+        alt: "Award presentation moment during a Konica Minolta partner event",
+        caption: "A proud recognition moment that reflects teamwork, customer trust, and a strong partner ecosystem.",
+      },
+      {
+        src: konicaAwardBackdropPhoto,
+        alt: "Zest Digital Solutions team with Konica Minolta leaders at a partner event",
+        caption: "Relationships built on collaboration and consistency continue to shape our growth journey.",
+      },
+      {
+        src: konicaAwardCelebrationPhoto,
+        alt: "Celebration moment after the Konica Minolta recognition",
+        caption: "Recognition becomes more meaningful when it is backed by customer confidence and team effort.",
+      },
+    ],
+    sections: [
+      {
+        heading: "A recognition built on trust",
+        paragraphs: [
+          "Winning “Most Valuable Reseller – West” for the second consecutive year is a strong reflection of the trust our customers place in us. Every installation, recommendation, and service commitment adds up to the reputation we carry in the market.",
+          "We see this recognition as a shared achievement with every business that has chosen Zest Digital Solutions for reliable printing systems, guidance, and support.",
+        ],
+        bullets: [
+          "Second consecutive regional recognition",
+          "Built on customer confidence and long-term relationships",
+          "Strengthened by close alignment with Konica Minolta",
+        ],
+      },
+      {
+        heading: "What this milestone says about our work",
+        paragraphs: [
+          "This achievement reflects our continued focus on delivering innovative printing solutions that match real business needs. Whether customers need production print capability, business multifunction systems, or dependable after-sales support, our goal stays the same: create measurable value.",
+          "Recognition from a global brand like Konica Minolta reinforces our commitment to service quality, solution fit, and consistent execution across the region.",
+        ],
+        bullets: [
+          "Innovative printing solutions for business growth",
+          "Consistent service and execution across customer accounts",
+          "A long-term focus on value, not only product supply",
+        ],
+      },
+      {
+        heading: "Gratitude and the road ahead",
+        paragraphs: [
+          "We sincerely thank Konica Minolta for this honour, our customers for their continued confidence, and our team for their unwavering commitment. This recognition belongs to every person who contributes to the Zest journey.",
+          "The journey continues with the same spirit, passion, and pursuit of excellence. We remain focused on helping businesses choose smarter, stronger printing solutions for the future.",
+        ],
+        bullets: [
+          "Thank you to Konica Minolta, our customers, and our team",
+          "A milestone that motivates future growth",
+          "The same spirit, passion, and pursuit of excellence continues",
+        ],
+      },
+    ],
+    keyPointsTitle: "Recognition at a glance",
+    keyPoints: [
+      "Zest Digital Solutions receives “Most Valuable Reseller – West” at the Konica Minolta Annual Strategic Partner Conference 2026 in Goa.",
+      "The recognition marks the second consecutive year for this regional award.",
+      "The achievement reflects customer trust, partnership strength, and team dedication.",
+      "Zest continues to focus on innovative printing solutions, strong service, and long-term business value.",
+    ],
+    ctaTitle: "Looking for the right print partner?",
+    ctaBody:
+      "If you are evaluating Konica Minolta production systems or business print solutions, our team can help you choose the right fit for your workload, service expectations, and growth plans.",
+    primaryCtaLabel: "Explore Konica Production",
+    primaryCtaHref: "/konica-production",
+    secondaryCtaLabel: "Talk to Zestek",
+    secondaryCtaHref: "/contact#sales-inquiry",
+  },
   {
     slug: "myth-vs-truth-modern-printing-misconceptions",
     route: "/insights/myth-vs-truth-modern-printing-misconceptions",

@@ -6,8 +6,21 @@ import { defaultViewport, fadeUp, staggerContainer } from "@/lib/motion";
 const imageFitClass = (fit?: "cover" | "contain") =>
   fit === "contain" ? "bg-white p-4 object-contain" : "object-cover";
 
-const cardFrameClass = (frame?: "landscape" | "tall") =>
-  frame === "tall" ? "aspect-[4/3]" : "aspect-[16/9]";
+const cardFrameClass = () => "aspect-[16/9]";
+
+const cardTitleClampStyle = {
+  display: "-webkit-box",
+  WebkitBoxOrient: "vertical" as const,
+  WebkitLineClamp: 2,
+  overflow: "hidden",
+};
+
+const cardDescriptionClampStyle = {
+  display: "-webkit-box",
+  WebkitBoxOrient: "vertical" as const,
+  WebkitLineClamp: 3,
+  overflow: "hidden",
+};
 
 const InsightsSection = () => (
   <section id="blogs" className="section-padding bg-card">
@@ -42,7 +55,7 @@ const InsightsSection = () => (
             transition={{ duration: 0.55, delay: index * 0.08 }}
             className="group surface-glow hover-lift flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background"
           >
-            <div className={`${cardFrameClass(item.cardImageFrame)} w-full overflow-hidden bg-slate-50`}>
+            <div className={`${cardFrameClass()} w-full overflow-hidden bg-slate-50`}>
               <img
                 src={item.cardImageUrl ?? item.imageUrl}
                 alt={item.cardImageAlt ?? item.imageAlt}
@@ -56,12 +69,14 @@ const InsightsSection = () => (
               <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                 {item.tag}
               </span>
-              <h3 className="mt-2 font-display font-bold text-navy md:min-h-[3rem]">
+              <h3 className="mt-2 min-h-[3.75rem] font-display font-bold leading-snug text-navy" style={cardTitleClampStyle}>
                 <Link to={item.route} className="hover:text-highlight transition-colors">
                   {item.title}
                 </Link>
               </h3>
-              <p className="mt-2 text-sm text-muted-foreground md:min-h-[3.5rem]">{item.cardDescription}</p>
+              <p className="mt-2 min-h-[5rem] text-sm leading-7 text-muted-foreground" style={cardDescriptionClampStyle}>
+                {item.cardDescription}
+              </p>
               <Link
                 to={item.route}
                 className="mt-auto pt-4 inline-flex text-xs font-semibold text-navy transition-colors hover:text-highlight"

@@ -1,0 +1,126 @@
+<svg width="1080" height="1600" viewBox="0 0 1080 1600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold" x1="90" y1="50" x2="420" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBE7A5"/>
+      <stop offset="0.32" stop-color="#E7B84A"/>
+      <stop offset="0.66" stop-color="#C98B1D"/>
+      <stop offset="1" stop-color="#F8D97A"/>
+    </linearGradient>
+    <linearGradient id="goldSoft" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#E0B14E"/>
+      <stop offset="1" stop-color="#FFF2C5"/>
+    </linearGradient>
+    <linearGradient id="blueWave" x1="40" y1="1510" x2="330" y2="1360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B328F"/>
+      <stop offset="1" stop-color="#2E79FF"/>
+    </linearGradient>
+    <radialGradient id="bgGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(905 200) rotate(136.734) scale(590.422 592.439)">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="0.45" stop-color="#F6F7FB"/>
+      <stop offset="1" stop-color="#E9EDF5"/>
+    </radialGradient>
+    <linearGradient id="glass" x1="825" y1="290" x2="955" y2="1310" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.98"/>
+      <stop offset="0.25" stop-color="#F2F6FC" stop-opacity="0.88"/>
+      <stop offset="0.58" stop-color="#FFFFFF" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#D7E1EE" stop-opacity="0.86"/>
+    </linearGradient>
+    <linearGradient id="glassEdge" x1="770" y1="300" x2="1000" y2="1325" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8DA0BF" stop-opacity="0.5"/>
+      <stop offset="0.3" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="0.7" stop-color="#B3C7DF" stop-opacity="0.56"/>
+      <stop offset="1" stop-color="#EEF4FF" stop-opacity="0.95"/>
+    </linearGradient>
+    <filter id="softShadow" x="0" y="0" width="1080" height="1600" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#0E1C4A" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1080" height="1600" rx="36" fill="url(#bgGlow)"/>
+  <circle cx="988" cy="115" r="84" fill="#FFF7D7" opacity="0.38"/>
+  <circle cx="913" cy="195" r="150" fill="#FFF9E7" opacity="0.25"/>
+  <circle cx="70" cy="450" r="28" fill="#F2C977" opacity="0.24"/>
+  <circle cx="108" cy="520" r="12" fill="#E4B443" opacity="0.4"/>
+
+  <path d="M0 0H266C187 72 110 145 60 260C26 337 10 428 0 525V0Z" fill="#FFFDF8"/>
+  <path d="M0 0C105 72 154 145 200 268C222 328 240 425 248 520" stroke="url(#gold)" stroke-width="18" stroke-linecap="round" opacity="0.95"/>
+  <path d="M0 32C88 96 132 164 174 278C192 325 210 395 218 474" stroke="#EFD596" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+  <path d="M0 1406C120 1385 235 1388 345 1450C430 1497 494 1546 628 1600H0V1406Z" fill="url(#blueWave)"/>
+  <path d="M0 1352C118 1322 246 1324 366 1384C433 1418 488 1462 586 1508" stroke="url(#gold)" stroke-width="16" stroke-linecap="round"/>
+  <path d="M0 1476C120 1460 230 1468 334 1515C406 1548 468 1580 552 1600H0V1476Z" fill="#1E58C5" opacity="0.92"/>
+
+  <image href="/zestek-logo.png" x="68" y="64" width="312" height="126" preserveAspectRatio="xMidYMid meet"/>
+
+  <path d="M522 68V166" stroke="#D8A536" stroke-width="4" stroke-linecap="round"/>
+
+  <circle cx="784" cy="112" r="64" fill="#0F64E6"/>
+  <circle cx="784" cy="112" r="62" fill="url(#glassEdge)" opacity="0.18"/>
+  <path d="M742 99C760 95 807 95 826 99" stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+  <path d="M736 113C759 109 810 109 832 113" stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.92"/>
+  <path d="M742 127C762 123 807 123 826 127" stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+  <text x="684" y="218" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" letter-spacing="1">KONICA MINOLTA</text>
+
+  <g filter="url(#softShadow)">
+    <text x="174" y="360" fill="url(#gold)" font-family="Georgia, 'Times New Roman', serif" font-size="66" font-weight="700">★ ★ ★</text>
+    <text x="92" y="526" fill="url(#gold)" font-family="Georgia, 'Times New Roman', serif" font-size="112" font-weight="700" letter-spacing="2">MOST</text>
+    <text x="88" y="666" fill="url(#gold)" font-family="Georgia, 'Times New Roman', serif" font-size="112" font-weight="700" letter-spacing="2">VALUABLE</text>
+    <text x="92" y="784" fill="url(#gold)" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="700" letter-spacing="1.2">RESELLER – WEST</text>
+  </g>
+
+  <path d="M86 852H307" stroke="#113B93" stroke-width="3"/>
+  <path d="M465 852H690" stroke="#113B93" stroke-width="3"/>
+  <text x="330" y="868" text-anchor="middle" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="32" letter-spacing="8">A TESTAMENT TO</text>
+  <text x="390" y="955" text-anchor="middle" fill="#194CB7" font-family="'Brush Script MT', 'Segoe Script', cursive" font-size="78">Trust, Partnership &amp; Excellence</text>
+  <path d="M132 988H458" stroke="#255FD2" stroke-width="3"/>
+
+  <circle cx="120" cy="1087" r="46" fill="#194CB7"/>
+  <circle cx="120" cy="1087" r="42" fill="url(#gold)"/>
+  <path d="M103 1069H136V1092C136 1107 124 1118 109 1118C96 1118 103 1097 103 1092V1069Z" fill="#194CB7"/>
+  <path d="M98 1074H91C82 1074 81 1088 91 1091H98" stroke="#194CB7" stroke-width="5" stroke-linecap="round"/>
+  <path d="M141 1074H148C157 1074 158 1088 148 1091H141" stroke="#194CB7" stroke-width="5" stroke-linecap="round"/>
+  <path d="M113 1118V1134H127V1118" stroke="#194CB7" stroke-width="5" stroke-linecap="round"/>
+  <path d="M104 1138H136" stroke="#194CB7" stroke-width="5" stroke-linecap="round"/>
+
+  <path d="M184 1038V1146" stroke="#194CB7" stroke-width="3"/>
+  <text x="218" y="1082" fill="#123D97" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700">PROUD MOMENT FOR</text>
+  <text x="218" y="1124" fill="#123D97" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700">TEAM ZEST DIGITAL SOLUTIONS</text>
+
+  <text x="82" y="1215" fill="#202020" font-family="Arial, Helvetica, sans-serif" font-size="32">This achievement reflects the trust of our customers,</text>
+  <text x="82" y="1260" fill="#202020" font-family="Arial, Helvetica, sans-serif" font-size="32">the dedication of our team, and the strength of our</text>
+  <text x="82" y="1305" fill="#202020" font-family="Arial, Helvetica, sans-serif" font-size="32">partnership with</text>
+  <text x="408" y="1305" fill="#194CB7" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700">Konica Minolta.</text>
+
+  <path d="M122 1360H418" stroke="url(#gold)" stroke-width="4"/>
+  <path d="M502 1360H693" stroke="url(#gold)" stroke-width="4"/>
+  <text x="390" y="1414" text-anchor="middle" fill="#194CB7" font-family="'Brush Script MT', 'Segoe Script', cursive" font-size="84">Thank You</text>
+  <text x="162" y="1482" fill="#202020" font-family="Arial, Helvetica, sans-serif" font-size="28">To our customers, team members &amp;</text>
+  <text x="170" y="1522" fill="#202020" font-family="Arial, Helvetica, sans-serif" font-size="28">team</text>
+  <text x="248" y="1522" fill="#194CB7" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Konica Minolta</text>
+  <text x="482" y="1522" fill="#202020" font-family="Arial, Helvetica, sans-serif" font-size="28">for being part of this journey.</text>
+
+  <ellipse cx="874" cy="1462" rx="154" ry="42" fill="#B4C7E7" opacity="0.32"/>
+  <g filter="url(#softShadow)">
+    <path d="M760 1448C772 1425 795 1411 821 1404H919C950 1412 974 1429 989 1452V1478H760V1448Z" fill="#F6F7FA"/>
+    <path d="M758 1447C770 1421 794 1403 822 1394H921C953 1404 978 1423 992 1449" stroke="url(#gold)" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <path d="M856 330C838 354 818 391 816 433C814 486 843 523 841 565C838 622 802 670 797 738C793 798 824 866 826 933C828 1020 787 1093 788 1166C788 1226 814 1280 842 1340H929C955 1299 973 1241 981 1178C989 1116 973 1052 967 984C960 905 995 842 1000 768C1005 699 982 644 980 586C978 506 1008 445 996 372C992 348 982 328 968 312L856 330Z" fill="url(#glass)"/>
+    <path d="M883 308C860 341 833 390 832 446C831 508 863 545 861 587C858 644 822 690 817 754C811 822 843 887 848 958C853 1032 820 1107 820 1177C820 1234 844 1287 871 1339" stroke="url(#glassEdge)" stroke-width="9" stroke-linecap="round"/>
+    <path d="M949 301C936 330 920 371 919 417C917 477 936 517 935 567C933 631 903 685 899 756C895 829 919 897 923 971C928 1061 904 1140 910 1234C912 1268 918 1303 927 1337" stroke="#F8FBFF" stroke-width="7" stroke-linecap="round" opacity="0.95"/>
+    <path d="M838 451C861 425 893 411 928 406C961 402 985 410 1002 423" stroke="white" stroke-opacity="0.65" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="1006" cy="415" r="28" fill="#FFF9D3" opacity="0.95"/>
+    <circle cx="1006" cy="415" r="42" fill="#FFF4BC" opacity="0.3"/>
+  </g>
+
+  <circle cx="902" cy="1308" r="40" fill="#0F64E6"/>
+  <path d="M876 1299C887 1296 917 1296 928 1299" stroke="white" stroke-width="5" stroke-linecap="round" opacity="0.92"/>
+  <path d="M872 1308C886 1305 918 1305 932 1308" stroke="white" stroke-width="5" stroke-linecap="round" opacity="0.95"/>
+  <path d="M876 1317C888 1314 917 1314 928 1317" stroke="white" stroke-width="5" stroke-linecap="round" opacity="0.92"/>
+  <text x="828" y="1376" fill="#202020" font-family="Arial, Helvetica, sans-serif" font-size="24" text-anchor="middle">KONICA MINOLTA</text>
+  <text x="822" y="1430" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" text-anchor="middle">MOST VALUABLE RESELLER</text>
+  <text x="822" y="1472" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" text-anchor="middle">WEST</text>
+  <text x="822" y="1520" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" text-anchor="middle">Zest Digital Solutions</text>
+  <text x="822" y="1556" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="24" text-anchor="middle">Professional Print Business</text>
+  <text x="822" y="1590" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" text-anchor="middle">FY2025-26</text>
+</svg>
