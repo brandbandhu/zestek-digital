@@ -13,6 +13,12 @@ import {
   type SeoStructuredData,
 } from "@/lib/seo";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 type PageMetaProps = {
   title: string;
   description: string;
