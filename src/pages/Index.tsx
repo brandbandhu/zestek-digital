@@ -34,54 +34,6 @@ const Index = () => (
       ]}
       canonicalPath="/"
       image="/zestek-logo.png"
-      structuredData={[
-        {
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "Zestek Digital LLP",
-          alternateName: ["Zestek", "Zestek Digital Solutions", "Zestek Printer Solutions"],
-          legalName: "Zestek Digital LLP",
-          url: "https://zestek.in/",
-          logo: "https://zestek.in/zestek-logo.png",
-          contactPoint: [
-            {
-              "@type": "ContactPoint",
-              telephone: "+91-9920909700",
-              contactType: "sales",
-              areaServed: "IN",
-            },
-          ],
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          name: "Zestek Digital LLP",
-          alternateName: ["Zestek", "Zestek Digital Solutions", "Zestek Printer Solutions"],
-          url: "https://zestek.in/",
-          image: "https://zestek.in/zestek-logo.png",
-          telephone: "+91-9920909700",
-          email: "connect@zestek.in",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "32, Kohinoor Industrial Estate, Near Virwani Industry, Goregaon East",
-            addressLocality: "Mumbai",
-            addressRegion: "Maharashtra",
-            postalCode: "400063",
-            addressCountry: "IN",
-          },
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "Zestek Digital LLP",
-          url: "https://zestek.in/",
-          potentialAction: {
-            "@type": "SearchAction",
-            target: "https://zestek.in/?q={search_term_string}",
-            "query-input": "required name=search_term_string",
-          },
-        },
-      ]}
     />
     <Header />
     <HeroSection />
