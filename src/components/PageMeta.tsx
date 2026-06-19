@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import {
   buildBreadcrumbItems,
   buildBreadcrumbSchema,
+  buildSeoKeywords,
   buildWebPageSchema,
   DEFAULT_LOCALE,
   DEFAULT_OG_IMAGE,
@@ -122,11 +123,7 @@ const PageMeta = ({
     upsertMetaTag("name", "author", LEGAL_NAME);
     upsertMetaTag("name", "robots", noIndex ? "noindex, nofollow" : "index, follow");
     upsertMetaTag("name", "twitter:card", "summary_large_image");
-    if (keywords && keywords.length > 0) {
-      upsertMetaTag("name", "keywords", keywords.join(", "));
-    } else {
-      removeMetaTag("name", "keywords");
-    }
+    upsertMetaTag("name", "keywords", buildSeoKeywords({ title, description, canonicalPath, keywords }).join(", "));
 
     upsertMetaTag("property", "og:site_name", SITE_NAME);
     upsertMetaTag("property", "og:locale", DEFAULT_LOCALE);
