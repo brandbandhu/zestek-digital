@@ -1,14 +1,17 @@
 export const SITE_URL = "https://zestek.in";
-export const SITE_NAME = "Zestek Digital Solutions";
+export const SITE_NAME = "Zestek";
 export const LEGAL_NAME = "Zestek Digital LLP";
 export const DEFAULT_OG_IMAGE = "/zestek-logo.png";
-export const DEFAULT_OG_IMAGE_ALT = "Zestek Digital Solutions logo";
+export const DEFAULT_OG_IMAGE_ALT = "Zestek logo";
 export const DEFAULT_LOCALE = "en_IN";
 export const DEFAULT_LANGUAGE = "en-IN";
 
 const SITE_KEYWORD_BASE = [
+  "Zestek",
   "Zestek Digital LLP",
-  "Zestek Digital Solutions",
+  "Zestek India",
+  "industrial automation solutions Mumbai",
+  "engineering solutions Mumbai",
   "printer solutions Mumbai",
   "printer dealer Mumbai",
   "managed print services Mumbai",
@@ -56,6 +59,8 @@ const SITE_KEYWORD_GROUPS: Array<{ pattern: RegExp; keywords: string[] }> = [
   {
     pattern: /^\/$/,
     keywords: [
+      "industrial automation solutions Mumbai",
+      "engineering solutions Mumbai",
       "Epson printers Mumbai",
       "Konica Minolta printers India",
       "printer ROI calculator",
