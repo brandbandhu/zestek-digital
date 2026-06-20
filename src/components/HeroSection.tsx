@@ -31,19 +31,19 @@ type BannerOverlay = {
 const desktopBanners = [banner1, banner2, banner3, banner4, banner5];
 const mobileBanners = [mobileBanner1, mobileBanner2, mobileBanner3, mobileBanner4, mobileBanner5];
 
-const brandHeroOverlay: BannerOverlay = {
-  label: "Zestek Digital LLP",
-  title: "Zestek Industrial Automation & Engineering Solutions",
-  body: "Epson, Konica Minolta, print software, and managed print services for businesses in Mumbai & MMR.",
-  bullets: [
-    "Epson printers and production systems",
-    "Service, installation, and AMC support",
-    "Mumbai and MMR coverage",
-  ],
-};
-
 const bannerOverlays: Record<number, BannerOverlay> = {
-  0: brandHeroOverlay,
+  0: {
+    label: "Epson - Print Buddy",
+    title: "Print buddy of every print shop.",
+    body: "Highlights",
+    bullets: [
+      "One lakh prints free",
+      "Low power consumption",
+      "Low maintenance",
+      "Low print cost",
+      "Print variety of papers",
+    ],
+  },
   1: {
     label: "Konica Minolta",
     brand: "KONICA MINOLTA",
@@ -76,22 +76,22 @@ const renderDesktopOverlay = (index: number) => {
               animate="show"
               className="ml-auto w-full max-w-[24rem] text-left text-[#101828] sm:max-w-[30rem] lg:max-w-[35rem] lg:-translate-x-12 xl:max-w-[38rem] xl:-translate-x-20 2xl:-translate-x-24"
             >
-              <motion.span variants={fadeUp} className="inline-flex rounded-full bg-white/92 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-navy">
-                {overlay.label}
-              </motion.span>
-              <motion.h1
-                variants={fadeInRight}
-                className="mt-4 max-w-[34rem] text-3xl font-extrabold leading-[1.06] tracking-tight md:text-4xl lg:text-[3.55rem]"
-              >
-                <span className="block text-[#101828]">{overlay.title}</span>
+              <motion.h1 variants={fadeInRight} className="mt-4 max-w-[34rem] text-3xl font-extrabold leading-[1.06] tracking-tight md:text-4xl lg:text-[3.55rem]">
+                <span className="block text-[#101828]">
+                  Print buddy <span className="inline-block text-highlight">of every</span>
+                </span>
+                <span className="mt-5 block text-[#101828]">print shop.</span>
               </motion.h1>
-              <motion.p variants={fadeUp} className="mt-5 max-w-[31rem] text-sm leading-7 text-[#101828]/88 md:text-base">
-                {overlay.body}
-              </motion.p>
               <motion.div
                 variants={fadeUp}
                 className="animate-float-soft mt-5 max-w-[29rem] rounded-[2rem] border border-black/10 bg-white/78 p-5 text-left shadow-[0_22px_60px_rgba(15,23,42,0.1)] backdrop-blur-md"
               >
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="inline-flex items-center rounded-full bg-highlight/14 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-highlight">
+                    {overlay.body}
+                  </span>
+                  <span className="h-px flex-1 bg-gradient-to-r from-highlight/45 to-transparent" />
+                </div>
                 <ul className="mt-4 space-y-2.5 text-sm text-[#101828] md:text-base">
                   {overlay.bullets?.map((item) => (
                     <li key={item} className="flex items-start gap-3">
@@ -169,42 +169,6 @@ const renderDesktopOverlay = (index: number) => {
 };
 
 const renderMobileOverlay = (index: number) => {
-  if (index === 0) {
-    const overlay = bannerOverlays[index];
-
-    return (
-      <>
-        <div className="absolute inset-x-0 top-0 z-[1] h-[58%] bg-gradient-to-b from-white/92 via-white/60 to-transparent" />
-        <div className="absolute inset-x-0 top-0 z-[2] px-4 pt-7">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="show"
-            className="max-w-[19rem] rounded-[1.6rem] border border-white/80 bg-white/92 p-4 text-navy shadow-[0_22px_60px_rgba(15,23,42,0.12)] backdrop-blur-md"
-          >
-            <motion.span variants={fadeUp} className="inline-flex items-center rounded-full bg-highlight/12 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-highlight">
-              {overlay.label}
-            </motion.span>
-            <motion.h1 variants={fadeInLeft} className="mt-3 text-2xl font-extrabold leading-tight">
-              {overlay.title}
-            </motion.h1>
-            <motion.p variants={fadeUp} className="mt-3 text-xs leading-6 text-foreground/80">
-              {overlay.body}
-            </motion.p>
-            <motion.div variants={fadeUp} className="mt-4 flex flex-wrap gap-2.5">
-              <Link
-                to="/service#service-amc"
-                className="inline-flex items-center justify-center rounded-full bg-navy px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-navy/90"
-              >
-                Request Support Now
-              </Link>
-            </motion.div>
-          </motion.div>
-        </div>
-      </>
-    );
-  }
-
   if (index !== 2) {
     return null;
   }
